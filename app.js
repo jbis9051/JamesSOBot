@@ -2,7 +2,7 @@ const bot = require('./src/bot.js');
 const Client = require('./src/Client.js');
 
 (async ()=>{
-    bot.client = await new Client(38).init();
+    bot.client = await new Client(1).init();
 
     bot.client.on('ready', () => {
         bot.client.send('I am alive!');
