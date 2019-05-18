@@ -10,7 +10,7 @@ const Client = require('./src/Client.js');
     bot.client.on('new-message', msg => {
         bot.ListenerCheck(msg);
         if(!bot.validateMsg(msg.content)){
-            bot.client.send('You sick bastard. Stop trying to hack me!');
+            bot.client.send('This command conflicts with law #3');
             return;
         }
         if(!bot.isCommandMsg(msg)){ /* is a command */
@@ -42,6 +42,7 @@ const Client = require('./src/Client.js');
     require('./src/plugins/funfact.js')(bot);
     require('./src/plugins/kill.js')(bot);
     require('./src/plugins/timer.js')(bot);
+    require('./src/plugins/rules.js')(bot);
 
     await bot.client.connect();
 })();

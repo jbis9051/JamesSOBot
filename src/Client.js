@@ -12,7 +12,7 @@ module.exports = class Client extends EventEmitter {
     }
 
     async init() {
-        this.browser = await puppeteer.launch({headless:false});
+        this.browser = await puppeteer.launch();
         this.mainPage = await this.browser.newPage();
         const cookies = Client.getCookies();
         if (cookies) {
@@ -80,6 +80,11 @@ module.exports = class Client extends EventEmitter {
         switch (data["r"+this.roomNum].e[0].event_type) {
             case 1: {
                 this.emit('new-message',data["r"+this.roomNum].e[0]);
+                break;
+            }
+            case 8: {
+                this.emit('new-message',data["r"+this.roomNum].e[0]);
+                this.emit('direct-message',data["r"+this.roomNum].e[0]);
                 break;
             }
             case 2: {

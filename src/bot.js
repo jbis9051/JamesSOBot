@@ -10,14 +10,16 @@ const bot = {
 
     user_groups: config.users_groups,
     info: {
-        start: new Date(),
+        start: Date.now(),
         name: "James",
     },
 
     log: (str) => {
         console.log((new Date()).toString() + " - " + str);
     },
-
+    error: (str) => {
+        console.error((new Date()).toString() + " - " + str);
+    },
     addCommand: (cmd) => {
         if (!cmd.func || !cmd.name) {
             console.error("Invalid command");

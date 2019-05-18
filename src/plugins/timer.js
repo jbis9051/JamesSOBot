@@ -2,32 +2,36 @@ let timers = [];
 module.exports = function (bot) {
     bot.addCommand({
         name: "timer",
-        args: ["what to remind","time"],
+        args: ["who to remind (@User or me)","what to remind","time"],
         description: "Creates a time",
         shortcuts: [
             "timer",
             "remind",
-            "remind_me"
+            "remind"
         ],
         ignore: false,
         permissions: ["all"],
         func: (msg, args, sudo) => {
-            if(args.length < 2){
+            if(args.length < 3){
                 if(args.length < 1){
                     bot.client.send("Need more args");
                     return;
                 }
                 if(args[0] === "list"){
-
+                    //TODO list current timers/reminders
                 }
                 return;
+            }
+            let user = args.pop();
+            if(user === "me"){
+                user = "@"+msg.user_name;
             }
             let time = convertTimeToMiliseconds(args.pop());
             if(!time){
                 bot.client.send("Invalid time.");
                 return;
             }
-            const content = `@${msg.user_name}, ${args.join(" ")}`;
+            const content = `${user}, ${args.join(" ")}`;
             timers.push({
                user: msg.user_name,
                content: content,

@@ -22,20 +22,8 @@ module.exports = function (bot) {
                     return;
                 }
                 bot.getCommand('selfDestruct').func(msg, args, sudo);
-                return;
             }
-            const person = await bot.client.fetchUser(args[0].match(/[0-9]+/));
-            bot.client.send(`\`sudo rm -rf /\` <@${person.id}>`);
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-            var yyyy = today.getFullYear();
-            today = mm + '/' + dd + '/' + yyyy;
-            const old_nicname = person.nickname;
-            await msg.guild.members.get(person.id).setNickname('Died ' + today);
-            setTimeout(async () => {
-                await msg.guild.members.get(person.id).setNickname(old_nicname);
-            }, 300000);
+            bot.client.send("This conflicts with the First Law.");
         }
     });
 };

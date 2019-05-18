@@ -10,7 +10,7 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg, args, sudo) => {
             if (Math.random() <= 0.1 && args !== "bypass") {
-                bot.client.send(`${msg.user_name}'s code :wink:`);
+                bot.client.send(`${msg.user_name}'s code 😜`);
                 return;
             }
             bot.json_request('https://official-joke-api.appspot.com/jokes/programming/random', (err, res, body) => {
