@@ -22,11 +22,10 @@ The chat, being a subdomain (`chat.`) of the main site, has access to the main s
 
 The login form can be accessed directly at `siteURL + "/users/login"`. If the site detects you are already logged in, it will redirect you to the home page. This allows you to check if you are already logged in by checking the URL:
 ```javascript
- await this.mainPage.goto(config.siteUrl + '/users/login'); /* load the login url like `https://stackoveflow.com/users/login`
-        if (!this.mainPage.url().includes("/users/login")) { /* if you are still on the page, and haven't been redicrected to the main site, `https://stackoveflow.com`, then you need to login */
-            console.log("Already Logged in Yey!");
-        }
-        
+await this.mainPage.goto(config.siteUrl + '/users/login'); /* load the login url like `https://stackoveflow.com/users/login`
+if (!this.mainPage.url().includes("/users/login")) { /* if you are still on the page, and haven't been redicrected to the main site, `https://stackoveflow.com`, then you need to login */
+    console.log("Already Logged in Yey!");
+}      
 ```
 
 **Note:** Although you are logged in, you may be provided with new cookies. If you are saving cookies, it is suggested that you save cookies after you are redirected.
@@ -36,11 +35,11 @@ The login form can be accessed directly at `siteURL + "/users/login"`. If the si
 Once on the form page, the input with the id, `#email` , is used for email and `#password` for password.  The submit button has an id of `#submit-button`.
 
 ```javascript
-    await this.mainPage.focus('#email');
-    await this.mainPage.keyboard.type(config.email);
-    await this.mainPage.focus('#password');
-    await this.mainPage.keyboard.type(config.password);
-    await this.mainPage.click('#submit-button');
+await this.mainPage.focus('#email');
+await this.mainPage.keyboard.type(config.email);
+await this.mainPage.focus('#password');
+await this.mainPage.keyboard.type(config.password);
+await this.mainPage.click('#submit-button');
 ```
 
 Once the submit button is clicked, you are redirected (It doesn't use AJAX to log you in).
@@ -132,22 +131,22 @@ The response is JSON containing a single url key with the websocket as it's valu
 Example code:
 
 ```javascript
- const page = await this.browser.newPage();
-        await page.setRequestInterception(true);
-        page.on('request', interceptedRequest => {
-            const data = {
-                'headers': {
-                    'content-type': 'application/x-www-form-urlencoded',
-                },
-                'method': 'POST',
-                'postData': `roomid=${this.roomNum}&fkey=${this.fkey}`,
-            };
-            interceptedRequest.continue(data);
-        });
-        const response = await page.goto(config.chatURL + '/ws-auth');
-        const content = await response.text();
-        this.emit('main-site-login');
-        return JSON.parse(content).url;
+const page = await this.browser.newPage();
+await page.setRequestInterception(true);
+page.on('request', interceptedRequest => {
+    const data = {
+        'headers': {
+            'content-type': 'application/x-www-form-urlencoded',
+         },
+             'method': 'POST',
+             'postData': `roomid=${this.roomNum}&fkey=${this.fkey}`,
+         };
+         interceptedRequest.continue(data);
+    });
+const response = await page.goto(config.chatURL + '/ws-auth');
+const content = await response.text();
+this.emit('main-site-login');
+return JSON.parse(content).url;
 ```
 
 ### Connecting to the WebSocket
@@ -158,35 +157,36 @@ The WebSocket requires an `l` parameter. We are not exactly sure what this is bu
 
 1. Get the correct time - Credit to [@Zoe](https://chat.stackoverflow.com/users/6296561/zoe)
 
-In Java (ew) it can be obtained with the following sample code:
+Generalized, you can get the time by sending a POST request to `<chat domain>/chats/<room number>/events`, and passing the fkey with it. If the call succeeds, you'll get a JSON form in either a string format, or a JSON object variant, depending on your framework. From there, get the `time` key. 
 
+Pseudo-code:
 ```
-String time = post(CHAT_DOMAIN + "/chats/<room number>/events", cookies, { "fkey": fkey }).getJsonObject("time").toString();
+String time = post(CHAT_DOMAIN + "/chats/<room number>/events", cookies, PostData { "fkey": fkey }).getJsonObject("time").toString();
 ```
 
-In JavaScript it roughly looks like this
+In JavaScript, it roughly looks like this
 
 ```
 const page = await this.browser.newPage();
-        await page.setRequestInterception(true);
-        page.on('request', interceptedRequest => {
-            const data = {
-                'headers': {
-                    'content-type': 'application/x-www-form-urlencoded',
-                },
-                'method': 'POST',
-                'postData': `fkey=${this.fkey}`,
-            };
-            interceptedRequest.continue(data);
-        });
-        const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/events`);
-        const content = await response.text();
-        return JSON.parse(content).time;
+await page.setRequestInterception(true);
+page.on('request', interceptedRequest => {
+    const data = {
+        'headers': {
+            'content-type': 'application/x-www-form-urlencoded',
+         },
+            'method': 'POST',
+            'postData': `fkey=${this.fkey}`,
+         };
+         interceptedRequest.continue(data);
+    });
+const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/events`);
+const content = await response.text();
+return JSON.parse(content).time;
 ```
 
 2. Just set it to `?l=99999999999`
 
-This is what we do for the bot because it works and its one less request.
+This is what we do for the bot this repository contains, because it works, and it's one less request.
 
 #### Actually Connecting (finally)
 
@@ -286,7 +286,27 @@ We don't know all event types but here are some of them. Please add as you find
 | 2  | Edit  |
 | 3  | User Join |
 | 4  | User Leave  |
+| 5  | Room name, description, or tag changes |
+| 6  | Message starred or unstarred |
+| 7  | Debug message. The signficance and usage of this is unknown. |
 | 8  | Message directed at the user currently logged in. For example, `@JamesBot` |
+| 9  | Message flagged as spam or offensive - possibly only receiveable by accounts with 10000 reputation |
+| 10 | Message deleted |
+| 11 | File added. A source says this is limited to one room - the Android SE testing app room |
+| 12 | Moderator flag - like event 9, this is likely only receiveable by moderator accounts |
+| 13 | User ignored or unignored |
+| 14 | Global notification - notifications displayed as banners, excluding room invitations. Example: Room event |
+| 15 | User access level changed. Access levels can be seen in `<chat domain>/rooms/info/<room id>/?tab=access` |
+| 16 | User notification. The exact trigger is somewhat unclear, but it behaves the same way as event 14 in a browser |
+| 17 | Room invitation |
+| 18 | Triggered when someone replies to a message posted by the active account | 
+| 19 | Message moved out of the room by a room owner or moderator |
+| 20 | Message moved in to the room by a room owner or moderator | 
+| 21 | Time break. Unclear usage in several sources |
+| 22 | New items added to a feed ticker | 
+| 29 | A user has been suspended |
+| 30 | two accounts have been merged | 
+| 34 | User name or avatar changed in chat |
 
 #### User Join/Leave Event
 
@@ -333,17 +353,36 @@ The Response will be one of the following:
 **Detect and Set Timeout for Throttle Sample Code**
 
 ```javascript
-  const text = await response.text();
-        await page.close();
-        const delay = text.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
-        if(delay){
-            setTimeout(()=>{
-                this.send(msg);
-            },(parseInt(delay)*1000) + 0.25);
-        }
+const text = await response.text();
+await page.close();
+const delay = text.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
+if(delay){
+    setTimeout(()=>{
+        this.send(msg);
+    },(parseInt(delay)*1000) + 0.25);
+}
 
 ``` 
 
 ## Editing Messages
 
+Editing messages needs to be done within two minutes of the message being posted, due to SE restrictions. Editing can be achieved by posting to `<chat domain>/messages/<message id>`, and posting with the fkey parameter and a parameter called `text` containing the new content. 
+
+If the message isn't yours, or the edit window has elapsed, this will fail. 
+
+Example POST data:
+
+```json
+{
+    "fkey": "fkey here",
+    "text": "This is where you add the new content of the message
+}
+```
+
 // TODO
+
+## Deleting messages
+
+Deleting, like editing, needs to be done within two minutes of the message being posted, and the message needs to be yours. There are likely exceptions for moderator accounts. 
+
+The endpoint used here is `<chat host>/messages/<message id>/delete`, again posting the fkey. 
