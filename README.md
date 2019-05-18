@@ -1,11 +1,11 @@
-#SO-ChatBot
-#Description
+# SO-ChatBot
+# Description
 
 I could not find a simple and easy to understand StackExchange chat bot API so I decided to create my own. This can be easily used to create your own bot, simply remove the plugins and add your own!
 
 I am also planning on writing full documentation for the how SO Chat works, as none currently exists. 
 
-#Usage
+# Usage
 ```
 || command args 
 ```
@@ -13,7 +13,7 @@ or
 ```
 @JamesBot command args 
 ```
-#Plugin API
+# Plugin API
 *More in depth explanation coming soon*
 
 ```
