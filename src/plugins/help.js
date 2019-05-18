@@ -12,7 +12,7 @@ module.exports = function (bot) {
             let exportText = "";
             Object.keys(bot.commands).forEach(e => {
                 e = bot.getCommand(e);
-                if (!e.ignore) {
+                if (e && !e.ignore) {
                     exportText += `\`${e.name}\` - **${e.args.toString()}** - ${e.description}\n`
                 }
             });

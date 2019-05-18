@@ -348,6 +348,7 @@ The Response will be one of the following:
 | Response  | Description   |
 | ------------- | ------------- |
 | `{"id":11832651,"time":1379406464}` | Successful  |
+| `{"id":null,"time":null}` | If you send to many of the same messages consecutively, it won't send and you will get this message. |
 | `You can perform this action again in X second(s)` | There's a throttle on how fast you can send message and you've reached it. Simply wait that amount of seconds and retry. We use the regex + code below for that. |
 | `You need 20 reputation points...` | I don't know the exact wording but its something like that. It means you need....well....20 reputation points on the main site. Just answer a question and get upvoted. If you can't get 20 rep points on the main site than you probably shouldn't have a bot in the chat site.|
 

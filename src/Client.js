@@ -4,6 +4,8 @@ const fs = require('fs');
 const WebSocket = require('ws');
 const EventEmitter = require('events');
 
+const path = require('path');
+
 module.exports = class Client extends EventEmitter {
     constructor(roomNum) {
         super(roomNum);
@@ -154,7 +156,7 @@ module.exports = class Client extends EventEmitter {
 
     static getCookies() {
         if (fs.existsSync('./data/cookies')) {
-            return JSON.parse(fs.readFileSync('./data/cookies'));
+            return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'cookies')));
         }
         return false;
     }
@@ -170,7 +172,7 @@ module.exports = class Client extends EventEmitter {
         if (typeof cookies !== "string") {
             cookies = JSON.stringify(cookies);
         }
-        fs.writeFileSync('./data/cookies', cookies);
+        fs.writeFileSync(path.join(__dirname, '..', 'data', 'cookies'), cookies);
     }
 
     static cookiesToString(cookies) {
@@ -200,8 +202,8 @@ module.exports = class Client extends EventEmitter {
         console.log(text);
         const delay = text.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
         if(delay){
-            setTimeout(()=>{
-                this.send(msg);
+            setTimeout(async ()=>{
+               await this.send(msg);
             },(parseInt(delay)*1000) + 0.25);
             return false
         }
