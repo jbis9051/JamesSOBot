@@ -21,11 +21,10 @@ The above can be changed depending the the chat room.
 The chat, being a subdomain (`chat.`) of the main site, has access to the main site's cookies. 
 
 The login form can be accessed directly at `siteURL + "/users/login"`. If the site detects you are already logged in, it will redirect you to the home page. This allows you to check if you are already logged in by checking the URL:
-```
+```javascript
  await this.mainPage.goto(config.siteUrl + '/users/login'); /* load the login url like `https://stackoveflow.com/users/login`
-        if (!this.mainPage.url().includes("/users/login")) { /* if you are still on the page, and haven't been redicrected to the main site, `https://stackoveflow.com`, then you need to login
+        if (!this.mainPage.url().includes("/users/login")) { /* if you are still on the page, and haven't been redicrected to the main site, `https://stackoveflow.com`, then you need to login */
             console.log("Already Logged in Yey!");
-            return;
         }
         
 ```
@@ -36,7 +35,7 @@ The login form can be accessed directly at `siteURL + "/users/login"`. If the si
  
 Once on the form page, the input with the id, `#email` , is used for email and `#password` for password.  The submit button has an id of `#submit-button`.
 
-```
+```javascript
     await this.mainPage.focus('#email');
     await this.mainPage.keyboard.type(config.email);
     await this.mainPage.focus('#password');
@@ -80,22 +79,26 @@ The `fkey` can be found in either of the following ways while on a chat page:
 
 1. Getting the value of an input with the id `#fkey`. The input is the last element in the `<body>` and contains the fkey.
 
-`<input id="fkey" name="fkey" type="hidden" value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">`
+```html
+<input id="fkey" name="fkey" type="hidden" value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+```
 
 2. Running the `fkey()` function
 
 The `fkey()` function just does method 1 with the option for a custom argument.
 
 
-```
+```javascript
 function fkey(e){
-return e||(e={}),e.fkey||(e.fkey=$("input[name='fkey']").attr("value")),e
+    return e||(e={}),e.fkey||(e.fkey=$("input[name='fkey']").attr("value")),e
 }
 ```
 
 `fkey()` will return a JavaScript object containing an `fkey` key and the actual `fkey` for its value:
 
-```{fkey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}```
+```javascript
+{fkey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}
+```
 
 `fkey().fkey` returns the actual `fkey`
 
@@ -122,11 +125,13 @@ The WebSocket URL is gotten by making a POST request to the `chatURL + '/ws-auth
 
 The response is JSON containing a single url key with the websocket as it's value. The response looks like this:
 
-`{"url":"wss://chat.sockets.stackexchange.com/events/17/..."}`
+```json
+{"url":"wss://chat.sockets.stackexchange.com/events/1/..."}
+```
 
 Example code:
 
-```
+```javascript
  const page = await this.browser.newPage();
         await page.setRequestInterception(true);
         page.on('request', interceptedRequest => {
@@ -232,7 +237,7 @@ The most simple one containing no events looks like this:
 When there is no traffic there maybe an event like this:
 
 ```json
- {"r17" : {
+ {"r1" : {
         "t" : 23531002,
         "d" : 3
  }}
@@ -300,7 +305,7 @@ To send, make a POST request to `chatURL + '/chats/[room num]/messages/new'` wit
 
 Here's an example
 
-```
+```javascript
    const page = await this.browser.newPage();
         await page.setRequestInterception(true);
         page.on('request', interceptedRequest => {
@@ -327,7 +332,7 @@ The Response will be one of the following:
 
 **Detect and Set Timeout for Throttle Sample Code**
 
-```
+```javascript
   const text = await response.text();
         await page.close();
         const delay = text.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
