@@ -157,7 +157,9 @@ The WebSocket requires an `l` parameter. We are not exactly sure what this is bu
 
 1. Get the correct time - Credit to [@Zoe](https://chat.stackoverflow.com/users/6296561/zoe)
 
-Generalized, you can get the time by sending a POST request to `<chat domain>/chats/<room number>/events`, and passing the fkey with it. If the call succeeds, you'll get a JSON form in either a string format, or a JSON object variant, depending on your framework. From there, get the `time` key. 
+Generalized, you can get the time by sending a POST request to `<chat domain>/chats/<room id>/events`, and passing the fkey with it. In the URL, `<chat domain>` refers to the site you're on (i.e. `https://chat.stackoverflow.com`, but it can be any of the chat domains in the SE network), and `<room id>` is exactly as the name suggests - the ID if the room you're trying to join. Both of these parameters are without the brackets (`<>`) around them.
+
+If the call succeeds, you'll get a JSON form in either a string format, or a JSON object variant, depending on your framework. From there, get/parse the value `time` key. 
 
 Pseudo-code:
 ```
@@ -174,11 +176,11 @@ page.on('request', interceptedRequest => {
         'headers': {
             'content-type': 'application/x-www-form-urlencoded',
          },
-            'method': 'POST',
-            'postData': `fkey=${this.fkey}`,
-         };
-         interceptedRequest.continue(data);
-    });
+         'method': 'POST',
+         'postData': `fkey=${this.fkey}`,
+     };
+     interceptedRequest.continue(data);
+});
 const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/events`);
 const content = await response.text();
 return JSON.parse(content).time;
@@ -326,20 +328,19 @@ To send, make a POST request to `chatURL + '/chats/[room num]/messages/new'` wit
 Here's an example
 
 ```javascript
-   const page = await this.browser.newPage();
-        await page.setRequestInterception(true);
-        page.on('request', interceptedRequest => {
-            const data = {
-                'headers': {
-                    'content-type': 'application/x-www-form-urlencoded',
-                },
-                'method': 'POST',
-                'postData': `text=${encodeURIComponent(msg)}&fkey=${this.fkey}`,
-            };
-            interceptedRequest.continue(data);
-        });
- const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/messages/new`);
-
+const page = await this.browser.newPage();
+await page.setRequestInterception(true);
+page.on('request', interceptedRequest => {
+    const data = {
+        'headers': {
+            'content-type': 'application/x-www-form-urlencoded',
+        },
+        'method': 'POST',
+        'postData': `text=${encodeURIComponent(msg)}&fkey=${this.fkey}`,
+    };
+    interceptedRequest.continue(data);
+});
+const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/messages/new`);
 ```
 
 The Response will be one of the following:
@@ -366,7 +367,7 @@ if(delay){
 
 ## Editing Messages
 
-Editing messages needs to be done within two minutes of the message being posted, due to SE restrictions. Editing can be achieved by posting to `<chat domain>/messages/<message id>`, and posting with the fkey parameter and a parameter called `text` containing the new content. 
+Editing messages needs to be done within two minutes of the message being posted, due to SE restrictions. Editing can be achieved by posting to `<chat domain>/messages/<message id>`, and posting with the fkey parameter and a parameter called `text` containing the new content. `<chat domain>` is again the chat site you want to handle (i.e. `https://chat.stackoverflow.com`, and `<message id>` is the ID of the message you want to edit. Both of these are naturally without brackets. 
 
 If the message isn't yours, or the edit window has elapsed, this will fail. 
 
