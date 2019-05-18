@@ -1,0 +1,4 @@
+config/config.json
+.idea
+node_modules
+data/*

@@ -1,0 +1,9 @@
+{
+  "email": "myemail@example.com",
+  "password": "password123",
+  "users_groups":{
+    "admin": ["JBis"]
+  },
+  "siteUrl": "https://stackexchange.com",
+  "chatURL": "https://chat.stackexchange.com"
+}

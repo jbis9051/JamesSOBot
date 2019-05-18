@@ -1,0 +1,11 @@
+{
+  "name": "so-chatbot-boilerplate",
+  "version": "1.0.0",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "chrome-remote-interface": "^0.27.1",
+    "puppeteer": "^1.16.0",
+    "request": "latest",
+    "ws": "^7.0.0"
+  }
+}
