@@ -389,7 +389,7 @@ Deleting, like editing, needs to be done within two minutes of the message being
 
 The endpoint used here is `<chat host>/messages/<message id>/delete`, again posting the fkey. 
 
-## User Information
+# User Information
 
 ## Name to id/Search for Name
 
