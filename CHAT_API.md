@@ -447,6 +447,7 @@ If `0 < limit <= 100` you will receive a response containing a maximum of `limit
 If `limit > 100` you will receive a response containing a maximum of 100 users
 
 tl;dr The limit parameter is optional with a maximum of 100. If it is above 100, you will still only receive and maximum of 100 users. 
+
 Example: 
 
 Request:
