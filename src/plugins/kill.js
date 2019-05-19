@@ -22,6 +22,7 @@ module.exports = function (bot) {
                     return;
                 }
                 bot.getCommand('selfDestruct').func(msg, args, sudo);
+                return;
             }
             bot.client.send("This conflicts with the First Law.");
         }

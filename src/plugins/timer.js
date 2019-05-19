@@ -19,10 +19,12 @@ module.exports = function (bot) {
                 }
                 if(args[0] === "list"){
                     //TODO list current timers/reminders
+                } else {
+                    bot.client.send("Need more args");
                 }
                 return;
             }
-            let user = args.pop();
+            let user = args.shift();
             if(user === "me"){
                 user = "@"+msg.user_name;
             }
@@ -42,7 +44,7 @@ module.exports = function (bot) {
                bot.client.send(content);
                timers.splice(index,1);
             },time);
-            bot.client.send("Ok. I'll remind you.")
+            bot.client.send("Ok. I'll remind.")
         }
     });
 };
