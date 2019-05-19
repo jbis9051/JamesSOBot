@@ -22,7 +22,7 @@ The chat, being a subdomain (`chat.`) of the main site, has access to the main s
 
 The login form can be accessed directly at `siteURL + "/users/login"`. If the site detects you are already logged in, it will redirect you to the home page. This allows you to check if you are already logged in by checking the URL:
 ```javascript
-await this.mainPage.goto(config.siteUrl + '/users/login'); /* load the login url like `https://stackoveflow.com/users/login`
+await this.mainPage.goto(config.siteUrl + '/users/login'); /* load the login url like `https://stackoveflow.com/users/login` */
 if (!this.mainPage.url().includes("/users/login")) { /* if you are still on the page, and haven't been redicrected to the main site, `https://stackoveflow.com`, then you need to login */
     console.log("Already Logged in Yey!");
 }      
@@ -307,7 +307,7 @@ We don't know all event types but here are some of them. Please add as you find
 | 21 | Time break. Unclear usage in several sources |
 | 22 | New items added to a feed ticker | 
 | 29 | A user has been suspended |
-| 30 | two accounts have been merged | 
+| 30 | Two accounts have been merged | 
 | 34 | User name or avatar changed in chat |
 
 #### User Join/Leave Event
@@ -388,3 +388,139 @@ Example POST data:
 Deleting, like editing, needs to be done within two minutes of the message being posted, and the message needs to be yours. There are likely exceptions for moderator accounts. 
 
 The endpoint used here is `<chat host>/messages/<message id>/delete`, again posting the fkey. 
+
+## User Information
+
+## Name to id/Search for Name
+
+Searching for a user by name is pretty simple.
+
+Simply make a GET request to 
+
+```
+https://chat.stackoverflow.com/users/search?q=[search query]
+```
+
+You will receive a response with JavaScript objects, up to 50, of users matching your search query.
+
+Example: 
+
+Request
+
+```
+https://chat.stackoverflow.com/users/search?q=JBis
+```
+
+Response
+
+```javascript
+{"id":7886229,"dn":"JBis","hash":"!https://i.stack.imgur.com/8kBbg.png?s=128&amp;g=1"}
+{"id":1128805,"dn":"jbisa","hash":"05d61e48bb8383dd08a6f369a6286b9f"}
+{"id":4826991,"dn":"Jbisgood9999999","hash":"!https://lh3.googleusercontent.com/-zK7AwNMh0g4/AAAAAAAAAAI/AAAAAAAAACs/06VTJLu-JEE/photo.jpg?sz=128"}
+{"id":4559760,"dn":"JBiss","hash":"4a83dea33d0674a4e5389095509cc84c"}
+{"id":8854949,"dn":"Manoj Bisarahalli","hash":"69965e456e56fbf3e33eb32de7ddcff3"}
+{"id":2422621,"dn":"Manoj Bisht","hash":"!https://i.stack.imgur.com/M5Qtn.jpg"}
+{"id":1734727,"dn":"Manoj Bisht","hash":"!https://cdn-chat.sstatic.net/chat/img/anon.png"}
+{"id":6237079,"dn":"Manoj Bist","hash":"5d2c7cfe748eb9dd10f9118511c36beb"}
+{"id":5936764,"dn":"neeraj bisht","hash":"!https://lh3.googleusercontent.com/-dc2Cgab4tD0/AAAAAAAAAAI/AAAAAAAAAC8/BxfsC9c8QKM/photo.jpg?sz=128"}
+{"id":4823794,"dn":"Pankaj Bisaria","hash":"!https://cdn-chat.sstatic.net/chat/img/anon.png"}
+{"id":2848655,"dn":"Pankaj Bishnoi","hash":"!https://www.gravatar.com/avatar/?s=128&amp;d=identicon&amp;r=PG&amp;f=1"}
+{"id":3611958,"dn":"Pankaj Bisht","hash":"!https://i.stack.imgur.com/ISFs9.jpg?s=128&amp;g=1"}
+{"id":6326785,"dn":"Raj Bisht","hash":"!https://cdn-chat.sstatic.net/chat/img/anon.png"}
+{"id":5306656,"dn":"Ritej Bisaria","hash":"!https://cdn-chat.sstatic.net/chat/img/anon.png"}
+{"id":7215546,"dn":"Ruturaj Bisure","hash":"fc70455d139cfac29f058fa91023541f"}
+{"id":3057266,"dn":"Taj Bista","hash":"c8dca7011b91fa5cabbdbdbc2858e67d"}
+```
+
+Each JavaScript object contains an `id` key with the users id, a `dn` key with the users Username, and a `hash` key containing a hash or URL for the users profile image. More information on the profile image in the *id to information* section below.
+
+### `limit` parameter
+
+There is also an optional `limit=[limit num]` parameter to limit the number of results.
+
+If `limit < 0` you will receive and HTML page with an error.
+
+If `limit === 0` you will receive and empty response.
+
+If `0 < limit <= 100` you will receive a response containing a maximum of `limit` users
+
+If `limit > 100` you will receive a response containing a maximum of 100 users
+
+tl;dr The limit parameter is optional with a maximum of 100. If it is above 100, you will still only receive and maximum of 100 users. 
+Example: 
+
+Request:
+
+```
+https://chat.stackoverflow.com/users/search?q=JBis&limit=2
+```
+
+Response:
+
+```javascript
+{"id":7886229,"dn":"JBis","hash":"!https://i.stack.imgur.com/8kBbg.png?s=128&amp;g=1"}
+{"id":1128805,"dn":"jbisa","hash":"05d61e48bb8383dd08a6f369a6286b9f"}
+```
+
+## id to information
+
+**For general user information we do not suggest using the method below. Instead use, [the offical StackExchange API](https://api.stackexchange.com/)**
+
+User information is cached by the chat site and takes a couple hours to sync with the main site. So things like reputation may not be entirely accurate (use the official API for that), but things like last seen and last post are accurate.
+
+To get user information make a POST request `chatURL + "/user/info"` with the following parameters. Cookies are NOT required.
+
+```json
+{
+   "ids": "[user id]",
+   "roomID": "[room id]" 
+}
+```
+ 
+
+
+The roomID is required as it is needed for some of the information in the response.
+
+Here is a sample request and response
+
+Request:
+
+```javascript
+const page = await this.browser.newPage();
+await page.setRequestInterception(true);
+page.on('request', interceptedRequest => {
+    const data = {
+        'headers': {
+            'content-type': 'application/x-www-form-urlencoded',
+        },
+        'method': 'POST',
+        'postData': `ids=7886229&roomId=1`,
+    };
+    interceptedRequest.continue(data);
+});
+const response = await page.goto(`${config.chatURL}/user/info`);
+```
+
+Response
+
+```json
+
+{  
+   "users":[  
+      {  
+         "id":7886229,
+         "name":"JBis",
+         "email_hash":"!https://i.stack.imgur.com/8kBbg.png?s=128\u0026g=1",
+         "reputation":324,
+         "is_moderator":false,
+         "is_owner":null,
+         "last_post":1558232577,
+         "last_seen":1558239940
+      }
+   ]
+}
+```
+
+`is_moderator` is for the parent site of the chat. `is_owner` is for the room specified in roomId. `last post` is the last time the user chatted in the room. `last_seen` is that last time the person interacted with the chat (sent message/joined a room/leaved a room, etc.). `email_hash` is a bit odd. Although it is labeled "email_hash" it will sometimes contain a URL to the users image with an `!` prepended in front of it. Other times, it will contain a hash. This hash seems to either be a [gravatar](https://gravatar.com) hash or not.
+
+// TODO specify all actions that affect the `last_seen` value and the email_hash more depth.
