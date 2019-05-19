@@ -43,6 +43,7 @@ const Client = require('./src/Client.js');
     require('./src/plugins/kill.js')(bot);
     require('./src/plugins/timer.js')(bot);
     require('./src/plugins/rules.js')(bot);
+    require('./src/plugins/goodbye.js')(bot);
 
     await bot.client.connect();
 })();
