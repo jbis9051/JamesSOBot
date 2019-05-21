@@ -44,7 +44,7 @@ module.exports = function (bot) {
                bot.client.send(content);
                timers.splice(index,1);
             },time);
-            bot.client.send("Ok. I'll remind.")
+            msg.reply("Ok. I'll remind.")
         }
     });
 };

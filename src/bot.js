@@ -9,6 +9,8 @@ const bot = {
     shutdown_scripts: [],
     commands: {},
     listeners: [],
+    validatorScripts: [],
+
 
     user_groups: config.users_groups,
     info: {
@@ -83,8 +85,20 @@ const bot = {
             }
         }
     },
-    validateMsg: (str) => {
+    isMyMsg(msg) {
+      return msg.user_id === bot.client._id
+    },
+    validateMsg: (msg) => {
         return true;
+    },
+    validatorScriptRunner:(msg)=>{
+       for(let script of bot.validatorScripts){
+           if(!script.func(msg)){
+               bot.log("Validator Failed: " + script.name);
+               return false;
+           }
+       }
+       return true;
     },
 
 
@@ -105,6 +119,9 @@ const bot = {
     },
     RegisterClientListener: (on, callback) => {
         bot.client.on(on, callback);
+    },
+    addValidatorScript:(name,func) =>{
+      bot.validatorScripts.push({name: name, func: func});
     },
     addShutdownScript: (script) => {
         bot.shutdown_scripts.push(script);
@@ -137,7 +154,6 @@ const bot = {
                 callback(false);
             }
         });
-    }
-
+    },
 };
 module.exports = bot;

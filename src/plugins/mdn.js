@@ -1,5 +1,3 @@
-const cheerio = require('cheerio');
-
 module.exports = function (bot) {
   bot.addCommand({
       name: "mdn",

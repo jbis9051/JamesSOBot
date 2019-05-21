@@ -4,12 +4,19 @@ const Client = require('./src/Client.js');
 (async ()=>{
     bot.client = await new Client(1).init();
 
-    bot.client.on('ready', () => {
+    bot.client.on('ready', async () => {
         bot.client.send('I am alive!');
     });
     bot.client.on('new-message', msg => {
+        msg.reply = (content) => bot.client.reply(msg,content);
+        if(!bot.validatorScriptRunner(msg)){
+            return;
+        }
         bot.ListenerCheck(msg);
-        if(!bot.validateMsg(msg.content)){
+        if(bot.isMyMsg(msg)){
+            return;
+        }
+        if(!bot.validateMsg(msg)){
             bot.client.send('This command conflicts with law #3');
             return;
         }
@@ -44,6 +51,9 @@ const Client = require('./src/Client.js');
     require('./src/plugins/timer.js')(bot);
     require('./src/plugins/rules.js')(bot);
     require('./src/plugins/goodbye.js')(bot);
+    require('./src/plugins/random.js')(bot);
+    require('./src/plugins/youmessedup.js')(bot);
+    require('./src/plugins/life.js')(bot);
 
     await bot.client.connect();
 })();

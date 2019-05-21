@@ -1,10 +1,10 @@
 module.exports = function (bot) {
     bot.RegisterListener({
         func: (msg) =>{
-            return (msg.content === "o/");
+            return /^\|\|[A-Za-z]+/.test(msg.content);
         },
         callback:(msg) => {
-            bot.client.send('\\o');
+           msg.reply("Use a space between `||` and your command. For example: `|| help`")
         }
     });
 };
