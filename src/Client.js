@@ -13,7 +13,13 @@ module.exports = class Client extends EventEmitter {
         this._handleMessage = this._handleMessage.bind(this);
     }
 
-    async init() {
+    init() {
+        this.browserSetup().then(() => this.connect()).catch(reason => {
+            console.error(reason);
+           throw reason;
+        });
+    }
+    async browserSetup(){
         this.browser = await puppeteer.launch();
         this.mainPage = await this.browser.newPage();
         const cookies = Client.getCookies();
