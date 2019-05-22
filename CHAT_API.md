@@ -278,6 +278,30 @@ A standard message event looks like this:
     }}
 ```
 
+A standard message with image upload looks like this:
+
+```json
+{  
+   "r1":{  
+      "e":[  
+         {  
+            "event_type":1,
+            "time_stamp":1558448296,
+            "content":"\u003cdiv class=\"onebox ob-image\"\u003e\u003ca rel=\"nofollow noopener noreferrer\" href=\"//i.stack.imgur.com/6x6tw.png\"\u003e\u003cimg src=\"//i.stack.imgur.com/6x6tw.png\" class=\"user-image\" alt=\"user image\" /\u003e\u003c/a\u003e\u003c/div\u003e",
+            "id":94420223,
+            "user_id":7886229,
+            "user_name":"JBis",
+            "room_id":1,
+            "room_name":"Sandbox",
+            "message_id":46278793
+         }
+      ],
+      "t":94420223,
+      "d":1
+   }
+}
+```
+
 The event type is determined by the `event_type` property in the `e` property.
 
 We don't know all event types but here are some of them. Please add as you find
@@ -312,7 +336,32 @@ We don't know all event types but here are some of them. Please add as you find
 
 #### User Join/Leave Event
 
-// TODO
+## User Join Event
+
+Example:
+
+Room 23:
+
+```json
+{  
+   "r23":{  
+      "e":[  
+         {  
+            "event_type":3,
+            "time_stamp":1558447963,
+            "id":94420093,
+            "user_id":7886229,
+            "target_user_id":7886229,
+            "user_name":"JBis",
+            "room_id":23,
+            "room_name":"F#"
+         }
+      ],
+      "t":94420094,
+      "d":2
+   }
+}
+```
 
 # Sending Events/Messages
 

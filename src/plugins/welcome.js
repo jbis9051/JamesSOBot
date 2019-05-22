@@ -11,12 +11,12 @@ module.exports = function (bot) {
         ],
         ignore: false,
         permissions: ["all"],
-        func: (msg,args) =>{
-            if (args.length < 1) {
+        func: (msg) =>{
+            if (msg.args.length < 1) {
                 bot.client.send("**Missing arg `person`**");
                 return;
             }
-            const person = args[0];
+            const person = msg.args[0];
             bot.client.send(welcome_msg.replace("{USER_ID}",person).replace("{USERNAME}",person));
         }
     });

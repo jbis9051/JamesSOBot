@@ -14,8 +14,8 @@ module.exports = function (bot) {
           ],
           ignore: false,
           permissions: ["admin"],
-          func: (msg, args, sudo) => {
-              if (!sudo) {
+          func: (msg) => {
+              if (!msg.sudo) {
                   bot.client.send("Try `sudo`");
                   return;
               }

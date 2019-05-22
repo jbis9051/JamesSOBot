@@ -9,7 +9,7 @@ module.exports = function (bot) {
         ],
         ignore: false,
         permissions: ["all"],
-        func: (msg, args, client, sudo) => {
+        func: (msg) => {
             bot.json_request('http://randomuselessfact.appspot.com/random.json?language=en', (err, res, body) => {
                 bot.client.send(body.text);
             });

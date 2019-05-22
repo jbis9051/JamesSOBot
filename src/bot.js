@@ -32,9 +32,20 @@ const bot = {
         bot.commands[cmd.name] = cmd;
     },
     getCommand: (cmdName) => {
+        if(!cmdName){
+            return false;
+        }
         const cmdNamLower = cmdName.toLowerCase();
         for (const cmd of Object.keys(bot.commands)) {
             if (bot.commands[cmd].shortcuts.includes(cmdNamLower)) {
+                return bot.commands[cmd];
+            }
+        }
+        return false;
+    },
+    getCommandFromName: (cmdName) => {
+        for (const cmd of Object.keys(bot.commands)) {
+            if (bot.commands[cmd].name === cmdName) {
                 return bot.commands[cmd];
             }
         }
@@ -54,21 +65,21 @@ const bot = {
         return lang.cmd.prefix.includes(str);
     },
     isCommandMsg: (msg) => {
-        return bot.isCommand(msg.content)
+        return bot.isCommand(msg.getContent())
     },
-    permissionCheck: (commandName, msg) => {
-        if (bot.getCommand(commandName).permissions[0] === "all") {
-            return true
+    permissionCheck: (command, msg) => {
+        if (command.permissions[0] === "all") {
+            return true;
         }
-        for (let permissionsKey of bot.getCommand(commandName).permissions) {
-            if (config.users_groups[permissionsKey].includes(msg.user_name.toLowerCase())) {
+        for (let permissionsKey of command.permissions) {
+            if (config.users_groups[permissionsKey].includes(msg.getVaribleUsername().toLowerCase())) {
                 return true;
             }
         }
         return false;
     },
     format: (msg) => {
-        const msgSplit = msg.content.split(" ");
+        const msgSplit = msg.getContent().split(" ");
         if (msgSplit[1] === "sudo") {
             const prefix = msgSplit.shift();
             msgSplit.shift();
@@ -86,7 +97,7 @@ const bot = {
         }
     },
     isMyMsg(msg) {
-      return msg.user_id === bot.client._id
+      return msg.getStaticUserUID() === bot.client._id
     },
     validateMsg: (msg) => {
         return true;
@@ -100,6 +111,13 @@ const bot = {
        }
        return true;
     },
+    ListenerCheck: (msg) => {
+        bot.listeners.forEach((value, index) => {
+            if (value.func(msg)) {
+                value.callback(msg);
+            }
+        });
+    },
 
 
 
@@ -109,13 +127,6 @@ const bot = {
             return;
         }
         bot.listeners.push(listener);
-    },
-    ListenerCheck: (msg) => {
-        bot.listeners.forEach((value, index) => {
-            if (value.func(msg)) {
-                value.callback(msg);
-            }
-        });
     },
     RegisterClientListener: (on, callback) => {
         bot.client.on(on, callback);
@@ -130,7 +141,7 @@ const bot = {
         await request(url, {json: true}, callback)
     },
     standard_request: async (url, callback) => {
-        await request(url, callback);
+        await request({url, headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}}, callback);
     },
     google_search: async (query, site, selector,selectorMatch,callback) => {
         /* if anyone wants to pay for API keys, feel free */
@@ -139,16 +150,22 @@ const bot = {
             try {
                 const $ = cheerio.load(body);
                 let selected;
+                let title;
                 if (selector){
                     selected = selector($);
                 }  else {
                     selected = $('.r').find('a').attr('href').replace('/url?q=', '').replace(/&sa=.*/, '');
+                    title = $('.r').find('.LC20lb').html();
                 }
                 if(!selected.match(selectorMatch)){
                     console.error('Invalid Selector ' + selected);
                     callback(false);
                 }
-                callback(selected);
+                if(title){
+                    callback({url: selected, title: title});
+                } else {
+                    callback(selected);
+                }
             } catch (e) {
                 console.error(e);
                 callback(false);

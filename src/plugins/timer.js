@@ -11,31 +11,31 @@ module.exports = function (bot) {
         ],
         ignore: false,
         permissions: ["all"],
-        func: (msg, args, sudo) => {
-            if(args.length < 3){
-                if(args.length < 1){
+        func: (msg) => {
+            if(msg.args.length < 3){
+                if(msg.args.length < 1){
                     bot.client.send("Need more args");
                     return;
                 }
-                if(args[0] === "list"){
+                if(msg.args[0] === "list"){
                     //TODO list current timers/reminders
                 } else {
                     bot.client.send("Need more args");
                 }
                 return;
             }
-            let user = args.shift();
+            let user = msg.args.shift();
             if(user === "me"){
-                user = "@"+msg.user_name;
+                user = "@"+msg.getVaribleUsername();
             }
-            let time = convertTimeToMiliseconds(args.pop());
+            let time = convertTimeToMiliseconds(msg.args.pop());
             if(!time){
                 bot.client.send("Invalid time.");
                 return;
             }
-            const content = `${user}, ${args.join(" ")}`;
+            const content = `${user}, ${msg.args.join(" ")}`;
             timers.push({
-               user: msg.user_name,
+               user: msg.getVaribleUsername(),
                content: content,
                date: Date.now() + time,
             });

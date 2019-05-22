@@ -226,7 +226,7 @@ module.exports = class Client extends EventEmitter {
         return true;
     }
     async reply(msg,content){
-        await this.send(`:${msg.message_id} ${content}`)
+        await this.send(`:${msg.data.message_id} ${content}`)
     }
 
     async getCurrentUsers(){
@@ -238,35 +238,5 @@ module.exports = class Client extends EventEmitter {
             }
         });
         return data.users;
-    }
-
-
-
-    /* The below was stolen directly from https://github.com/Zirak/SO-ChatBot/blob/master/master.js. I made a couple edits*/
-    // receives a url and text to display, returns a recognizable link
-    link (text, url) {
-        return `[${this.escape(text)}](${url})`;
-    }
-    // escape characters meaningful to the chat, such as parentheses
-    // full list of escaped characters: `*_()[]
-    escape(msg) {
-        return msg.replace(/([`\*_\(\)\[\]])/g, '\\$1');
-    }
-    // receives text and turns it into a codified version
-    // codified is ambiguous for a simple reason: it means nicely-aligned and
-    // mono-spaced. in SO chat, it handles it for us nicely; in others, more
-    // clever methods may need to be taken
-    codify(content){
-        let tab = '    ',
-            spacified = content.replace('\t', tab),
-            lines = spacified.split(/[\r\n]/g);
-
-        if (lines.length === 1) {
-            return '`' + lines[0] + '`';
-        }
-
-        return lines.map(function (line) {
-            return tab + line;
-        }).join('\n');
     }
 };

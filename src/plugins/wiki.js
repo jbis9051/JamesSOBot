@@ -19,12 +19,12 @@ module.exports = function (bot) {
         ],
         ignore: false,
         permissions: ["all"],
-        func: (msg, args, client, sudo) => {
-            if (args.length < 1) {
+        func: (msg) => {
+            if (msg.args.length < 1) {
                 bot.client.send("**Missing args**");
                 return;
             }
-            bot.json_request('https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=' + args.join("%20"), (err, response, resp) => {
+            bot.json_request('https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=' + msg.args.join("%20"), (err, response, resp) => {
                 // the result will look like this:
                 // [search_term, [title0], [description0], [link0]]
                 // we only asked for one result, so the inner arrays will have only

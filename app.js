@@ -1,3 +1,4 @@
+const Message = require("./src/Message");
 const bot = require('./src/bot.js');
 const Client = require('./src/Client.js');
 
@@ -8,7 +9,7 @@ const Client = require('./src/Client.js');
         bot.client.send('I am alive!');
     });
     bot.client.on('new-message', msg => {
-        msg.reply = (content) => bot.client.reply(msg,content);
+        msg = new Message(msg);
         if(!bot.validatorScriptRunner(msg)){
             return;
         }
@@ -23,18 +24,16 @@ const Client = require('./src/Client.js');
         if(!bot.isCommandMsg(msg)){ /* is a command */
             return;
         }
-        const command = bot.format(msg);
-        const actualCommand = bot.getCommand(command.args[0]);
-        if(!actualCommand){
+        if(!msg.command){
             bot.client.send('Invalid command! Try ` help` for a list of available commands.');
             return;
         }
-        if(!bot.permissionCheck(actualCommand.name,msg)){
+        if(!bot.permissionCheck(msg.command,msg)){
             bot.client.send("Your are not authorized to administer this command");
             return;
         }
         try {
-            actualCommand.func(msg,command.args.slice(1),command.sudo);
+            msg.command.func(msg);
         } catch (e) {
             console.error(e);
         }
@@ -54,6 +53,7 @@ const Client = require('./src/Client.js');
     require('./src/plugins/random.js')(bot);
     require('./src/plugins/youmessedup.js')(bot);
     require('./src/plugins/life.js')(bot);
+    require('./src/plugins/applesupport.js')(bot);
 
     await bot.client.connect();
 })();

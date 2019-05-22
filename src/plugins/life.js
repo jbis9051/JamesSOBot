@@ -9,8 +9,8 @@ module.exports = function (bot) {
         ],
         ignore: false,
         permissions: ["admin"],
-        func: (msg, args, sudo) => {
-            if (!sudo) {
+        func: (msg) => {
+            if (!msg.sudo) {
                 bot.client.send("Try `sudo`");
                 return;
             }
@@ -39,6 +39,6 @@ module.exports = function (bot) {
         },
     });
     bot.addValidatorScript("life",(msg) => {
-        return live || msg.content === "|| enable";
+        return live || msg.getContent() === "|| enable";
     });
 };

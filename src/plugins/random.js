@@ -8,18 +8,18 @@ module.exports = function (bot) {
         ],
         ignore: false,
         permissions: ["all"],
-        func: (msg, args) => {
-            if (args.length < 2) {
+        func: (msg) => {
+            if (msg.args.length < 2) {
                 bot.client.send("**Missing args**");
                 return;
             }
-            if (!/^\d+$/.test(args[0] + args[1])) {
+            if (!/^\d+$/.test(msg.args[0] + msg.args[1])) {
                 bot.client.send("**Invalid args. Must be two integers.**");
                 return;
             }
-            args[0] = parseInt(args[0]);
-            args[1] = parseInt(args[1]);
-            msg.reply(getRandomIntInclusive(Math.min(args[0],args[1]),Math.max(args[0],args[1])))
+            msg.args[0] = parseInt(msg.args[0]);
+            msg.args[1] = parseInt(msg.args[1]);
+            msg.reply(getRandomIntInclusive(Math.min(msg.args[0],msg.args[1]),Math.max(msg.args[0],msg.args[1])))
         }
     });
 };

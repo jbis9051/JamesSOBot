@@ -10,14 +10,18 @@ module.exports = function (bot) {
       ],
       ignore: false,
       permissions: ["all"],
-      func: (msg, args, sudo) => {
-          if (args.length < 1) {
+      func: (msg) => {
+          if (msg.args.length < 1) {
               bot.client.send("**Missing args**");
               return;
           }
-          bot.google_search(args.join(" "), "developer.mozilla.org", null, /^https:\/\/developer\.mozilla.org\/.*$/,
-              (url)=> {
-                  bot.client.send(url || 'An error occurred with the request.');
+          bot.google_search(msg.args.join(" "), "developer.mozilla.org", null, /^https:\/\/developer\.mozilla\.org\/.*$/,
+              (data)=> {
+                  if (data) {
+                      bot.client.send(data.url);
+                  } else {
+                      bot.client.send('An error occurred with the request.');
+                  }
               });
       },
   })

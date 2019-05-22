@@ -8,12 +8,16 @@ module.exports = function (bot) {
         ],
         ignore: false,
         permissions: ["all"],
-        func: (msg, args, sudo) => {
-            if (Math.random() <= 0.1 && args !== "bypass") {
-                bot.client.send(`${msg.user_name}'s code 😜`);
+        func: (msg) => {
+            if (Math.random() <= 0.1 && msg.args !== "bypass") {
+                bot.client.send(`${msg.getVaribleUsername()}'s code 😜`);
                 return;
             }
             bot.json_request('https://official-joke-api.appspot.com/jokes/programming/random', (err, res, body) => {
+                if(!body){
+                    msg.reply("Error getting Joke");
+                    return;
+                }
                 body = body[0];
                 bot.client.send(body.setup);
                 setTimeout(() => {

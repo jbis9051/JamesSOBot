@@ -2,7 +2,7 @@ module.exports = function (bot) {
     var lastJavaSucks = 0;
     bot.RegisterListener({
         func: (msg) =>{
-            return (msg.content.toLowerCase().includes("java") &&  Date.now() - lastJavaSucks > 600000);
+            return (msg.getContent().toLowerCase().includes("java") &&  Date.now() - lastJavaSucks > 600000);
         },
         callback:(msg) => {
             lastJavaSucks = Date.now();
