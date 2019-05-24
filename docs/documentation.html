@@ -1,0 +1,3861 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <title>so-chatbot-boilerplate 1.0.0</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <style>
+        input[type="search"]::-webkit-search-cancel-button {
+            -webkit-appearance: searchfield-cancel-button;
+        }
+
+        .jumbotron {
+            margin-bottom: 0;
+            border-radius: 0;
+            background-color: #2B303E;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .jumbotron h1 {
+            font-size: 3.5rem;
+            line-height: 1;
+        }
+
+        .jumbotron h1,
+        .jumbotron h1 a {
+            color: #eee;
+        }
+
+        .jumbotron small {
+            font-weight: 200;
+            color: #777;
+        }
+
+        .jumbotron p {
+            font-size: 1.5rem;
+            font-weight: 200;
+            line-height: 1.2;
+            color: #ccc;
+        }
+
+        .wrap {
+            padding: 2rem 1rem;
+        }
+
+        .search {
+            margin: 0 0 1rem 0;
+            width: 90%;
+        }
+
+        .menu {
+            padding: 0;
+        }
+
+        .menu li {
+            list-style: none;
+        }
+
+        .menu li ul {
+            padding: 0;
+        }
+
+        .menu li a {
+            display: block;
+            padding: .25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .menu .file {
+            color: #E54D89;
+        }
+
+        .menu .file+ul {
+            margin: 0 0 1rem 0;
+        }
+
+        .menu .scope-private a {
+            color: #8BAAC6;
+        }
+
+        .method {
+            margin: 0 0 4rem 0;
+        }
+
+        .method .method-name {
+            display: inline-block;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .method .method-name+.scope-private {
+            color: #AAAAAA;
+        }
+
+        .method section {
+            margin: 2rem 0;
+        }
+
+        .method h3 {
+            margin: 0 0 1rem 0;
+        }
+
+        .method .table,
+        .method .table p,
+        .method .table ol,
+        .method .table ul {
+            margin: 0;
+        }
+
+        .permalink {
+            position: absolute;
+            margin-left: -1em;
+            font-weight: normal;
+            color: #eee;
+            text-decoration: none;
+        }
+
+        .permalink:hover {
+            color: #E54D89;
+        }
+
+        .back-to-top {
+            display: none;
+            position: fixed;
+            right: 1rem;
+            bottom: 1rem;
+            padding: .5rem .6rem;
+            line-height: 1;
+            background: #fff;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            display: block;
+        }
+
+        .back-to-top svg {
+            vertical-align: middle;
+        }
+
+        .bs-footer {
+            margin: 3rem auto;
+            color: #777;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="#" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="13px" height="14px"
+            viewBox="0 0 13 14">
+            <path
+                d="M7.18761156,13 L7.18761156,5.49249703 L10.4587853,5.49249703 L5.09931763,0.113558129 L-0.26015,5.49249703 L3.01102371,5.49249703 L3.01102371,13 L7.18761156,13 Z"
+                fill="#428bca"></path>
+        </svg> Back to Top</a>
+
+    <div class="jumbotron">
+
+        <div class="container">
+
+            <h1>
+                so-chatbot-boilerplate
+                <small>1.0.0</small>
+            </h1>
+
+            
+
+        </div>
+
+    </div>
+
+    <div class="wrap">
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-3 hidden-sm hidden-xs">
+
+                    <input type="search" class="form-control search" id="search-methods" placeholder="Search..."
+                        autocomplete="off">
+
+                    <ul class="menu">
+
+
+                        <li>
+                            <a href="#src/Client.js" class="file"><b>src/Client.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-client.js-new-client" title="new Client">new Client</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/Message.js" class="file"><b>src/Message.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-message.js-new-message" title="new Message">new Message</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-message.js-message.prototype.constructor" title="Message.constructor">Message.constructor</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-message.js-message.prototype.reply" title="Message.reply">Message.reply</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-message.js-message.prototype.getstaticuseruid" title="Message.getStaticUserUID">Message.getStaticUserUID</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-message.js-message.prototype.getvaribleusername" title="Message.getVaribleUsername">Message.getVaribleUsername</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-message.js-message.prototype.getcontent" title="Message.getContent">Message.getContent</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-message.js-message.link" title="Message.link">Message.link</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-message.js-message.escape" title="Message.escape">Message.escape</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/bot.js" class="file"><b>src/bot.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-log" title="log">log</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-error" title="error">error</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-addcommand" title="addCommand">addCommand</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-getcommand" title="getCommand">getCommand</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-getcommandfromname" title="getCommandFromName">getCommandFromName</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-commandexists" title="commandExists">commandExists</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-shutdown" title="shutdown">shutdown</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-iscommand" title="isCommand">isCommand</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-iscommandprefix" title="isCommandPrefix">isCommandPrefix</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-iscommandmsg" title="isCommandMsg">isCommandMsg</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-permissioncheck" title="permissionCheck">permissionCheck</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-format" title="format">format</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-ismymsg" title="isMyMsg">isMyMsg</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-validatorscriptrunner" title="validatorScriptRunner">validatorScriptRunner</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-listenercheck" title="ListenerCheck">ListenerCheck</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-registerlistener" title="RegisterListener">RegisterListener</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-registerclientlistener" title="RegisterClientListener">RegisterClientListener</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-addvalidatorscript" title="addValidatorScript">addValidatorScript</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-addshutdownscript" title="addShutdownScript">addShutdownScript</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-json_request" title="json_request">json_request</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-standard_request" title="standard_request">standard_request</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-bot.js-google_search" title="google_search">google_search</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/applesupport.js" class="file"><b>src/plugins/applesupport.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-applesupport.js-aps" title="aps">aps</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/funfact.js" class="file"><b>src/plugins/funfact.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-funfact.js-funfact" title="funfact">funfact</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/help.js" class="file"><b>src/plugins/help.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-help.js-help" title="help">help</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/joke.js" class="file"><b>src/plugins/joke.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-joke.js-joke" title="joke">joke</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/life.js" class="file"><b>src/plugins/life.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-life.js-disable" title="disable">disable</a>
+                                </li>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-life.js-enable" title="enable">enable</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/mdn.js" class="file"><b>src/plugins/mdn.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-mdn.js-mdn" title="mdn">mdn</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/random.js" class="file"><b>src/plugins/random.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-random.js-random" title="random">random</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/rules.js" class="file"><b>src/plugins/rules.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-rules.js-laws" title="laws">laws</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/selfDestruct.js" class="file"><b>src/plugins/selfDestruct.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-selfdestruct.js-die" title="die">die</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/status.js" class="file"><b>src/plugins/status.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-status.js-status" title="status">status</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/timer.js" class="file"><b>src/plugins/timer.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-timer.js-remind" title="remind">remind</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/welcome.js" class="file"><b>src/plugins/welcome.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-welcome.js-welcome" title="welcome">welcome</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                        <li>
+                            <a href="#src/plugins/wiki.js" class="file"><b>src/plugins/wiki.js</b></a>
+                            <ul>
+
+
+                                <li class="method-link scope-public">
+                                    <a href="#src-plugins-wiki.js-wiki" title="wiki">wiki</a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+
+                    </ul>
+
+                </div>
+
+                <div class="col-md-9">
+
+
+                    <a id="src/Client.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-client.js-new-client">
+                            <a href="#src-client.js-new-client" class="permalink">#</a>
+                            <span class="method-name" title="new Client()">new Client()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            
+
+                        </div>
+
+
+
+                        <section class="property">
+
+                            <h3>Properties</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>this.roomNum</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>The StackExchange room the bot should connect to</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.browser</td>
+                                            <td>
+                                                <code>puppeteer</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.mainPage</td>
+                                            <td>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.chatPage</td>
+                                            <td>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this._id</td>
+                                            <td>
+                                                <code>int</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.fkey</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.wsurl</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.ws</td>
+                                            <td>
+                                                <code>WebSocket</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/Message.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-message.js-new-message">
+                            <a href="#src-message.js-new-message" class="permalink">#</a>
+                            <span class="method-name" title="new Message()">new Message()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            
+
+                        </div>
+
+
+
+                        <section class="property">
+
+                            <h3>Properties</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>this.data</td>
+                                            <td>
+                                                <code>Object</code>
+                                            </td>
+                                            <td><ul>
+<li>the raw message data</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.sudo</td>
+                                            <td>
+                                                <code>boolean</code>
+                                            </td>
+                                            <td><ul>
+<li>if this command was ran with sudo prefix</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.prefix</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>the command prefix used to call this command</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.commandCall</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>the command attempting to be called</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>this.command</td>
+                                            <td>
+                                                <code>Object</code>
+                                                <code>boolean</code>
+                                            </td>
+                                            <td><ul>
+<li>the command object this message is calling or false if a command wasn't found</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-message.js-message.prototype.constructor">
+                            <a href="#src-message.js-message.prototype.constructor" class="permalink">#</a>
+                            <span class="method-name" title="Message.constructor(data)">Message.constructor(data)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>data</td>
+                                            <td>
+                                                <code>Object</code>
+                                            </td>
+                                            <td><ul>
+<li>raw message data</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-message.js-message.prototype.reply">
+                            <a href="#src-message.js-message.prototype.reply" class="permalink">#</a>
+                            <span class="method-name" title="Message.reply(content)">Message.reply(content)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Reply's to <code>this</code> message with <code>content</code></p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>content</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-message.js-message.prototype.getstaticuseruid">
+                            <a href="#src-message.js-message.prototype.getstaticuseruid" class="permalink">#</a>
+                            <span class="method-name" title="Message.getStaticUserUID()">Message.getStaticUserUID()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Returns a unique identifier for the user that sent this message. Usually a numerical string.</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>The unique identifier</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-message.js-message.prototype.getvaribleusername">
+                            <a href="#src-message.js-message.prototype.getvaribleusername" class="permalink">#</a>
+                            <span class="method-name" title="Message.getVaribleUsername()">Message.getVaribleUsername()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Returns a possibly variable friendly username. This may change so DO NOT rely on it for authorization/authentication.</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>The friendly username</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-message.js-message.prototype.getcontent">
+                            <a href="#src-message.js-message.prototype.getcontent" class="permalink">#</a>
+                            <span class="method-name" title="Message.getContent()">Message.getContent()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Returns the message's content</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>message content</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-message.js-message.link">
+                            <a href="#src-message.js-message.link" class="permalink">#</a>
+                            <span class="method-name" title="Message.link(text, url)">Message.link(text, url)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Receives a url and text to display, returns a recognizable link</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>text</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>url</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-message.js-message.escape">
+                            <a href="#src-message.js-message.escape" class="permalink">#</a>
+                            <span class="method-name" title="Message.escape(content)">Message.escape(content)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Escape characters meaningful to the chat, such as parentheses full list of escaped characters: `*_()[]</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>content</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>content to escape</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>the escaped string</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/bot.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-log">
+                            <a href="#src-bot.js-log" class="permalink">#</a>
+                            <span class="method-name" title="log(str)">log(str)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Logs messages</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>str</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-error">
+                            <a href="#src-bot.js-error" class="permalink">#</a>
+                            <span class="method-name" title="error(str)">error(str)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Logs Errors</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>str</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-addcommand">
+                            <a href="#src-bot.js-addcommand" class="permalink">#</a>
+                            <span class="method-name" title="addCommand(cmd)">addCommand(cmd)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>cmd</td>
+                                            <td>
+                                                <code>Object</code>
+                                            </td>
+                                            <td><ul>
+<li>Command to add</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>cmd.name</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>The name of the command. NOT used to identify a command is being called from a Message (If the name is &quot;test&quot;, that doesn't mean that a message calling the command&quot;test&quot; will actually activate this command. If you wan't &quot;test&quot; to call this command, add it to the <code>shortcuts</code> array.)</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>cmd.args</td>
+                                            <td>
+                                                <code>Array</code>
+                                            </td>
+                                            <td><ul>
+<li>A description of the args this command accepts. Only used for descriptive purposes.</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>cmd.shortcuts</td>
+                                            <td>
+                                                <code>Array</code>
+                                            </td>
+                                            <td><ul>
+<li>Keywords that activate this command. If the Message's commandCall matches any of these shortcuts, this command will be activated.</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>cmd.ignore</td>
+                                            <td>
+                                                <code>Boolean</code>
+                                            </td>
+                                            <td><ul>
+<li>Should this command be hidden from the help menu?</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>cmd.permissions</td>
+                                            <td>
+                                                <code>Array</code>
+                                            </td>
+                                            <td><ul>
+<li>Array of groups allowed to use this command. Each entry should line up to group in <code>config.json[&quot;users_groups&quot;]</code>.</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>cmd.func</td>
+                                            <td>
+                                                <code>CommandFunction</code>
+                                            </td>
+                                            <td><ul>
+<li>The function to call when the command is activated</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-getcommand">
+                            <a href="#src-bot.js-getcommand" class="permalink">#</a>
+                            <span class="method-name" title="getCommand(cmdShortcut)">getCommand(cmdShortcut)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Searches for a command based on command shortcuts</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>cmdShortcut</td>
+                                            <td>
+                                            </td>
+                                            <td><ul>
+<li>shortcut of the command to search for</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>boolean</code>
+                                <code>Object</code>
+                            </p>
+
+                            <ul>
+<li>the command found, or false if none was found</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-getcommandfromname">
+                            <a href="#src-bot.js-getcommandfromname" class="permalink">#</a>
+                            <span class="method-name" title="getCommandFromName(cmdName)">getCommandFromName(cmdName)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Searches for a command based on command name</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>cmdName</td>
+                                            <td>
+                                            </td>
+                                            <td><ul>
+<li>Name of the command to search for</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>boolean</code>
+                                <code>Object</code>
+                            </p>
+
+                            <ul>
+<li>the command found, or false if none was found</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-commandexists">
+                            <a href="#src-bot.js-commandexists" class="permalink">#</a>
+                            <span class="method-name" title="commandExists(cmdName)">commandExists(cmdName)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Returns whether a command under a name exists</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>cmdName</td>
+                                            <td>
+                                            </td>
+                                            <td><ul>
+<li>command name to search for</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>boolean</code>
+                            </p>
+
+                            <ul>
+<li>if the command exists</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-shutdown">
+                            <a href="#src-bot.js-shutdown" class="permalink">#</a>
+                            <span class="method-name" title="shutdown(msg)">shutdown(msg)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Shuts down the command after attempting to call shutdown scripts</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>msg</td>
+                                            <td>
+                                                <code>Message</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-iscommand">
+                            <a href="#src-bot.js-iscommand" class="permalink">#</a>
+                            <span class="method-name" title="isCommand(str)">isCommand(str)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Returns whether a space delimited string contains a command prefix</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>str</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>string to check</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>Boolean</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-iscommandprefix">
+                            <a href="#src-bot.js-iscommandprefix" class="permalink">#</a>
+                            <span class="method-name" title="isCommandPrefix(str)">isCommandPrefix(str)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Returns whether a string is a command prefix defined in <code>lang.json.prefix</code> array</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>str</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>string to check</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>Boolean</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-iscommandmsg">
+                            <a href="#src-bot.js-iscommandmsg" class="permalink">#</a>
+                            <span class="method-name" title="isCommandMsg(msg)">isCommandMsg(msg)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Returns whether a message contains a command prefix</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>msg</td>
+                                            <td>
+                                                <code>Message</code>
+                                            </td>
+                                            <td><ul>
+<li>Message to check</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>Boolean</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-permissioncheck">
+                            <a href="#src-bot.js-permissioncheck" class="permalink">#</a>
+                            <span class="method-name" title="permissionCheck(command, msg)">permissionCheck(command, msg)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Returns whether a Message object's sender has sufficient privileges to activate the <code>command</code></p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>command</td>
+                                            <td>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>msg</td>
+                                            <td>
+                                                <code>Message</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>boolean</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-format">
+                            <a href="#src-bot.js-format" class="permalink">#</a>
+                            <span class="method-name" title="format(msg)">format(msg)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>msg</td>
+                                            <td>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>[object Object]</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-ismymsg">
+                            <a href="#src-bot.js-ismymsg" class="permalink">#</a>
+                            <span class="method-name" title="isMyMsg(msg)">isMyMsg(msg)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Checks whether a Message object author is the bot</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>msg</td>
+                                            <td>
+                                                <code>Message</code>
+                                            </td>
+                                            <td><ul>
+<li>Message to check</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>boolean</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-validatorscriptrunner">
+                            <a href="#src-bot.js-validatorscriptrunner" class="permalink">#</a>
+                            <span class="method-name" title="validatorScriptRunner(msg)">validatorScriptRunner(msg)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Runs validator scripts and returns true if all return true, other wise false</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>msg</td>
+                                            <td>
+                                                <code>Message</code>
+                                            </td>
+                                            <td><ul>
+<li>Message to pass to validation scripts</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>boolean</code>
+                            </p>
+
+                            <ul>
+<li>If the Message is valid</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-listenercheck">
+                            <a href="#src-bot.js-listenercheck" class="permalink">#</a>
+                            <span class="method-name" title="ListenerCheck(msg)">ListenerCheck(msg)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Checks if listeners need to be ran and runs them if so</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>msg</td>
+                                            <td>
+                                                <code>Message</code>
+                                            </td>
+                                            <td><ul>
+<li>Message to pass to listeners</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-registerlistener">
+                            <a href="#src-bot.js-registerlistener" class="permalink">#</a>
+                            <span class="method-name" title="RegisterListener(listener)">RegisterListener(listener)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Register a msg listener. This bypasses the command checks and allows direct access to the <code>new-message</code> event. The only check ran are the validator scripts. This means it is your job to make sure the message is not from the bot itself.</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>listener</td>
+                                            <td>
+                                                <code>Object</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>listener.func</td>
+                                            <td>
+                                                <code>shouldRun</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>listener.callback</td>
+                                            <td>
+                                                <code>listenerFunction</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-registerclientlistener">
+                            <a href="#src-bot.js-registerclientlistener" class="permalink">#</a>
+                            <span class="method-name" title="RegisterClientListener()">RegisterClientListener()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Gives direct access to Client events. This is very low-level and is not needed in most cases.</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-addvalidatorscript">
+                            <a href="#src-bot.js-addvalidatorscript" class="permalink">#</a>
+                            <span class="method-name" title="addValidatorScript(name, func)">addValidatorScript(name, func)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Adds a validator script to check</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>name</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>Name of your validator script for logging purposes</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>func</td>
+                                            <td>
+                                                <code>validatorCallback</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-addshutdownscript">
+                            <a href="#src-bot.js-addshutdownscript" class="permalink">#</a>
+                            <span class="method-name" title="addShutdownScript(script)">addShutdownScript(script)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Adds a script to be ran when the bot is shutdown</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>script</td>
+                                            <td>
+                                                <code>shutdownScript</code>
+                                            </td>
+                                            <td><ul>
+<li>script to run</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-json_request">
+                            <a href="#src-bot.js-json_request" class="permalink">#</a>
+                            <span class="method-name" title="json_request(url, callback)">json_request(url, callback)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Retrieve JSON data from <code>url</code> and passes it to the <code>callback</code></p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>url</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>URL to request</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>callback</td>
+                                            <td>
+                                                <code>RequestCallback</code>
+                                            </td>
+                                            <td><ul>
+<li>callback to pass</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>Promise.&lt;undefined&gt;</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-standard_request">
+                            <a href="#src-bot.js-standard_request" class="permalink">#</a>
+                            <span class="method-name" title="standard_request(url, callback)">standard_request(url, callback)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Retrieves data from URL and passes it to the <code>callback</code>. If you need JSON than use the <code>json_request</code> function</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>url</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>URL to request</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>callback</td>
+                                            <td>
+                                                <code>RequestCallback</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>Promise.&lt;undefined&gt;</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-bot.js-google_search">
+                            <a href="#src-bot.js-google_search" class="permalink">#</a>
+                            <span class="method-name" title="google_search(query[, site, selector], selectorMatch, callback)">google_search(query[, site, selector], selectorMatch, callback)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Allows you to retrieve data from Google Search</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>query</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>Google Search Query</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>site</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>domain (<code>example.com</code>) of site you would like to limit Google Search to</li>
+</ul>
+</td>
+                                            <td>
+                                                <span class="tag tag-default">Optional</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>selector</td>
+                                            <td>
+                                                <code>SelectorFunction</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <span class="tag tag-default">Optional</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>selectorMatch</td>
+                                            <td>
+                                                <code>RegExp</code>
+                                            </td>
+                                            <td><ul>
+<li>Sometimes limiting to a site using Google Search Hacks, so we provide a way to check if the selected content matches what you really want. This is most useful for URL checking.</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>callback</td>
+                                            <td>
+                                                <code>GoogleCallback</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>Promise.&lt;undefined&gt;</code>
+                            </p>
+
+                            
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/applesupport.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-applesupport.js-aps">
+                            <a href="#src-plugins-applesupport.js-aps" class="permalink">#</a>
+                            <span class="method-name" title="aps(query)">aps(query)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Searches for query on Apple Support</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>query</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>An Apple Support article based on your <code>query</code></li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/funfact.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-funfact.js-funfact">
+                            <a href="#src-plugins-funfact.js-funfact" class="permalink">#</a>
+                            <span class="method-name" title="funfact()">funfact()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Sends a fun fact</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>A fun fact from the <code>http://randomuselessfact.appspot.com/random.json?language=en</code></li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/help.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-help.js-help">
+                            <a href="#src-plugins-help.js-help" class="permalink">#</a>
+                            <span class="method-name" title="help()">help()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Lists commands</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>List of commands</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/joke.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-joke.js-joke">
+                            <a href="#src-plugins-joke.js-joke" class="permalink">#</a>
+                            <span class="method-name" title="joke()">joke()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Sends a joke</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>A joke from the <code>https://official-joke-api.appspot.com/jokes/programming/random</code></li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/life.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-life.js-disable">
+                            <a href="#src-plugins-life.js-disable" class="permalink">#</a>
+                            <span class="method-name" title="disable()">disable()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Disables the bot. Won't respond to messages until <code>|| enable</code> is ran by admin.</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-life.js-enable">
+                            <a href="#src-plugins-life.js-enable" class="permalink">#</a>
+                            <span class="method-name" title="enable()">enable()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Enables the bot. Will start listening for messages again.</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/mdn.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-mdn.js-mdn">
+                            <a href="#src-plugins-mdn.js-mdn" class="permalink">#</a>
+                            <span class="method-name" title="mdn(query)">mdn(query)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Searches for query on MDN</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>query</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>An MDN article based on your <code>query</code></li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/random.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-random.js-random">
+                            <a href="#src-plugins-random.js-random" class="permalink">#</a>
+                            <span class="method-name" title="random(min, max)">random(min, max)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Generates Random number in range of [min,max] (both inclusive)</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>min</td>
+                                            <td>
+                                                <code>int</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>max</td>
+                                            <td>
+                                                <code>int</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>A random number between min and max (inclusive)</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/rules.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-rules.js-laws">
+                            <a href="#src-plugins-rules.js-laws" class="permalink">#</a>
+                            <span class="method-name" title="laws()">laws()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Lists the laws</p>
+<p>Alias:</p>
+<ul>
+<li><code>rules</code></li>
+</ul>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>The laws</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/selfDestruct.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-selfdestruct.js-die">
+                            <a href="#src-plugins-selfdestruct.js-die" class="permalink">#</a>
+                            <span class="method-name" title="die()">die()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Ends the bot's node process.</p>
+<p>Alias:</p>
+<ul>
+<li><code>sudo kill self</code></li>
+</ul>
+<p><strong>Requires:</strong> <code>sudo</code></p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/status.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-status.js-status">
+                            <a href="#src-plugins-status.js-status" class="permalink">#</a>
+                            <span class="method-name" title="status()">status()</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Used to check if the bot is alive.</p>
+
+
+                        </div>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>describes status</li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/timer.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-timer.js-remind">
+                            <a href="#src-plugins-timer.js-remind" class="permalink">#</a>
+                            <span class="method-name" title="remind(user, message, time)">remind(user, message, time)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Sets a timer to remind a user a message at a specific time relative to the current time</p>
+<p>Alias:</p>
+<ul>
+<li><code>timer</code></li>
+</ul>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>user</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>username of the person to remind, or &quot;me&quot; if you want the bot to remind you</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>message</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>the message to be reminded about</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>time</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>in how much time, relative to the current time, would you like the remind to occur. Must be in the following format: <code>int [suffix]</code> or <code>int[one letter suffix]</code>
+Example:</li>
+</ul>
+<p><code>|| remind @JBis Hello. 5 seconds</code>
+<code>|| remind @JBis Hello. 5s</code></p>
+<p>Suffixes:</p>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Suffixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Seconds</td>
+<td><ul><li><code>seconds</code></li><li><code>sec</code></li><li><code>s</code></li></ul></td>
+</tr>
+<tr>
+<td>Minutes</td>
+<td><ul><li><code>minutes</code></li><li><code>min</code></li><li><code>m</code></li></ul></td>
+</tr>
+<tr>
+<td>Hours</td>
+<td><ul><li><code>hours</code></li><li><code>h</code></li></ul></td>
+</tr>
+</tbody>
+</table>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/welcome.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-welcome.js-welcome">
+                            <a href="#src-plugins-welcome.js-welcome" class="permalink">#</a>
+                            <span class="method-name" title="welcome(user)">welcome(user)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Welcomes a new user to the room with a message</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>user</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td><ul>
+<li>user to welcome</li>
+</ul>
+</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+                            <p><code>Void</code></p>
+
+
+                        </section>
+
+                    </div>
+
+
+
+                    <a id="src/plugins/wiki.js"></a>
+
+
+                    <div class="method scope-public">
+
+                        <h2 id="src-plugins-wiki.js-wiki">
+                            <a href="#src-plugins-wiki.js-wiki" class="permalink">#</a>
+                            <span class="method-name" title="wiki(query)">wiki(query)</span>
+                        </h2>
+
+                        <div class="description lead">
+
+                            <p>Searches for query on Wikipedia</p>
+
+
+                        </div>
+
+
+                        <section class="parameters">
+
+                            <h3>Parameters</h3>
+
+                            <div class="table-responsive">
+                                <table class="table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>query</td>
+                                            <td>
+                                                <code>String</code>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </section>
+
+
+
+
+                        <section class="returns">
+
+                            <h3>Returns</h3>
+
+
+
+                            <p>
+                                <code>String</code>
+                            </p>
+
+                            <ul>
+<li>A Wikipedia article based on your <code>query</code></li>
+</ul>
+
+
+
+
+                        </section>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="bs-footer">
+
+        <div class="container">
+
+            <p>Documentation generated with <a href="https://github.com/neogeek/doxdox">doxdox</a>.</p>
+
+        </div>
+
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+
+        (function () {
+
+            'use strict';
+
+            var headerHeight = $('.jumbotron').outerHeight(true),
+                $backToTop = $('.back-to-top');
+
+            function handleScrollEvent() {
+
+                if (window.scrollY > headerHeight && $backToTop.not('.visible')) {
+
+                    $backToTop.addClass('visible');
+
+                } else if (window.scrollY < headerHeight && $backToTop.is('.visible')) {
+
+                    $backToTop.removeClass('visible');
+
+                }
+
+            }
+
+            $('pre code:not(.hljs)').each(function () {
+                hljs.highlightBlock(this);
+            });
+
+            var $searchInput = $('#search-methods');
+            var $methodLinks = $('.method-link');
+            var $methodNames = $('.method .method-name');
+
+            var urlQuery = window.location.search.match(/q=([^&]+)/);
+
+            $searchInput.on('keyup', function (e) {
+
+                var query = new RegExp(e.target.value.replace(' ', '|'), 'ig');
+
+                $methodLinks.each(function () {
+
+                    var $this = $(this);
+
+                    if (!$this.text().match(query)) {
+
+                        $this.hide();
+
+                    } else {
+
+                        $this.show();
+
+                    }
+
+                });
+
+                $methodNames.each(function () {
+
+                    var $this = $(this);
+
+                    if (!$this.text().match(query)) {
+
+                        $this.closest('.method').hide();
+
+                    } else {
+
+                        $this.closest('.method').show();
+
+                    }
+
+                });
+
+                window.history.replaceState({}, '', window.location.pathname + '?q=' + e.target.value);
+
+            });
+
+            $searchInput.on('search', function () {
+
+                $searchInput.trigger('keyup');
+
+            });
+
+            if (urlQuery && urlQuery.length > 1) {
+
+                $searchInput.val(urlQuery[1]).trigger('keyup');
+
+            }
+
+            $(window).on('scroll', handleScrollEvent);
+
+            handleScrollEvent();
+
+        })();
+
+    </script>
+
+</body>
+
+</html>
