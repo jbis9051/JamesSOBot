@@ -1,12 +1,11 @@
-const Message = require("./src/Message");
+const {Message} = require("./src/Message");
 const bot = require('./src/bot.js');
-const Client = require('./src/Client.js');
+const {Client} = require('./src/Client.js');
 
-(async ()=>{
-    bot.client = await new Client(1).init();
+bot.client = new Client(1);
 
 bot.client.on('ready', async () => {
-    bot.client.send('I am alive!');
+     bot.client.send('I am alive!');
 });
 bot.client.on('new-message', msg => {
     msg = new Message(msg);

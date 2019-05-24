@@ -18,3 +18,13 @@ module.exports = function (bot) {
         }
     });
 };
+/**
+ * Lists the laws
+ *
+ * Alias:
+ *
+ * - `rules`
+ *
+ * @return {String} - The laws
+ */
+function laws(min,max) {}

@@ -1,8 +1,8 @@
 module.exports = function (bot) {
     bot.addCommand({
         name: "random",
-        args: ["Integer 1", "Integer 2"],
-        description: "Random number in range of [arg[0],arg[0]] (both inclusive)",
+        args: ["min", "max"],
+        description: "Generates Random number in range of [min,max] (both inclusive)",
         shortcuts: [
             "random",
         ],
@@ -37,3 +37,11 @@ function getRandomIntInclusive(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
 }
+/**
+ * Generates Random number in range of [min,max] (both inclusive)
+ *
+ * @param {int} min
+ * @param {int} max
+ * @return {String} - A random number between min and max (inclusive)
+ */
+function random(min,max) {}

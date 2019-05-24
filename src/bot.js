@@ -18,12 +18,38 @@ const bot = {
         name: "James",
     },
 
+    /**
+     * Logs messages
+     *
+     * @param {String} str
+     */
     log: (str) => {
         console.log((new Date()).toString() + " - " + str);
     },
+    /**
+     * Logs Errors
+     *
+     * @param {String} str
+     */
     error: (str) => {
         console.error((new Date()).toString() + " - " + str);
     },
+    /**
+     * A function that is to be including in a command
+     *
+     * @param {Message} msg - The Message used to activate the command
+     * @callback CommandFunction
+     */
+    /**
+     *
+     * @param {Object} cmd - Command to add
+     * @param {String} cmd.name - The name of the command. NOT used to identify a command is being called from a Message (If the name is "test", that doesn't mean that a message calling the command"test" will actually activate this command. If you wan't "test" to call this command, add it to the `shortcuts` array.)
+     * @param {Array} cmd.args - A description of the args this command accepts. Only used for descriptive purposes.
+     * @param {Array} cmd.shortcuts - Keywords that activate this command. If the Message's commandCall matches any of these shortcuts, this command will be activated.
+     * @param {Boolean} cmd.ignore - Should this command be hidden from the help menu?
+     * @param {Array} cmd.permissions - Array of groups allowed to use this command. Each entry should line up to group in `config.json["users_groups"]`.
+     * @param {CommandFunction} cmd.func - The function to call when the command is activated
+     */
     addCommand: (cmd) => {
         if (!cmd.func || !cmd.name) {
             console.error("Invalid command");
@@ -31,18 +57,30 @@ const bot = {
         }
         bot.commands[cmd.name] = cmd;
     },
-    getCommand: (cmdName) => {
-        if(!cmdName){
+    /**
+     * Searches for a command based on command shortcuts
+     *
+     * @param cmdShortcut - shortcut of the command to search for
+     * @return {boolean|Object} - the command found, or false if none was found
+     */
+    getCommand: (cmdShortcut) => {
+        if(!cmdShortcut){
             return false;
         }
-        const cmdNamLower = cmdName.toLowerCase();
+        const commandShortcutLowerCase = cmdShortcut.toLowerCase();
         for (const cmd of Object.keys(bot.commands)) {
-            if (bot.commands[cmd].shortcuts.includes(cmdNamLower)) {
+            if (bot.commands[cmd].shortcuts.includes(commandShortcutLowerCase)) {
                 return bot.commands[cmd];
             }
         }
         return false;
     },
+    /**
+     * Searches for a command based on command name
+     *
+     * @param cmdName - Name of the command to search for
+     * @return {boolean|Object} - the command found, or false if none was found
+     */
     getCommandFromName: (cmdName) => {
         for (const cmd of Object.keys(bot.commands)) {
             if (bot.commands[cmd].name === cmdName) {
@@ -51,22 +89,62 @@ const bot = {
         }
         return false;
     },
+    /**
+     * Returns whether a command under a name exists
+     *
+     * @param cmdName - command name to search for
+     * @return {boolean} - if the command exists
+     */
     commandExists: (cmdName) => {
         return bot.commands.hasOwnProperty(cmdName);
     },
+    /**
+     * Shuts down the command after attempting to call shutdown scripts
+     *
+     * @param {Message} msg
+     */
     shutdown: (msg) => {
-        bot.shutdown_scripts.forEach(async e => await e(msg));
+        try {
+            bot.shutdown_scripts.forEach(async e => await e(msg));
+        } catch (e) {
+            process.exit();
+        }
         process.exit();
     },
+    /**
+     * Returns whether a space delimited string contains a command prefix
+     *
+     * @param {String} str - string to check
+     * @return {Boolean}
+     */
     isCommand: (str) => {
         return bot.isCommandPrefix(str.split(" ")[0].toLowerCase());
     },
+    /**
+     * Returns whether a string is a command prefix defined in `lang.json.prefix` array
+     *
+     * @param {String} str - string to check
+     * @return {Boolean}
+     */
     isCommandPrefix: (str) => {
         return lang.cmd.prefix.includes(str);
     },
+    /**
+     * Returns whether a message contains a command prefix
+     *
+     * @param {Message} msg - Message to check
+     * @return {Boolean}
+     */
     isCommandMsg: (msg) => {
         return bot.isCommand(msg.getContent())
     },
+    /**
+     * Returns whether a Message object's sender has sufficient privileges to activate the `command`
+     *
+     * @param command
+     * @param {Message} msg
+     * @return {boolean}
+     */
     permissionCheck: (command, msg) => {
         if (command.permissions[0] === "all") {
             return true;
@@ -78,6 +156,12 @@ const bot = {
         }
         return false;
     },
+    /**
+     * @deprecated
+     *
+     * @param msg
+     * @return {{args: string[], prefix: string, sudo: boolean}}
+     */
     format: (msg) => {
         const msgSplit = msg.getContent().split(" ");
         if (msgSplit[1] === "sudo") {
@@ -96,12 +180,24 @@ const bot = {
             }
         }
     },
+    /**
+     * Checks whether a Message object author is the bot
+     *
+     * @param {Message} msg - Message to check
+     * @return {boolean}
+     */
     isMyMsg(msg) {
       return msg.getStaticUserUID() === bot.client._id
     },
     validateMsg: (msg) => {
         return true;
     },
+    /**
+     * Runs validator scripts and returns true if all return true, other wise false
+     *
+     * @param {Message} msg - Message to pass to validation scripts
+     * @return {boolean} - If the Message is valid
+     */
     validatorScriptRunner:(msg)=>{
        for(let script of bot.validatorScripts){
            if(!script.func(msg)){
@@ -111,6 +207,11 @@ const bot = {
        }
        return true;
     },
+    /**
+     * Checks if listeners need to be ran and runs them if so
+     *
+     * @param {Message} msg - Message to pass to listeners
+     */
     ListenerCheck: (msg) => {
         bot.listeners.forEach((value, index) => {
             if (value.func(msg)) {
@@ -119,8 +220,28 @@ const bot = {
         });
     },
 
+    /**
+     * Callback for ListenerFunction to check if callback needs to be run
+     *
+     * @callback shouldRun
+     * @param {Message} msg - the msg to check
+     * @return boolean
+     */
 
+    /**
+     * Callback for ListenerFunction that will be ran if shouldRun is true
+     *
+     * @callback listenerFunction
+     * @param {Message} msg - the msg to check
+     */
 
+    /**
+     * Register a msg listener. This bypasses the command checks and allows direct access to the `new-message` event. The only check ran are the validator scripts. This means it is your job to make sure the message is not from the bot itself.
+     *
+     * @param {Object} listener
+     * @param {shouldRun} listener.func
+     * @param {listenerFunction} listener.callback
+     */
     RegisterListener: (listener) => {
         if (!listener.func || !listener.callback) {
             console.error("Invalid Listener");
@@ -128,21 +249,92 @@ const bot = {
         }
         bot.listeners.push(listener);
     },
+    /**
+     * Gives direct access to Client events. This is very low-level and is not needed in most cases.
+     *
+     * @borrows NodeJS#EventEmitter#on
+     */
     RegisterClientListener: (on, callback) => {
         bot.client.on(on, callback);
     },
+    /**
+     * Callback for validator function.
+     *
+     * @callback validatorCallback
+     * @param {Message} msg - msg to validate
+     * @return boolean - if the `msg` was valid. The `msg` will not be processed by anything if this is false
+     */
+    /**
+     * Adds a validator script to check
+     *
+     * @param {String} name - Name of your validator script for logging purposes
+     * @param {validatorCallback} func
+     */
     addValidatorScript:(name,func) =>{
       bot.validatorScripts.push({name: name, func: func});
     },
+    /**
+     * Callback for shutdown script.
+     *
+     * @callback shutdownScript
+     * @param {Message} msg - msg that caused the bot to shut down
+     */
+    /**
+     * Adds a script to be ran when the bot is shutdown
+     *
+     * @param {shutdownScript} script - script to run
+     */
     addShutdownScript: (script) => {
         bot.shutdown_scripts.push(script);
     },
+    /**
+     * @callback RequestCallback
+     * @borrows request
+     */
+    /**
+     * Retrieve JSON data from `url` and passes it to the `callback`
+     *
+     * @param {String} url - URL to request
+     * @param {RequestCallback} callback - callback to pass
+     * @return {Promise<void>}
+     */
     json_request: async (url, callback) => {
         await request(url, {json: true}, callback)
     },
+    /**
+     * Retrieves data from URL and passes it to the `callback`. If you need JSON than use the `json_request` function
+     *
+     * @param {String} url - URL to request
+     * @param {RequestCallback} callback
+     * @return {Promise<void>}
+     */
     standard_request: async (url, callback) => {
         await request({url, headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}}, callback);
     },
+    /**
+     * Selects data from HTML using the cheerio API
+     *
+     * @param {cheerio} body - Cheerio selector
+     * @callback SelectorFunction
+     */
+    /**
+     * Callback for selected Google Search content
+     *
+     * @param {String|boolean|Object} selected - Your chosen selection or false if an error occurred
+     * @param {String} selected.url - URL returned from default selection
+     * @param {String} selected.title - Page `<title>` returned from default selection
+     * @callback GoogleCallback
+     */
+    /**
+     * Allows you to retrieve data from Google Search
+     *
+     * @param {String} query - Google Search Query
+     * @param {String} [site] - domain (`example.com`) of site you would like to limit Google Search to
+     * @param {SelectorFunction} [selector]
+     * @param {RegExp} selectorMatch - Sometimes limiting to a site using Google Search Hacks, so we provide a way to check if the selected content matches what you really want. This is most useful for URL checking.
+     * @param {GoogleCallback} callback
+     * @return {Promise<void>}
+     */
     google_search: async (query, site, selector,selectorMatch,callback) => {
         /* if anyone wants to pay for API keys, feel free */
         const url = 'https://www.google.com/search?q=' + encodeURIComponent(query) + ((site) ? "%20site:" + site : "");

@@ -45,3 +45,10 @@ module.exports = function (bot) {
         }
     });
 };
+/**
+ * Searches for query on Wikipedia
+ *
+ * @param {String} query
+ * @return {String} - A  Wikipedia article based on your `query`
+ */
+function wiki(query) {}

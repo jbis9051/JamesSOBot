@@ -26,3 +26,10 @@ module.exports = function (bot) {
       },
   })
 };
+/**
+ * Searches for query on MDN
+ *
+ * @param {String} query
+ * @return {String} - An MDN article based on your `query`
+ */
+function mdn(query) {}

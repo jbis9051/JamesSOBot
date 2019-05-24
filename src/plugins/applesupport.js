@@ -1,4 +1,4 @@
-const Message = require('../Message.js');
+const {Message} = require('../Message.js');
 
 module.exports = function (bot) {
     bot.addCommand({
@@ -28,3 +28,10 @@ module.exports = function (bot) {
         },
     })
 };
+/**
+ * Searches for query on Apple Support
+ *
+ * @param {String} query
+ * @return {String} - An Apple Support article based on your `query`
+ */
+function aps(query) {}

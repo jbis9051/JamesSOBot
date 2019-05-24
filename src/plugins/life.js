@@ -22,7 +22,7 @@ module.exports = function (bot) {
     bot.addCommand({
         name: "enable",
         args: [],
-        description: "Enabled the bot.",
+        description: "Enables the bot.",
         shortcuts: [
             "enable"
         ],
@@ -38,7 +38,18 @@ module.exports = function (bot) {
             }
         },
     });
-    bot.addValidatorScript("life",(msg) => {
+    bot.addValidatorScript("life", (msg) => {
         return live || msg.getContent() === "|| enable";
     });
 };
+
+/**
+ * Disables the bot. Won't respond to messages until `|| enable` is ran by admin.
+ *
+ */
+function disable() {}
+/**
+ * Enables the bot. Will start listening for messages again.
+ *
+ */
+function enable() {}

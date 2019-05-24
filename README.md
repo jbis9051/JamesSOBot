@@ -9,12 +9,18 @@ I am also planning on writing full documentation for the how SO Chat works, as n
 ```
 || command args 
 ```
-or
-```
-@JamesBot command args 
-```
-# Plugin API
+
+**[Bot Documentation Here](/docs/DOCUMENTATION.md)**
+
+# Plugin API Function Documentation
+
 *More in depth explanation coming soon*
+
+Most plugins will require just a simple `addCommand` function. For more advanced functions see below:
+
+- [RegisterListener](/docs/documentation.html#src-bot.js-registerlistener)
+- [ClientListener](/docs/documentation.html#src-bot.js-registerclientlistener)
+
 
 ```
 module.exports = function (bot) {

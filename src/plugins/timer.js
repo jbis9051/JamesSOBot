@@ -7,7 +7,6 @@ module.exports = function (bot) {
         shortcuts: [
             "timer",
             "remind",
-            "remind"
         ],
         ignore: false,
         permissions: ["all"],
@@ -84,3 +83,27 @@ function convertTimeToMiliseconds(time) {
     }
 
 }
+/**
+ * Sets a timer to remind a user a message at a specific time relative to the current time
+ *
+ * Alias:
+ *
+ * - `timer`
+ * @param {String} user - username of the person to remind, or "me" if you want the bot to remind you
+ * @param {String} message - the message to be reminded about
+ * @param {String} time - in how much time, relative to the current time, would you like the remind to occur. Must be in the following format: `int [suffix]` or `int[one letter suffix]`
+ *
+ * Example:
+ *
+ * `|| remind @JBis Hello. 5 seconds`
+ * `|| remind @JBis Hello. 5s`
+ *
+ * Suffixes:
+ *
+ * | Unit | Suffixes |
+ * |------|----------|
+ * | Seconds | <ul><li>`seconds`</li><li>`sec`</li><li>`s`</li></ul> |
+ * | Minutes | <ul><li>`minutes`</li><li>`min`</li><li>`m`</li></ul> |
+ * | Hours | <ul><li>`hours`</li><li>`h`</li></ul> |
+ */
+function remind(user,message,time) {}

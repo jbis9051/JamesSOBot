@@ -20,3 +20,9 @@ module.exports = function (bot) {
         }
     })
 };
+/**
+ * Lists commands
+ *
+ * @return {String} - List of commands
+ */
+function help(query) {}

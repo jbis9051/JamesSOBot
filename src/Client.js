@@ -6,7 +6,19 @@ const EventEmitter = require('events');
 
 const path = require('path');
 
-module.exports = class Client extends EventEmitter {
+/**
+ * @class Client
+ * @classdesc The Client. Handles everything from logging in to sending & receiving messages. It is environment specific and should be one of the few things needing to be changed, environment to environment.
+ * @property {String} this.roomNum - The StackExchange room the bot should connect to
+ * @property {puppeteer} this.browser
+ * @property {puppeteer#page} this.mainPage
+ * @property {puppeteer#page} this.chatPage
+ * @property {int} this._id
+ * @property {String} this.fkey
+ * @property {String} this.wsurl
+ * @property {WebSocket} this.ws
+ */
+class Client extends EventEmitter {
     constructor(roomNum) {
         super(roomNum);
         this.roomNum = roomNum;
@@ -245,4 +257,6 @@ module.exports = class Client extends EventEmitter {
         });
         return data.users;
     }
-};
+}
+
+module.exports = {Client};

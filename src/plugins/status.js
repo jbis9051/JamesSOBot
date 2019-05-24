@@ -14,3 +14,9 @@ module.exports = function (bot) {
         },
     )
 };
+/**
+ * Used to check if the bot is alive.
+ *
+ * @return {String} - describes status
+ */
+function status() {}

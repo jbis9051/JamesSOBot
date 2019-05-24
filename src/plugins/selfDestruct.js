@@ -2,7 +2,7 @@ module.exports = function (bot) {
       bot.addCommand({
           name: "suicide",
           args: [],
-          description: "Ends the process.",
+          description: "Ends the bot's node process.",
           shortcuts: [
               "die",
               "destroy",
@@ -24,3 +24,13 @@ module.exports = function (bot) {
           }
       });
 };
+/**
+ * Ends the bot's node process.
+ *
+ * Alias:
+ *
+ * - `sudo kill self`
+ *
+ * **Requires:** `sudo`
+ */
+function die(min,max) {}

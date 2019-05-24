@@ -24,3 +24,9 @@ module.exports = function (bot) {
         bot.client.channels.find("name","general").send(welcome_msg.replace("{USER_ID}",member.user.id).replace("{USERNAME}",member.user.username));
     });
 };
+
+/**
+ * Welcomes a new user to the room with a message
+ * @param {String} user - user to welcome
+ */
+function welcome(user) {}

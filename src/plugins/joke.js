@@ -27,3 +27,9 @@ module.exports = function (bot) {
         }
     });
 };
+/**
+ * Sends a joke
+ *
+ * @return {String} - A joke from the `https://official-joke-api.appspot.com/jokes/programming/random`
+ */
+function joke() {}
