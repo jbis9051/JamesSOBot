@@ -10,16 +10,20 @@ I am also planning on writing full documentation for the how SO Chat works, as n
 || command args 
 ```
 
-**[Bot Documentation Here](/docs/DOCUMENTATION.md)**
+**[Bot Documentation Here](https://jbis9051.github.io/SO-ChatBot/documentation.html)**
 
+
+**[Commands Documentation Here](https://jbis9051.github.io/SO-ChatBot/documentation.html#src/plugins/applesupport.js)**
+
+**Note:** The format for commands on the documentation page is wrong. It is displayed like to make it easier to understand (aka I couldn't figure out how to make it the proper format with the docs generator I am using). Instead it is the format above (`|| command args`). Any return values listed are sent in the chat.
 # Plugin API Function Documentation
 
 *More in depth explanation coming soon*
 
 Most plugins will require just a simple `addCommand` function. For more advanced functions see below:
 
-- [RegisterListener](/docs/documentation.html#src-bot.js-registerlistener)
-- [ClientListener](/docs/documentation.html#src-bot.js-registerclientlistener)
+- [RegisterListener](https://jbis9051.github.io/SO-ChatBot/documentation.html#src-bot.js-registerlistener)
+- [ClientListener](https://jbis9051.github.io/SO-ChatBot/documentation.html#src-bot.js-registerclientlistener)
 
 
 ```
