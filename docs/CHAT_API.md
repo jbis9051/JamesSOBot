@@ -115,12 +115,12 @@ Surprisingly the WebSocket does not require any `fkey` or cookies so its very ea
 
 ### Getting the WebSocket URL
 
-The WebSocket URL is gotten by making a POST request to the `chatURL + '/ws-auth` with the following parameters:
+The WebSocket URL is gotten by making a POST request, **with the login cookies**, to the `chatURL + '/ws-auth` with the following parameters:
 
 - `roomid=[room number]`
 - `fkey=[fkey obtained in previous steps]`
 
-**Note:** A `content-type` header with a value of `application/x-www-form-urlencoded` MUST be sent or the POST data will not work and you will get a 404 error
+**Note:** A `content-type` header with a value of `application/x-www-form-urlencoded` MUST be sent or the POST data will not work and you will get a 404 error.
 
 The response is JSON containing a single url key with the websocket as it's value. The response looks like this:
 
