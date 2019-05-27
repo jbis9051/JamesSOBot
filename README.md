@@ -12,6 +12,7 @@ I am also planning on writing full documentation for the how SO Chat works, as n
 
 **[Bot Documentation Here](https://jbis9051.github.io/SO-ChatBot/index.html)**
 
+**[Stack Exchange API Documentation](https://github.com/jbis9051/SO-ChatBot/blob/master/docs/CHAT_API.md)**
 
 **[Commands Documentation Here](https://jbis9051.github.io/SO-ChatBot/index.html#src/plugins/applesupport.js)**
 

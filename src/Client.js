@@ -28,10 +28,11 @@ class Client extends EventEmitter {
     init() {
         this.browserSetup().then(() => this.connect()).catch(reason => {
             console.error(reason);
-           throw reason;
+            throw reason;
         });
     }
-    async browserSetup(){
+
+    async browserSetup() {
         this.browser = await puppeteer.launch();
         this.mainPage = await this.browser.newPage();
         const cookies = Client.getCookies();
@@ -48,8 +49,8 @@ class Client extends EventEmitter {
         await this.setChatVars()
     }
 
-    async setChatVars(){
-        if(!this.chatPage){
+    async setChatVars() {
+        if (!this.chatPage) {
             console.error("There's no chat page");
             return;
         }
@@ -82,7 +83,7 @@ class Client extends EventEmitter {
     async setUpWS() {
         this.fkey = await this.getFKEY();
         this.wsurl = await this.getWSURL();
-        const ws = new WebSocket(this.wsurl + "?l=99999999999",null,{
+        const ws = new WebSocket(this.wsurl + "?l=99999999999", null, {
             headers: {
                 "Origin": config.chatURL
             }
@@ -98,7 +99,7 @@ class Client extends EventEmitter {
         });
         ws.on('close', function (code) {
             self.emit('ws-close', code);
-            console.log("Close: " +  code);
+            console.log("Close: " + code);
         });
         ws.on('error', function (err) {
             console.error(err);
@@ -109,33 +110,33 @@ class Client extends EventEmitter {
 
     _handleMessage(data) {
         data = JSON.parse(data);
-        if(!data["r"+this.roomNum].e){
+        if (!data["r" + this.roomNum].e) {
             return false;
         }
-        switch (data["r"+this.roomNum].e[0].event_type) {
+        switch (data["r" + this.roomNum].e[0].event_type) {
             case 1: {
-                this.emit('new-message',data["r"+this.roomNum].e[0]);
+                this.emit('new-message', data["r" + this.roomNum].e[0]);
                 break;
             }
             case 8: {
-                this.emit('new-message',data["r"+this.roomNum].e[0]);
-                this.emit('direct-message',data["r"+this.roomNum].e[0]);
+                this.emit('new-message', data["r" + this.roomNum].e[0]);
+                this.emit('direct-message', data["r" + this.roomNum].e[0]);
                 break;
             }
             case 2: {
-                this.emit('edit',data["r"+this.roomNum].e[0]);
+                this.emit('edit', data["r" + this.roomNum].e[0]);
                 break;
             }
             case 3: {
-                this.emit('user-join',data["r"+this.roomNum].e[0]);
+                this.emit('user-join', data["r" + this.roomNum].e[0]);
                 break;
             }
             case 4: {
-                this.emit('user-leave',data["r"+this.roomNum].e[0]);
+                this.emit('user-leave', data["r" + this.roomNum].e[0]);
                 break;
             }
             default: {
-                this.emit('unknown-message',data["r"+this.roomNum].e[0]);
+                this.emit('unknown-message', data["r" + this.roomNum].e[0]);
             }
         }
     }
@@ -151,6 +152,7 @@ class Client extends EventEmitter {
         });
         return data.fkey;
     }
+
     async getWSURL() {
         const page = await this.browser.newPage();
         await page.setRequestInterception(true);
@@ -169,7 +171,8 @@ class Client extends EventEmitter {
         this.emit('main-site-login');
         return JSON.parse(content).url;
     }
-    async getLPARAM(){
+
+    async getLPARAM() {
         const page = await this.browser.newPage();
         await page.setRequestInterception(true);
         page.on('request', interceptedRequest => {
@@ -209,11 +212,11 @@ class Client extends EventEmitter {
     }
 
     static cookiesToString(cookies) {
-        return cookies.reduce((acc, cookie) => acc + cookie.name + "=" + cookie.value + "; ",[]);
+        return cookies.reduce((acc, cookie) => acc + cookie.name + "=" + cookie.value + "; ", []);
     }
 
     async send(msg) {
-        console.log("Sending: " +  msg);
+        console.log("Sending: " + msg);
         if (typeof msg !== "string") {
             msg = JSON.stringify(msg);
         }
@@ -234,28 +237,79 @@ class Client extends EventEmitter {
         await page.close();
         console.log(text);
         const delay = text.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
-        if(delay){
-            setTimeout(async ()=>{
-               await this.send(msg);
-            },(parseInt(delay)*1000) + 0.25);
+        if (delay) {
+            setTimeout(async () => {
+                await this.send(msg);
+            }, (parseInt(delay) * 1000) + 0.25);
             return false
         }
-        this.emit('send',msg);
+        this.emit('send', msg);
         return true;
     }
-    async reply(msg,content){
+
+    async reply(msg, content) {
         await this.send(`:${msg.data.message_id} ${content}`)
     }
 
-    async getCurrentUsers(){
+    async getCurrentUsers() {
         /* There's probably a better way to do this, but I can't find it
          */
         const data = await this.chatPage.evaluate(() => {
             return {
-                users: (()=> { let x=[]; CHAT.RoomUsers.all().forEach(i=>x.push(i)); return x})()
+                users: (() => {
+                    let x = [];
+                    CHAT.RoomUsers.all().forEach(i => x.push(i));
+                    return x
+                })()
             }
         });
         return data.users;
+    }
+
+    async usernameSearch(query, limit = 50) {
+        const page = await this.browser.newPage();
+
+        const response = await page.goto(`${config.chatURL}/users/search?q=${encodeURIComponent(query)}&limit=${limit}`);
+        const text = await response.text();
+        await page.close();
+        if (text.length <= 0) {
+            return [];
+        }
+        return text.split('\n');
+    }
+
+    async usernameToId(username) {
+        const result = await this.usernameSearch(username, 1);
+        if (result.length === 0) {
+            return false;
+        }
+        return JSON.parse(result[0]).id;
+    }
+
+    async idToInfo(id, roomNum = this.roomNum) {
+        const page = await this.browser.newPage();
+        await page.setRequestInterception(true);
+        page.on('request', interceptedRequest => {
+            const data = {
+                'headers': {
+                    'content-type': 'application/x-www-form-urlencoded',
+                },
+                'method': 'POST',
+                'postData': `ids=${id}&roomId=${roomNum}`,
+            };
+            interceptedRequest.continue(data);
+        });
+        const response = await page.goto(`${config.chatURL}/user/info`);
+        const text = await response.text();
+        return JSON.parse(text).users[0];
+    }
+
+    async usernameToInfo(username) {
+        const id = await this.usernameToId(username);
+        if (!id) {
+            return false;
+        }
+        return await this.idToInfo(id);
     }
 }
 

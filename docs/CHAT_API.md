@@ -571,6 +571,64 @@ Response
 }
 ```
 
-`is_moderator` is for the parent site of the chat. `is_owner` is for the room specified in roomId. `last post` is the last time the user chatted in the room. `last_seen` is that last time the person interacted with the chat (sent message/joined a room/leaved a room, etc.). `email_hash` is a bit odd. Although it is labeled "email_hash" it will sometimes contain a URL to the users image with an `!` prepended in front of it. Other times, it will contain a hash. This hash seems to either be a [gravatar](https://gravatar.com) hash or not.
+`is_moderator` is for the parent site of the chat. `is_owner` is for the room specified in roomId. `last_post` is the last time the user chatted in any room. `last_seen` is that last time the person interacted with the chat (sent message/joined a room/leaved a room, etc.). `email_hash` is a bit odd. Although it is labeled "email_hash" it will sometimes contain a URL to the users image with an `!` prepended in front of it. Other times, it will contain a hash. This hash seems to either be a [gravatar](https://gravatar.com) hash or not.
 
 // TODO specify all actions that affect the `last_seen` value and the email_hash more depth.
+
+## Room Information/ Detect New User / Total Messages
+
+Unfortunately there's no API to find this information. Instead we have to do some HTML parsing.
+
+Make a request  to 
+```
+chatURL` + `/users/[user ID]`
+```
+
+You will receive and HTML response with a `<div>` element with an id of `#user-roomcards-container`. This div contains all the rooms the user is currently in. Each room card will have an id of `room-[room number]`. An example card for `#room-1` looks like the following. I have excluded unhelpful HTML:
+
+```html
+<div id="room-1" class="roomcard">
+        <div class="room-header">
+            [...]
+            <h3>
+                <span class="room-name" title="Sandbox"><a rel="noreferrer noopener" href="/rooms/1/sandbox">Sandbox</a></span>
+            </h3>
+            [...]
+            <div class="room-description" title="Where you can play with regular chat features (except flagging) without upsetting anyone">Where you can play with regular chat features (except flagging) wit…</div>           
+            [...]
+        </div>
+        <div class="room-details">
+                [...]
+                <div class="last-activity">1h ago – <a href="/users/11518920/jamesbot" title="JamesBot">JamesBot</a></div>
+            </div>
+            <div class="room-users" title="9 users present"><!-- 
+                    --><a class="user-gravatar32" href="/users/11518920/jamesbot"><img height="32" width="32" alt="JamesBot: 1h ago, 18 posts (0%)" title="JamesBot: 1h ago, 18 posts (0%)" src="https://i.stack.imgur.com/DHbov.png?s=32&amp;g=1" style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);"></a><!--
+                    --><a class="user-gravatar32" href="/users/7886229/jbis"><img height="32" width="32" alt="JBis: 2d ago, 159 posts (0%)" title="JBis: 2d ago, 159 posts (0%)" src="https://i.stack.imgur.com/8kBbg.png?s=32&amp;g=1" style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);"></a><!--
+                    --><a class="user-gravatar32" href="/users/5858238/nyconing"><img height="32" width="32" alt="nyconing: 3d ago, 68 posts (0%)" title="nyconing: 3d ago, 68 posts (0%)" src="https://i.stack.imgur.com/E1Dug.jpg?s=32&amp;g=1" style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);"></a><!--
+                    -->[..rest of the users...]
+        </div>
+ 
+        <div class="room-message-count" title="159 all time messages (by JBis)">
+            <a href="/transcript/1">159</a>
+        </div>
+        <div class="room-info-link">
+    <a href="/rooms/info/1/sandbox">info</a>
+    [...]
+```
+As you can see there's a lot of info there.  What we care about is: 
+ ```html
+ <div class="room-message-count" title="159 all time messages (by JBis)">
+ ```
+To check total messages, get the `title` attribute for the `.room-message-count` element:
+
+```text
+159 all time messages (by JBis)
+```
+
+You can use `^\d+` regex to parse the number:
+
+```text
+159
+```
+
+If this number is 0, the user has not chatted yet.
