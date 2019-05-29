@@ -1,5 +1,12 @@
+let people_seen;
 module.exports = function (bot) {
-    const welcome_msg = "<@{USER_ID}> Welcome, {USERNAME}, to the programming chat. Please introduce yourself after joining. This includes age and location (if you are comfortable with sharing that), favorite languages and frameworks, a few recent and past projects (if you have any you want to share), github profiles, personal websites, etc., and anything else that you want us to know about you. Also please tell us who recruited you into the chat. Thanks!";
+    const data = bot.loadData('people_seen');
+    if (data) {
+        people_seen = JSON.parse(data);
+    } else {
+        people_seen = [];
+    }
+    const welcome_msg = "@{USERNAME} Welcome to the Test My Bot chat. Feel free to test @JamesBot using `|| command args` syntax. You can also discuss and ask questions about bot creation.  StackOverflow and StackOverflow Chat rules apply. Be nice and don't ask to ask, just ask.";
     bot.addCommand({
         name: "welcome",
         args: [
@@ -11,17 +18,36 @@ module.exports = function (bot) {
         ],
         ignore: false,
         permissions: ["all"],
-        func: (msg) =>{
+        func: (msg) => {
             if (msg.args.length < 1) {
                 bot.client.send("**Missing arg `person`**");
                 return;
             }
             const person = msg.args[0];
-            bot.client.send(welcome_msg.replace("{USER_ID}",person).replace("{USERNAME}",person));
+            bot.client.send(welcome_msg.replace("{USERNAME}", person));
         }
     });
-    bot.RegisterClientListener('guildMemberAdd',(member) => {
-        bot.client.channels.find("name","general").send(welcome_msg.replace("{USER_ID}",member.user.id).replace("{USERNAME}",member.user.username));
+    bot.addShutdownScript((msg) => {
+        bot.saveData("people_seen", people_seen);
+    });
+    bot.RegisterListener({
+        func: (msg) => {
+            if (bot.isMyMsg(msg)) {
+                return false;
+            }
+            if (people_seen.includes(msg.getStaticUserUID())) {
+                return false;
+            } else {
+                people_seen.push(msg.getStaticUserUID());
+                return true;
+            }
+        },
+        callback: async (msg) => {
+            console.log(msg.data);
+            if (await bot.client.getNumMessagesFromId(msg.getStaticUserUID()) < 2) {
+                bot.client.send(welcome_msg.replace('{USERNAME}', msg.getVaribleUsername()));
+            }
+        }
     });
 };
 
@@ -29,4 +55,5 @@ module.exports = function (bot) {
  * Welcomes a new user to the room with a message
  * @param {String} user - user to welcome
  */
-function welcome(user) {}
+function welcome(user) {
+}

@@ -1,8 +1,10 @@
+const bot = require('./bot');
 const config = require('../config/config');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const WebSocket = require('ws');
 const EventEmitter = require('events');
+const cheerio = require('cheerio');
 
 const path = require('path');
 
@@ -301,6 +303,7 @@ class Client extends EventEmitter {
         });
         const response = await page.goto(`${config.chatURL}/user/info`);
         const text = await response.text();
+        await page.close();
         return JSON.parse(text).users[0];
     }
 
@@ -310,6 +313,31 @@ class Client extends EventEmitter {
             return false;
         }
         return await this.idToInfo(id);
+    }
+
+    /*
+    Using cheerio instead of puppeteer because in the future i would like to get rid of using puppeteer....and because using puppeteer didn't work for some reason
+     */
+    getNumMessagesFromId(id, roomNum = this.roomNum) {
+        return new Promise(resolve => {
+            bot.standard_request(`${config.chatURL}/users/${id}`, (err, res, body) => {
+                try {
+                    const $ = cheerio.load(body);
+                    const numMessages = parseInt($(`#room-${roomNum} .room-message-count`).attr('title').match(/^\d+/)[0]);
+                    resolve(numMessages);
+                } catch (e) {
+                    resolve(false);
+                }
+            });
+        });
+    }
+
+    async getNumMessages(username_or_id, roomNum = this.roomNum) {
+        if (typeof username_or_id === "number") {
+            return await this.getNumMessagesFromId(username_or_id, roomNum);
+        }
+        return await this.getNumMessagesFromId(await this.usernameToId(username_or_id), roomNum);
+
     }
 }
 

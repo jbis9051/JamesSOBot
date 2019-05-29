@@ -10,7 +10,8 @@ module.exports = function (bot) {
               "suicide",
               "reboot",
               "restart",
-              "just_do_it"
+              "just_do_it",
+              "shutdown",
           ],
           ignore: false,
           permissions: ["admin"],

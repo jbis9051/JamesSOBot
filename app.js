@@ -53,5 +53,6 @@ require('./src/plugins/random.js')(bot);
 require('./src/plugins/youmessedup.js')(bot);
 require('./src/plugins/life.js')(bot);
 require('./src/plugins/applesupport.js')(bot);
+require('./src/plugins/welcome.js')(bot);
 
 bot.client.init();

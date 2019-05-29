@@ -2,6 +2,8 @@ const lang = require('../config/lang.json');
 const request = require('request');
 const config = require('../config/config.json');
 const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require('path');
 
 const bot = {
     client: null,
@@ -364,5 +366,17 @@ const bot = {
             }
         });
     },
+    saveData(name, data) {
+        if (typeof data !== "string") {
+            data = JSON.stringify(data);
+        }
+        fs.writeFileSync(path.join(__dirname, '..', 'data', name), data);
+    },
+    loadData(name) {
+        if (!fs.existsSync(path.join(__dirname, '..', 'data', name))) {
+            return false;
+        }
+        return fs.readFileSync(path.join(__dirname, '..', 'data', name));
+    }
 };
 module.exports = bot;
