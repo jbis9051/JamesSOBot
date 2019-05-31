@@ -314,12 +314,12 @@ We don't know all event types but here are some of them. Please add as you find
 | 4  | User Leave  |
 | 5  | Room name, description, or tag changes |
 | 6  | Message starred or unstarred |
-| 7  | Debug message. The signficance and usage of this is unknown. |
+| 7  | Debug message. The significance and usage of this is unknown. |
 | 8  | Message directed at the user currently logged in. For example, `@JamesBot` |
-| 9  | Message flagged as spam or offensive - possibly only receiveable by accounts with 10000 reputation |
+| 9  | Message flagged as spam or offensive - possibly only receivable by accounts with 10000 reputation |
 | 10 | Message deleted |
 | 11 | File added. A source says this is limited to one room - the Android SE testing app room |
-| 12 | Moderator flag - like event 9, this is likely only receiveable by moderator accounts |
+| 12 | Moderator flag - like event 9, this is likely only receivable by moderator accounts |
 | 13 | User ignored or unignored |
 | 14 | Global notification - notifications displayed as banners, excluding room invitations. Example: Room event |
 | 15 | User access level changed. Access levels can be seen in `<chat domain>/rooms/info/<room id>/?tab=access` |
@@ -333,6 +333,22 @@ We don't know all event types but here are some of them. Please add as you find
 | 29 | A user has been suspended |
 | 30 | Two accounts have been merged | 
 | 34 | User name or avatar changed in chat |
+
+## Image Event
+
+When an image is sent the event looks like:
+
+```javascript
+{ event_type: 1,
+  time_stamp: 1559178320,
+  content: '<div class="onebox ob-image"><a rel="nofollow noopener noreferrer" href="//i.stack.imgur.com/dPoSj.png"><img src="//i.stack.imgur.com/dPoSj.png" class="user-image" alt="user image" /></a></div>',
+  id: 94579899,
+  user_id: 7886229,
+  user_name: 'JBis',
+  room_id: 193540,
+  room_name: 'Test My Bot',
+  message_id: 46357134 }
+```
 
 #### User Join/Leave Event
 
@@ -400,6 +416,8 @@ The Response will be one of the following:
 | `{"id":null,"time":null}` | If you send to many of the same messages consecutively, it won't send and you will get this message. |
 | `You can perform this action again in X second(s)` | There's a throttle on how fast you can send message and you've reached it. Simply wait that amount of seconds and retry. We use the regex + code below for that. |
 | `You need 20 reputation points...` | I don't know the exact wording but its something like that. It means you need....well....20 reputation points on the main site. Just answer a question and get upvoted. If you can't get 20 rep points on the main site than you probably shouldn't have a bot in the chat site.|
+| `The room has been frozen; new messages cannot be added` |  After a certain amount of days of inactivity, a room will turn frozen. It can only be unfrozen by  a moderator of the parent site. A room is frozen if there were at least 15 messages by at least two users, but was otherwise inactive for 14 days. If the minimum users and messages criteria are not met, the room is deleted instead, after only 7 days. [Source](https://meta.stackexchange.com/a/208589/388758)|
+| `The room does not exist, or you do not have permission` | Contrary to what the message says this will only show up if you do not have permission. If the room does not exist you will receive and HTML error page |
 
 **Detect and Set Timeout for Throttle Sample Code**
 
