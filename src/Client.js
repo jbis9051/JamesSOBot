@@ -1,12 +1,12 @@
 const bot = require('./bot');
 const config = require('../config/config');
-const puppeteer = require('puppeteer');
+const FileCookieStore = require('tough-cookie-filestore');
 const fs = require('fs');
 const WebSocket = require('ws');
 const EventEmitter = require('events');
 const cheerio = require('cheerio');
-
 const path = require('path');
+const request = require("request-promise");
 
 /**
  * @class Client
@@ -35,50 +35,46 @@ class Client extends EventEmitter {
     }
 
     async browserSetup() {
-        this.browser = await puppeteer.launch();
-        this.mainPage = await this.browser.newPage();
-        const cookies = Client.getCookies();
-        if (cookies) {
-            await this.addCookies(cookies);
-        }
+        this.cookieJar = request.jar(new FileCookieStore('./data/cookies.json'));
         return this;
     }
-
     async connect() {
         await this.mainSiteLogin();
         await this.setUpWS();
-        await this.mainPage.close();
         await this.setChatVars()
     }
 
     async setChatVars() {
-        if (!this.chatPage) {
-            console.error("There's no chat page");
-            return;
-        }
-        const data = await this.chatPage.evaluate(() => {
-            return {
-                my_id: CHAT.CURRENT_USER_ID,
-
-            }
-        });
-        this._id = data.my_id;
+        //this._id = data.my_id;
     }
 
     async mainSiteLogin() {
-        await this.mainPage.goto(config.siteUrl + '/users/login');
-        if (!this.mainPage.url().includes("/users/login")) {
+        const resp = await request({
+            method: 'GET',
+            uri: config.siteUrl + '/users/login',
+            jar: this.cookieJar,
+            resolveWithFullResponse: true
+        });
+        if (resp.request.path === "/") {
             console.log("Already Logged in Yey!");
-            await Client.saveCookies(await this.mainPage.cookies());
             return;
         }
-        await this.mainPage.focus('#email');
-        await this.mainPage.keyboard.type(config.email);
-        await this.mainPage.focus('#password');
-        await this.mainPage.keyboard.type(config.password);
-        await this.mainPage.click('#submit-button');
-        await this.mainPage.waitForNavigation();
-        await Client.saveCookies(await this.mainPage.cookies());
+        const $ = cheerio.load(resp.body);
+        const fkey = $('input[name="fkey"]').val();
+        const body = await request({
+            method: 'POST',
+            uri: config.siteUrl + '/users/login',
+            jar: this.cookieJar,
+            followAllRedirects: true,
+            form: {
+                fkey: fkey,
+                email: config.email,
+                password: config.password
+            },
+            headers: {
+                'User-Agent': 'Mozilla/qewrw5.0 (Macintosh; sfwerwqwerqwerqqwr Mac OS X 10.14; rv:63.0) Gecko/20100101 Firefox/63.0'
+            }
+        });
         this.emit('main-site-login');
     }
 
@@ -115,6 +111,7 @@ class Client extends EventEmitter {
         if (!data["r" + this.roomNum].e) {
             return false;
         }
+        console.log(data["r" + this.roomNum].e[0]);
         switch (data["r" + this.roomNum].e[0].event_type) {
             case 1: {
                 this.emit('new-message', data["r" + this.roomNum].e[0]);
@@ -144,54 +141,46 @@ class Client extends EventEmitter {
     }
 
     async getFKEY() {
-        const chatPage = await this.browser.newPage();
-        await chatPage.goto(`${config.chatURL}/rooms/${this.roomNum}`);
-        this.chatPage = chatPage;
-        const data = await chatPage.evaluate(() => {
-            return {
-                fkey: fkey().fkey
-            }
+        const body = await request({
+            method: 'GET',
+            uri: `${config.chatURL}/rooms/${this.roomNum}`,
+            jar: this.cookieJar,
         });
-        return data.fkey;
+        const $ = cheerio.load(body);
+        return $('#fkey').val();
     }
 
     async getWSURL() {
-        const page = await this.browser.newPage();
-        await page.setRequestInterception(true);
-        page.on('request', interceptedRequest => {
-            const data = {
-                'headers': {
-                    'content-type': 'application/x-www-form-urlencoded',
-                },
-                'method': 'POST',
-                'postData': `roomid=${this.roomNum}&fkey=${this.fkey}`,
-            };
-            interceptedRequest.continue(data);
+        const json = await request({
+            method: 'POST',
+            uri: config.chatURL + '/ws-auth',
+            jar: this.cookieJar,
+            form: {
+                roomid: this.roomNum,
+                fkey: this.fkey,
+            },
         });
-        const response = await page.goto(config.chatURL + '/ws-auth');
-        const content = await response.text();
-        this.emit('main-site-login');
-        return JSON.parse(content).url;
+        return JSON.parse(json).url;
     }
 
     async getLPARAM() {
-        const page = await this.browser.newPage();
-        await page.setRequestInterception(true);
-        page.on('request', interceptedRequest => {
-            const data = {
-                'headers': {
-                    'content-type': 'application/x-www-form-urlencoded',
-                },
-                'method': 'POST',
-                'postData': `fkey=${this.fkey}`,
-            };
-            interceptedRequest.continue(data);
+        const json = await request({
+            method: 'POST',
+            uri: `${config.chatURL}/chats/${this.roomNum}/events`,
+            jar: this.cookieJar,
+            body: {
+                fkey: this.fkey,
+            },
+            json: true
         });
-        const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/events`);
-        const content = await response.text();
-        return JSON.parse(content).time;
+        return JSON.parse(json).time;
     }
 
+    /**
+     * @deprecated
+     *
+     * @return {boolean|Object}
+     */
     static getCookies() {
         if (fs.existsSync('./data/cookies')) {
             return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'cookies')));
@@ -199,6 +188,11 @@ class Client extends EventEmitter {
         return false;
     }
 
+    /**
+     * @deprecated
+     *
+     * @return {boolean|Object}
+     */
     async addCookies(cookies) {
         if (typeof cookies === "string") {
             JSON.parse(cookies);
@@ -206,6 +200,10 @@ class Client extends EventEmitter {
         await this.mainPage.setCookie(...cookies);
     }
 
+    /**
+     * @deprecated
+     *
+     */
     static saveCookies(cookies) {
         if (typeof cookies !== "string") {
             cookies = JSON.stringify(cookies);
@@ -222,23 +220,17 @@ class Client extends EventEmitter {
         if (typeof msg !== "string") {
             msg = JSON.stringify(msg);
         }
-        const page = await this.browser.newPage();
-        await page.setRequestInterception(true);
-        page.on('request', interceptedRequest => {
-            const data = {
-                'headers': {
-                    'content-type': 'application/x-www-form-urlencoded',
-                },
-                'method': 'POST',
-                'postData': `text=${encodeURIComponent(msg)}&fkey=${this.fkey}`,
-            };
-            interceptedRequest.continue(data);
+        const body = await request({
+            method: 'POST',
+            uri: `${config.chatURL}/chats/${this.roomNum}/messages/new`,
+            jar: this.cookieJar,
+            form: {
+                text: msg,
+                fkey: this.fkey
+            },
         });
-        const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/messages/new`);
-        const text = await response.text();
-        await page.close();
-        console.log(text);
-        const delay = text.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
+        bot.log(body);
+        const delay = body.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
         if (delay) {
             setTimeout(async () => {
                 await this.send(msg);
@@ -269,15 +261,21 @@ class Client extends EventEmitter {
     }
 
     async usernameSearch(query, limit = 50) {
-        const page = await this.browser.newPage();
-
-        const response = await page.goto(`${config.chatURL}/users/search?q=${encodeURIComponent(query)}&limit=${limit}`);
-        const text = await response.text();
-        await page.close();
-        if (text.length <= 0) {
+        const body = await request({
+            method: 'GET',
+            uri: `${config.chatURL}/users/search`,
+            body: {
+                q: query,
+                limit: limit
+            },
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+        });
+        if (body.length <= 0) {
             return [];
         }
-        return text.split('\n');
+        return body.split('\n');
     }
 
     async usernameToId(username) {
@@ -289,22 +287,15 @@ class Client extends EventEmitter {
     }
 
     async idToInfo(id, roomNum = this.roomNum) {
-        const page = await this.browser.newPage();
-        await page.setRequestInterception(true);
-        page.on('request', interceptedRequest => {
-            const data = {
-                'headers': {
-                    'content-type': 'application/x-www-form-urlencoded',
-                },
-                'method': 'POST',
-                'postData': `ids=${id}&roomId=${roomNum}`,
-            };
-            interceptedRequest.continue(data);
+        const body = await request({
+            method: 'POST',
+            uri: `${config.chatURL}/user/info`,
+            form: {
+                ids: id,
+                roomId: roomNum
+            },
         });
-        const response = await page.goto(`${config.chatURL}/user/info`);
-        const text = await response.text();
-        await page.close();
-        return JSON.parse(text).users[0];
+        return JSON.parse(body).users[0];
     }
 
     async usernameToInfo(username) {
@@ -315,9 +306,6 @@ class Client extends EventEmitter {
         return await this.idToInfo(id);
     }
 
-    /*
-    Using cheerio instead of puppeteer because in the future i would like to get rid of using puppeteer....and because using puppeteer didn't work for some reason
-     */
     getNumMessagesFromId(id, roomNum = this.roomNum) {
         return new Promise(resolve => {
             bot.standard_request(`${config.chatURL}/users/${id}`, (err, res, body) => {
