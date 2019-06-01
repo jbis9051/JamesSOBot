@@ -35,7 +35,11 @@ class Client extends EventEmitter {
     }
 
     async browserSetup() {
-        this.cookieJar = request.jar(new FileCookieStore('./data/cookies.json'));
+        if (!fs.existsSync(path.join(__dirname, '..', 'data', 'cookies.json'))) {
+            fs.writeFileSync(path.join(__dirname, '..', 'data', 'cookies.json'), '{}');
+        }
+        //TODO continue to fix FileCookieStore's fucked up code
+        this.cookieJar = request.jar(new FileCookieStore('./data/cookies.json')); // TODO fix crash bug cause cookies.json is invalid or doesn't exist
         return this;
     }
 

@@ -54,5 +54,6 @@ require('./src/plugins/youmessedup.js')(bot);
 require('./src/plugins/life.js')(bot);
 require('./src/plugins/applesupport.js')(bot);
 require('./src/plugins/welcome.js')(bot);
+require('./src/plugins/learn.js')(bot);
 
 bot.client.init();

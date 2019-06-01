@@ -7,6 +7,7 @@ module.exports = function (bot) {
             if (!isTold(msg.getStaticUserUID())) {
                 msg.reply("You have been ban.");
                 ban_user_data[msg.getStaticUserUID()].told = true;
+                bot.saveData('ban_data', ban_user_data);
             }
             return false;
         }
