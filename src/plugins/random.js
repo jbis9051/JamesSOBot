@@ -13,7 +13,7 @@ module.exports = function (bot) {
                 bot.client.send("**Missing args**");
                 return;
             }
-            if (!/^\d+$/.test(msg.args[0] + msg.args[1])) {
+            if (!/^\d+$/.test((msg.args[0] + msg.args[1]).replace(/-/g, ""))) { // check if its all digits and replace the "-" incase it is negative
                 bot.client.send("**Invalid args. Must be two integers.**");
                 return;
             }

@@ -37,7 +37,7 @@ bot.client.on('new-message', msg => {
         console.error(e);
     }
 });
-
+require('./src/plugins/ban.js')(bot);
 require('./src/plugins/help.js')(bot);
 require('./src/plugins/joke.js')(bot);
 require('./src/plugins/mdn.js')(bot);

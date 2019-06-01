@@ -52,7 +52,7 @@ class Message {
      *
      * @return {String} - The friendly username
      */
-    getVaribleUsername() {
+    getVariableUsername() {
         return this.data.user_name
     }
 
@@ -62,7 +62,7 @@ class Message {
      * @return {String} - message content
      */
     getContent() {
-        return this.data.content
+        return this.data.content.htmldecode();
     }
 
 

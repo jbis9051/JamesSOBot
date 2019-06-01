@@ -25,7 +25,7 @@ module.exports = function (bot) {
             }
             let user = msg.args.shift();
             if(user === "me"){
-                user = "@"+msg.getVaribleUsername();
+                user = "@" + msg.getVariableUsername();
             }
             let time = convertTimeToMiliseconds(msg.args.pop());
             if(!time){
@@ -34,7 +34,7 @@ module.exports = function (bot) {
             }
             const content = `${user}, ${msg.args.join(" ")}`;
             timers.push({
-               user: msg.getVaribleUsername(),
+                user: msg.getVariableUsername(),
                content: content,
                date: Date.now() + time,
             });

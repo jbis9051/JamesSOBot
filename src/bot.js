@@ -5,6 +5,8 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
 
+require('./utils');
+
 const bot = {
     client: null,
 
@@ -148,15 +150,25 @@ const bot = {
      * @return {boolean}
      */
     permissionCheck: (command, msg) => {
-        if (command.permissions[0] === "all") {
-            return true;
-        }
         for (let permissionsKey of command.permissions) {
-            if (config.users_groups[permissionsKey].includes(msg.getVaribleUsername().toLowerCase())) {
-                return true;
+            switch (permissionsKey) {
+                case "all": {
+                    return true;
+                }
+                case "OWNER": {
+                    break;
+                }
+                default: {
+                    if (config.users_groups[permissionsKey].includes(msg.getStaticUserUID())) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
+    },
+    isAdmin(id) {
+        return config.users_groups["admin"].includes(id);
     },
     /**
      * @deprecated
@@ -376,7 +388,8 @@ const bot = {
         if (!fs.existsSync(path.join(__dirname, '..', 'data', name))) {
             return false;
         }
-        return fs.readFileSync(path.join(__dirname, '..', 'data', name));
+        const data = fs.readFileSync(path.join(__dirname, '..', 'data', name)).toString();
+        return data.isJSON() ? JSON.parse(data) : data;
     }
 };
 module.exports = bot;

@@ -1,11 +1,6 @@
 let people_seen;
 module.exports = function (bot) {
-    const data = bot.loadData('people_seen');
-    if (data) {
-        people_seen = JSON.parse(data);
-    } else {
-        people_seen = [];
-    }
+    people_seen = bot.loadData('people_seen') || [];
     const welcome_msg = "@{USERNAME} Welcome to the Test My Bot chat. Feel free to test @JamesBot using `|| command args` syntax. You can also discuss and ask questions about bot creation.  StackOverflow and StackOverflow Chat rules apply. Be nice and don't ask to ask, just ask.";
     bot.addCommand({
         name: "welcome",
@@ -44,7 +39,7 @@ module.exports = function (bot) {
         },
         callback: async (msg) => {
             if (await bot.client.getNumMessagesFromId(msg.getStaticUserUID()) < 2) {
-                bot.client.send(welcome_msg.replace('{USERNAME}', msg.getVaribleUsername()));
+                bot.client.send(welcome_msg.replace('{USERNAME}', msg.getVariableUsername()));
             }
         }
     });

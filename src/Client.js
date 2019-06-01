@@ -38,6 +38,7 @@ class Client extends EventEmitter {
         this.cookieJar = request.jar(new FileCookieStore('./data/cookies.json'));
         return this;
     }
+
     async connect() {
         await this.mainSiteLogin();
         await this.setUpWS();
@@ -260,16 +261,26 @@ class Client extends EventEmitter {
         return data.users;
     }
 
+    async activeUsernameSearch(username) {
+        const body = await request({
+            method: 'GET',
+            uri: `${config.chatURL}/rooms/pingable/${this.roomNum}`,
+            jar: this.cookieJar,
+        });
+        const array = JSON.parse(body).filter(a => a[1].replace(" ", "") === username.replace("@", ""));
+        if (array.length === 0) {
+            return false;
+        }
+        return array[0][0];
+    }
+
     async usernameSearch(query, limit = 50) {
         const body = await request({
             method: 'GET',
             uri: `${config.chatURL}/users/search`,
-            body: {
+            qs: {
                 q: query,
                 limit: limit
-            },
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
             },
         });
         if (body.length <= 0) {
@@ -279,11 +290,7 @@ class Client extends EventEmitter {
     }
 
     async usernameToId(username) {
-        const result = await this.usernameSearch(username, 1);
-        if (result.length === 0) {
-            return false;
-        }
-        return JSON.parse(result[0]).id;
+        return await this.activeUsernameSearch(username);
     }
 
     async idToInfo(id, roomNum = this.roomNum) {

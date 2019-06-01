@@ -458,7 +458,120 @@ The endpoint used here is `<chat host>/messages/<message id>/delete`, again post
 
 # User Information
 
-## Name to id/Search for Name
+## Username to id / Search for Username
+
+## Username to id
+
+There is no easy way to go from Username to id because different accounts can have very similar or the same username. The method below isn't always reliable because of this. This alternate way only works of they are pingable. All users who are currently in the room or have been in the room in the last couple (//TODO name amount of days) are pingable.
+
+Make a `GET` request to `chatURL + '/rooms/pingable/ + roomNum`, with your login cookies. If you do not provide login cookies, you will receive an empty array (`[]`) response.
+
+
+```javascript
+ const body = await request({
+            method: 'GET',
+            uri: `${config.chatURL}/rooms/pingable/${this.roomNum}`,
+            jar: this.cookieJar,
+        });
+        const array = JSON.parse(body).filter(a => a[1] === username); 
+        if(array.length === 0){
+            return false;
+        }
+        const id = array[0][0];
+```
+
+An example response looks like this:
+
+```json
+[  
+   [  
+      6296561,
+      "Zoe",
+      1558822652,
+      1558800697
+   ],
+   [  
+      13379,
+      "Michael",
+      1558906481,
+      1558904598
+   ],
+   [  
+      5757162,
+      "Squirrel in training",
+      1558965412,
+      1558680106
+   ],
+   [  
+      2450403,
+      "Simmant",
+      1559047768,
+      1533014425
+   ],
+   [  
+      8708364,
+      "U9-Forward",
+      1559094174,
+      1559093204
+   ],
+   [  
+      263525,
+      "Denys Séguret",
+      1559105899,
+      1436283747
+   ],
+   [  
+      1983854,
+      "fedorqui",
+      1559125795,
+      1521635746
+   ],
+   [  
+      4581014,
+      "Hans1984",
+      1559132212,
+      1559129497
+   ],
+   [  
+      11555333,
+      "FunBot",
+      1559166271,
+      1559164314
+   ],
+   [  
+      9717184,
+      "connectyourcharger",
+      1559167898,
+      1559165454
+   ],
+   [  
+      1440565,
+      "Code-Apprentice",
+      1559171438,
+      1505930734
+   ],
+   [  
+      10618540,
+      "Paritosh Singh",
+      1559225674,
+      1559202201
+   ],
+   [  
+      2326753,
+      "C4d",
+      1559228511,
+      1559226579
+   ],
+   [  
+      1114,
+      "User",
+      1559235942,
+      1527790955
+   ]
+]
+```
+
+### Searching For A Username
 
 Searching for a user by name is pretty simple.
 
@@ -593,7 +706,7 @@ Response
 
 // TODO specify all actions that affect the `last_seen` value and the email_hash more depth.
 
-## Room Information/ Detect New User / Total Messages
+## Room Information / Detect New User / User's Total Messages
 
 Unfortunately there's no API to find this information. Instead we have to do some HTML parsing.
 

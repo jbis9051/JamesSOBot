@@ -634,7 +634,7 @@ Returns a unique identifier for the user that sent this message. Usually a numer
 
 
 
-#### Message.getVaribleUsername() 
+#### Message.getVariableUsername() 
 
 Returns a possibly variable friendly username. This may change so DO NOT rely on it for authorization/authentication.
 
