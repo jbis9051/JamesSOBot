@@ -1,5 +1,4 @@
 # StackExchange Chat API Documentation
-*More in depth description coming soon*
 
 Partly Based on: https://github.com/Zirak/SO-ChatBot/blob/master/master.js
 
@@ -7,8 +6,8 @@ Also thanks to @Zoe for providing some useful info on the `l` parameter as well 
 
 **Note:** 
 
-- siteURL is defined as `https://stackoverflow.com`
-- chatURL is defined as `https://chat.stackoverflow.com`
+- `siteURL` is defined as `https://stackoverflow.com`
+- `chatURL` is defined as `https://chat.stackoverflow.com`
 
 The above can be changed depending the the chat room.
 
@@ -458,8 +457,6 @@ The endpoint used here is `<chat host>/messages/<message id>/delete`, again post
 
 # User Information
 
-## Username to id / Search for Username
-
 ## Username to id
 
 There is no easy way to go from Username to id because different accounts can have very similar or the same username. The method below isn't always reliable because of this. This alternate way only works of they are pingable. All users who are currently in the room or have been in the room in the last couple (//TODO name amount of days) are pingable.
@@ -571,7 +568,7 @@ An example response looks like this:
 ]
 ```
 
-### Searching For A Username
+## Searching For A Username
 
 Searching for a user by name is pretty simple.
 

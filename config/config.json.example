@@ -2,7 +2,9 @@
   "email": "myemail@example.com",
   "password": "password123",
   "users_groups":{
-    "admin": ["JBis"]
+     "admin": [
+          7886229
+     ]
   },
   "siteUrl": "https://stackexchange.com",
   "chatURL": "https://chat.stackexchange.com"

@@ -13,7 +13,7 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: async (msg) => {
             if (
-                bot.isCommand(msg.args[0]) /* if its already registered a command */
+                bot.getCommand(msg.args[0]) /* if its already registered a command */
                 && !(learn_list.hasOwnProperty(msg.args[0]) && learn_list[msg.args[0]].creatorID === msg.getStaticUserUID()) /* unless its a learned command and you have permission to overwrite it */
             ) {
                 msg.reply("Command with that shortcut already exists");
@@ -37,6 +37,7 @@ module.exports = function (bot) {
                 creator: msg.getVariableUsername(),
                 date_created: (new Date()).toString(),
             };
+            addLearnCommand(learn_list[name]);
             bot.saveData('learn_list', learn_list);
             msg.reply(name + " has been added");
         }

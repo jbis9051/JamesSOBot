@@ -7,7 +7,7 @@ bot.client = new Client(1);
 bot.client.on('ready', async () => {
      bot.client.send('I am alive!');
 });
-bot.client.on('new-message', msg => {
+bot.client.on('new-message', async msg => {
     msg = new Message(msg);
     if (!bot.validatorScriptRunner(msg)) {
         return;
@@ -27,7 +27,7 @@ bot.client.on('new-message', msg => {
         bot.client.send('Invalid command! Try ` help` for a list of available commands.');
         return;
     }
-    if (!bot.permissionCheck(msg.command, msg)) {
+    if (!await bot.permissionCheck(msg.command, msg)) {
         bot.client.send("Your are not authorized to administer this command");
         return;
     }
@@ -38,11 +38,16 @@ bot.client.on('new-message', msg => {
     }
 });
 require('./src/plugins/ban.js')(bot);
-require('./src/plugins/help.js')(bot);
+
+require('./src/plugins/default/help.js')(bot);
+require('./src/plugins/default/selfDestruct.js')(bot);
+require('./src/plugins/default/status.js')(bot);
+require('./src/plugins/default/info.js')(bot);
+require('./src/plugins/default/life.js')(bot);
+require('./src/plugins/default/welcome.js')(bot);
+
 require('./src/plugins/joke.js')(bot);
 require('./src/plugins/mdn.js')(bot);
-require('./src/plugins/selfDestruct.js')(bot);
-require('./src/plugins/status.js')(bot);
 require('./src/plugins/wiki.js')(bot);
 require('./src/plugins/funfact.js')(bot);
 require('./src/plugins/kill.js')(bot);
@@ -51,9 +56,7 @@ require('./src/plugins/rules.js')(bot);
 require('./src/plugins/goodbye.js')(bot);
 require('./src/plugins/random.js')(bot);
 require('./src/plugins/youmessedup.js')(bot);
-require('./src/plugins/life.js')(bot);
 require('./src/plugins/applesupport.js')(bot);
-require('./src/plugins/welcome.js')(bot);
 require('./src/plugins/learn.js')(bot);
 
 bot.client.init();

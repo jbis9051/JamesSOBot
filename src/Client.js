@@ -12,9 +12,6 @@ const request = require("request-promise");
  * @class Client
  * @classdesc The Client. Handles everything from logging in to sending & receiving messages. It is environment specific and should be one of the few things needing to be changed, environment to environment.
  * @property {String} this.roomNum - The StackExchange room the bot should connect to
- * @property {puppeteer} this.browser
- * @property {puppeteer#page} this.mainPage
- * @property {puppeteer#page} this.chatPage
  * @property {int} this._id
  * @property {String} this.fkey
  * @property {String} this.wsurl
@@ -28,6 +25,9 @@ class Client extends EventEmitter {
     }
 
     init() {
+        if (!fs.existsSync(path.join(__dirname, '..', 'data'))) {
+            fs.mkdirSync(path.join(__dirname, '..', 'data'));
+        }
         this.browserSetup().then(() => this.connect()).catch(reason => {
             console.error(reason);
             throw reason;
@@ -39,14 +39,14 @@ class Client extends EventEmitter {
             fs.writeFileSync(path.join(__dirname, '..', 'data', 'cookies.json'), '{}');
         }
         //TODO continue to fix FileCookieStore's fucked up code
-        this.cookieJar = request.jar(new FileCookieStore('./data/cookies.json')); // TODO fix crash bug cause cookies.json is invalid or doesn't exist
+        this.cookieJar = request.jar(new FileCookieStore(path.join(__dirname, '..', 'data', 'cookies.json'))); // TODO fix crash bug cause cookies.json is invalid or doesn't exist
         return this;
     }
 
     async connect() {
         await this.mainSiteLogin();
         await this.setUpWS();
-        await this.setChatVars()
+        await this.setChatVars();
     }
 
     async setChatVars() {
@@ -188,7 +188,7 @@ class Client extends EventEmitter {
      */
     static getCookies() {
         if (fs.existsSync('./data/cookies')) {
-            return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'cookies')));
+            return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'cookies')).toString());
         }
         return false;
     }
@@ -337,6 +337,40 @@ class Client extends EventEmitter {
         }
         return await this.getNumMessagesFromId(await this.usernameToId(username_or_id), roomNum);
 
+    }
+
+    /**
+     *
+     * @param roomNum
+     * @return {Promise<Array>}
+     */
+    getRoomOwners(roomNum = this.roomNum) {
+        return new Promise((resolve, reject) => {
+            bot.standard_request(`${config.chatURL}/rooms/info/${roomNum}`, (err, res, body) => {
+                try {
+                    const $ = cheerio.load(body);
+                    resolve(
+                        $('#room-ownercards').find('div.usercard').map((i, e) => ({
+                            username: $(e).find('.user-header').attr('title'),
+                            id: parseInt($(e).attr('id').replace("owner-user-", ""))
+                        })).get()
+                    );
+                } catch (e) {
+                    console.error(e);
+                    reject("Error finding owners");
+                }
+            });
+        });
+    }
+
+    async isRoomOwnerUsername(username, roomNum = this.roomNum) {
+        const owners = await this.getRoomOwners(roomNum);
+        return owners.some(o => o.username === username.replace(" ", ""));
+    }
+
+    async isRoomOwnerId(id, roomNum = this.roomNum) {
+        const owners = await this.getRoomOwners(roomNum);
+        return owners.some(o => o.id === id);
     }
 }
 

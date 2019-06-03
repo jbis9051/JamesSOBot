@@ -149,14 +149,14 @@ const bot = {
      * @param {Message} msg
      * @return {boolean}
      */
-    permissionCheck: (command, msg) => {
+    permissionCheck: async (command, msg) => {
         for (let permissionsKey of command.permissions) {
             switch (permissionsKey) {
                 case "all": {
                     return true;
                 }
                 case "OWNER": {
-                    break;
+                    return await bot.client.isRoomOwnerId(msg.getStaticUserUID());
                 }
                 default: {
                     if (config.users_groups[permissionsKey].includes(msg.getStaticUserUID())) {

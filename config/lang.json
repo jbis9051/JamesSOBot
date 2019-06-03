@@ -1,8 +1,7 @@
 {
   "cmd": {
     "prefix": [
-      "||",
-      "@JamesBot"
+      "||"
     ]
   },
   "log": {

@@ -41,7 +41,7 @@ module.exports = function (bot) {
                 msg.reply("That user is already ban.");
                 return;
             }
-            if (bot.isAdmin(id) /* || bot.isRoomOwner() */) {
+            if (bot.isAdmin(id) || bot.client.isRoomOwnerId(msg.getStaticUserUID())) {
                 msg.reply("That user cannot be ban");
                 return;
             }

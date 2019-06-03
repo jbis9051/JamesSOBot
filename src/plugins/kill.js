@@ -17,7 +17,7 @@ module.exports = function (bot) {
                 return;
             }
             if (msg.args[0] === "yourself" || msg.args[0] === "self") {
-                if (!bot.permissionCheck(bot.getCommandFromName('suicide'), msg)) {
+                if (!await bot.permissionCheck(bot.getCommandFromName('suicide'), msg)) {
                     bot.client.send("Your are not authorized to administer this command");
                     return;
                 }
