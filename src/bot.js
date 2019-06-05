@@ -61,6 +61,10 @@ const bot = {
         }
         bot.commands[cmd.name] = cmd;
     },
+
+    deleteCommand: (cmd) => {
+        delete bot.commands[cmd.name];
+    },
     /**
      * Searches for a command based on command shortcuts
      *
