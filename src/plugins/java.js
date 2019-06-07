@@ -6,9 +6,9 @@ module.exports = function (bot) {
         },
         callback:(msg) => {
             lastJavaSucks = Date.now();
-            bot.client.send(`Hey ${msg.user_name}...`);
-            setTimeout(() => bot.client.send(`Did you know...`), 1500);
-            setTimeout(() => bot.client.send(`__***3 BILLION DEVICES RUN JAVA***__`), 2000);
+            msg.roomContext.send(`Hey ${msg.user_name}...`);
+            setTimeout(() => msg.roomContext.send(`Did you know...`), 1500);
+            setTimeout(() => msg.roomContext.send(`__***3 BILLION DEVICES RUN JAVA***__`), 2000);
         }
     });
 };

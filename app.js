@@ -8,10 +8,10 @@ bot.client = new ClientDebug(1,{
     login: false,
 });
  */
-bot.client = new Client(1);
+bot.client = new Client([1]);
 
 bot.client.on('ready', async () => {
-     bot.client.send('I am alive!');
+    bot.client.send('I am alive!', 1);
 });
 bot.client.on('new-message', async msg => {
     msg = new Message(msg);
@@ -30,7 +30,7 @@ bot.client.on('new-message', async msg => {
         return;
     }
     if (!msg.command) {
-        msg.reply('Invalid command! Try `help` for a list of available commands.' + ('‍'.repeat(Math.random() * 10))); /* there is probably a better way of doing this */
+        msg.reply('Invalid command! Try `help` for a list of available commands.' + ('.‍'.repeat(Math.random() * 10))); /* there is probably a better way of doing this */
         return;
     }
     if (!await bot.permissionCheck(msg.command, msg)) {

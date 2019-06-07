@@ -9,7 +9,7 @@ module.exports = function (bot) {
             ignore: false,
             permissions: ["all"],
             func: (msg) => {
-                bot.client.send(`I am currently alive!`);
+                msg.roomContext.send(`I am currently alive!`);
             }
         },
     )

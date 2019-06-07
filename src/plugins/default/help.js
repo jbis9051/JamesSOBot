@@ -16,7 +16,7 @@ module.exports = function (bot) {
                     exportText += `\`${e.name}\` - **${e.args.toString()}** - ${e.description}\n`
                 }
             });
-            bot.client.send(exportText);
+            msg.roomContext.send(exportText);
         }
     })
 };

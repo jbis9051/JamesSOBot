@@ -14,7 +14,7 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg) => {
             if (msg.args.length < 1) {
-                bot.client.send("**Missing args**");
+                msg.roomContext.send("**Missing args**");
                 return;
             }
             bot.google_search(msg.args.join(" "), "support.apple.com", null, /^https:\/\/support\.apple\.com\/.*$/,

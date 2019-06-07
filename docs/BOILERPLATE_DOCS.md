@@ -13,7 +13,7 @@ These docs suck. I will make them better later.
 7. In `app.js`,
 
  ```javascript
- bot.client = new Client(1);
+ bot.client = new Client([1]);
  ```
 change `1` to the room you would like to join. `1` is the sandbox room. `193540` is the Test My Bot Room.
 
@@ -49,7 +49,7 @@ module.exports = function (bot) { /* the bot will be passed through here. No nee
             ignore: false, /* we want this command to be displayed in help and other information menus */
             permissions: ["all"], /* everyone can call ping-pong */
             func: async (msg) => {
-               await bot.client.send(`Pong!`); /* send the message */
+               await msg.roomContext.send(`Pong!`); /* send the message in the room that the message was recieved */
             }
         },
     )

@@ -10,7 +10,7 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg) => {
             if (Math.random() <= 0.1 && msg.args !== "bypass") {
-                bot.client.send(`${msg.getVariableUsername()}'s code 😜`);
+                msg.roomContext.send(`${msg.getVariableUsername()}'s code 😜`);
                 return;
             }
             bot.json_request('https://official-joke-api.appspot.com/jokes/programming/random', (err, res, body) => {
@@ -19,9 +19,9 @@ module.exports = function (bot) {
                     return;
                 }
                 body = body[0];
-                bot.client.send(body.setup);
+                msg.roomContext.send(body.setup);
                 setTimeout(() => {
-                    bot.client.send(body.punchline)
+                    msg.roomContext.send(body.punchline)
                 }, 2500);
             });
         }

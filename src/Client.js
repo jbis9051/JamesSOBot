@@ -11,16 +11,17 @@ const request = require("request-promise");
 /**
  * @class Client
  * @classdesc The Client. Handles everything from logging in to sending & receiving messages. It is environment specific and should be one of the few things needing to be changed, environment to environment.
- * @property {String} this.roomNum - The StackExchange room the bot should connect to
+ * @property {Array} this.roomNum - The StackExchange rooms the bot should connect to
  * @property {int} this._id
  * @property {String} this.fkey
  * @property {String} this.wsurl
  * @property {WebSocket} this.ws
  */
 class Client extends EventEmitter {
-    constructor(roomNum) {
-        super(roomNum);
-        this.roomNum = roomNum;
+    constructor(roomNums) {
+        super(roomNums);
+        this.roomNums = roomNums;
+        this.mainRoomNum = this.roomNums[0];
         this._handleMessage = this._handleMessage.bind(this);
     }
 
@@ -60,6 +61,7 @@ class Client extends EventEmitter {
     async connect() {
         await this.mainSiteLogin();
         await this.setUpWS();
+        this.roomNums.slice(1).forEach(await this.joinRoom.bind(this));
         await this.setChatVars();
     }
 
@@ -91,15 +93,15 @@ class Client extends EventEmitter {
                 password: config.password
             },
             headers: {
-                'User-Agent': 'Mozilla/qewrw5.0 (Macintosh; Mac OS X 10.14; rv:63.0) Gecko/20100101 Firefox/63.0'
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5)  iosdfgijofsdoijgosijdfgojisjoidfgosdifgjoi sdfgsdfgdsjfigs dfgsdfgd AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Safari/605.1.15'
             }
         });
         this.emit('main-site-login');
     }
 
     async setUpWS() {
-        this.fkey = await this.getFKEY();
-        this.wsurl = await this.getWSURL();
+        this.fkey = await this.getFKEY(this.mainRoomNum);
+        this.wsurl = await this.getWSURL(this.mainRoomNum);
         const ws = new WebSocket(this.wsurl + "?l=99999999999", null, {
             headers: {
                 "Origin": config.chatURL
@@ -127,42 +129,48 @@ class Client extends EventEmitter {
 
     _handleMessage(data) {
         data = JSON.parse(data);
-        if (!data["r" + this.roomNum].e) {
-            return false;
-        }
-        console.log(data["r" + this.roomNum].e[0]);
-        switch (data["r" + this.roomNum].e[0].event_type) {
-            case 1: {
-                this.emit('new-message', data["r" + this.roomNum].e[0]);
-                break;
+        Object.keys(data).forEach(room => {
+            room = parseInt(room.substring(1));
+            if (!data["r" + room].e) {
+                return false;
             }
-            case 8: {
-                this.emit('new-message', data["r" + this.roomNum].e[0]);
-                this.emit('direct-message', data["r" + this.roomNum].e[0]);
-                break;
+            if (!this.roomNums.includes(room)) {
+                return false;
             }
-            case 2: {
-                this.emit('edit', data["r" + this.roomNum].e[0]);
-                break;
+            console.log(data["r" + room].e[0]);
+            switch (data["r" + room].e[0].event_type) {
+                case 1: {
+                    this.emit('new-message', data["r" + room].e[0]);
+                    break;
+                }
+                case 8: {
+                    this.emit('new-message', data["r" + room].e[0]);
+                    this.emit('direct-message', data["r" + room].e[0]);
+                    break;
+                }
+                case 2: {
+                    this.emit('edit', data["r" + room].e[0]);
+                    break;
+                }
+                case 3: {
+                    this.emit('user-join', data["r" + room].e[0]);
+                    break;
+                }
+                case 4: {
+                    this.emit('user-leave', data["r" + room].e[0]);
+                    break;
+                }
+                default: {
+                    this.emit('unknown-message', data["r" + room].e[0]);
+                }
             }
-            case 3: {
-                this.emit('user-join', data["r" + this.roomNum].e[0]);
-                break;
-            }
-            case 4: {
-                this.emit('user-leave', data["r" + this.roomNum].e[0]);
-                break;
-            }
-            default: {
-                this.emit('unknown-message', data["r" + this.roomNum].e[0]);
-            }
-        }
+        });
     }
 
-    async getFKEY() {
+    async getFKEY(roomNum) {
         const body = await request({
             method: 'GET',
-            uri: `${config.chatURL}/rooms/${this.roomNum}`,
+            uri: `${config.chatURL}/rooms/${roomNum}`,
             jar: this.cookieJar,
         });
         const $ = cheerio.load(body);
@@ -170,30 +178,35 @@ class Client extends EventEmitter {
     }
 
     async joinRoom(roomNum) {
-        return await request({
-            method: 'GET',
-            uri: `${config.chatURL}/rooms/${roomNum}`,
-            jar: this.cookieJar,
+        const wsurl = await this.getWSURL(roomNum);
+        const ws = new WebSocket(wsurl + "?l=99999999999", null, {
+            headers: {
+                "Origin": config.chatURL
+            }
+        });
+        ws.on('open', () => {
+            this.emit('joined', roomNum);
+            ws.close();
         });
     }
 
-    async getWSURL() {
+    async getWSURL(roomNum) {
         const json = await request({
             method: 'POST',
             uri: config.chatURL + '/ws-auth',
             jar: this.cookieJar,
             form: {
-                roomid: this.roomNum,
+                roomid: roomNum,
                 fkey: this.fkey,
             },
         });
         return JSON.parse(json).url;
     }
 
-    async getLPARAM() {
+    async getLPARAM(roomNum) {
         const json = await request({
             method: 'POST',
-            uri: `${config.chatURL}/chats/${this.roomNum}/events`,
+            uri: `${config.chatURL}/chats/${roomNum}/events`,
             jar: this.cookieJar,
             body: {
                 fkey: this.fkey,
@@ -242,14 +255,14 @@ class Client extends EventEmitter {
         return cookies.reduce((acc, cookie) => acc + cookie.name + "=" + cookie.value + "; ", []);
     }
 
-    async send(msg) {
+    async send(msg, roomNum) {
         console.log("Sending: " + msg);
         if (typeof msg !== "string") {
             msg = JSON.stringify(msg);
         }
         const body = await request({
             method: 'POST',
-            uri: `${config.chatURL}/chats/${this.roomNum}/messages/new`,
+            uri: `${config.chatURL}/chats/${roomNum}/messages/new`,
             jar: this.cookieJar,
             form: {
                 text: msg,
@@ -260,7 +273,7 @@ class Client extends EventEmitter {
             const delay = error.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
             if (delay) {
                 setTimeout(async () => {
-                    await this.send(msg);
+                    await this.send(msg, roomNum);
                 }, (parseInt(delay) * 1000) + 0.25);
             }
         });
@@ -271,7 +284,7 @@ class Client extends EventEmitter {
     }
 
     async reply(msg, content) {
-        await this.send(`:${msg.data.message_id} ${content}`)
+        await this.send(`:${msg.data.message_id} ${content}`, msg.getContext())
     }
 
     async getCurrentUsers() {
@@ -289,10 +302,10 @@ class Client extends EventEmitter {
         return data.users;
     }
 
-    async activeUsernameSearch(username) {
+    async activeUsernameSearch(username, roomNum) {
         const body = await request({
             method: 'GET',
-            uri: `${config.chatURL}/rooms/pingable/${this.roomNum}`,
+            uri: `${config.chatURL}/rooms/pingable/${roomNum}`,
             jar: this.cookieJar,
         });
         const array = JSON.parse(body).filter(a => a[1].replace(" ", "") === username.replace("@", ""));
@@ -317,11 +330,11 @@ class Client extends EventEmitter {
         return body.split('\n');
     }
 
-    async usernameToId(username) {
-        return await this.activeUsernameSearch(username);
+    async usernameToId(username, roomNum) {
+        return await this.activeUsernameSearch(username, roomNum);
     }
 
-    async idToInfo(id, roomNum = this.roomNum) {
+    async idToInfo(id, roomNum) {
         const body = await request({
             method: 'POST',
             uri: `${config.chatURL}/user/info`,
@@ -333,15 +346,15 @@ class Client extends EventEmitter {
         return JSON.parse(body).users[0];
     }
 
-    async usernameToInfo(username) {
-        const id = await this.usernameToId(username);
+    async usernameToInfo(username, roomNum) {
+        const id = await this.usernameToId(username, roomNum);
         if (!id) {
             return false;
         }
         return await this.idToInfo(id);
     }
 
-    getNumMessagesFromId(id, roomNum = this.roomNum) {
+    getNumMessagesFromId(id, roomNum) {
         return new Promise(resolve => {
             bot.standard_request(`${config.chatURL}/users/${id}`, (err, res, body) => {
                 try {
@@ -355,11 +368,11 @@ class Client extends EventEmitter {
         });
     }
 
-    async getNumMessages(username_or_id, roomNum = this.roomNum) {
+    async getNumMessages(username_or_id, roomNum) {
         if (typeof username_or_id === "number") {
             return await this.getNumMessagesFromId(username_or_id, roomNum);
         }
-        return await this.getNumMessagesFromId(await this.usernameToId(username_or_id), roomNum);
+        return await this.getNumMessagesFromId(await this.usernameToId(username_or_id, roomNum), roomNum);
 
     }
 
@@ -368,7 +381,7 @@ class Client extends EventEmitter {
      * @param roomNum
      * @return {Promise<Array>}
      */
-    getRoomOwners(roomNum = this.roomNum) {
+    getRoomOwners(roomNum) {
         return new Promise((resolve, reject) => {
             bot.standard_request(`${config.chatURL}/rooms/info/${roomNum}`, (err, res, body) => {
                 try {
@@ -387,12 +400,12 @@ class Client extends EventEmitter {
         });
     }
 
-    async isRoomOwnerUsername(username, roomNum = this.roomNum) {
+    async isRoomOwnerUsername(username, roomNum) {
         const owners = await this.getRoomOwners(roomNum);
         return owners.some(o => o.username === username.replace(" ", ""));
     }
 
-    async isRoomOwnerId(id, roomNum = this.roomNum) {
+    async isRoomOwnerId(id, roomNum) {
         const owners = await this.getRoomOwners(roomNum);
         return owners.some(o => o.id === id);
     }

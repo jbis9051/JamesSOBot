@@ -32,7 +32,7 @@ module.exports = function (bot) {
         ignore: false,
         permissions: ["OWNER", "admin"],
         func: async (msg) => {
-            const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await bot.client.usernameToId(msg.args[0]);
+            const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await msg.roomContext.usernameToId(msg.args[0]);
             if (!id) {
                 msg.reply("Error: User not found");
                 return;
@@ -41,7 +41,7 @@ module.exports = function (bot) {
                 msg.reply("That user is already ban.");
                 return;
             }
-            if (bot.isAdmin(id) || bot.client.isRoomOwnerId(msg.getStaticUserUID())) {
+            if (bot.isAdmin(id) || msg.roomContext.isRoomOwnerId(msg.getStaticUserUID())) {
                 msg.reply("That user cannot be ban");
                 return;
             }
@@ -64,7 +64,7 @@ module.exports = function (bot) {
         ignore: false,
         permissions: ["OWNER", "admin"],
         func: async (msg) => {
-            const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await bot.client.usernameToId(msg.args[0]);
+            const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await msg.roomContext.usernameToId(msg.args[0]);
             if (!id) {
                 msg.reply("Error: User not found");
                 return;

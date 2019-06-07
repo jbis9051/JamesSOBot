@@ -21,7 +21,7 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg) => {
             if (msg.args.length < 1) {
-                bot.client.send("**Missing args**");
+                msg.roomContext.send("**Missing args**");
                 return;
             }
             bot.json_request('https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=' + msg.args.join("%20"), (err, response, resp) => {
@@ -40,7 +40,7 @@ module.exports = function (bot) {
                         'The Gods of Wikipedia did not bless us'
                     ].random();
                 }
-                bot.client.send(res);
+                msg.roomContext.send(res);
             });
         }
     });

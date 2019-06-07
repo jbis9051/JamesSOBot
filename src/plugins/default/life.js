@@ -11,11 +11,11 @@ module.exports = function (bot) {
         permissions: ["admin"],
         func: (msg) => {
             if (!msg.sudo) {
-                bot.client.send("Try `sudo`");
+                msg.roomContext.send("Try `sudo`");
                 return;
             }
             bot.log("Shut Down");
-            bot.client.send("Shut Down");
+            msg.roomContext.send("Shut Down");
             live = false;
         },
     });
@@ -30,10 +30,10 @@ module.exports = function (bot) {
         permissions: ["admin"],
         func: (msg) => {
             if (live) {
-                bot.client.send("I'm already alive...");
+                msg.roomContext.send("I'm already alive...");
             } else {
                 bot.log("Enable Bot");
-                bot.client.send("I'm back alive!");
+                msg.roomContext.send("I'm back alive!");
                 live = true;
             }
         },

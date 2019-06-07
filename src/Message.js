@@ -27,6 +27,19 @@ class Message {
         this.commandCall = msgSplit.shift();
         this.args = msgSplit;
         this.command = bot.getCommand(this.commandCall);
+
+        this.roomContext = {
+            send: (...args) => bot.client.send(...args, this.getContext()),
+            activeUsernameSearch: (...args) => bot.client.activeUsernameSearch(...args, this.getContext()),
+            idToInfo: (...args) => bot.client.idToInfo(...args, this.getContext()),
+            getNumMessagesFromId: (...args) => bot.client.getNumMessagesFromId(...args, this.getContext()),
+            getRoomOwners: (...args) => bot.client.getRoomOwners(...args, this.getContext()),
+            isRoomOwnerUsername: (...args) => bot.client.isRoomOwnerUsername(...args, this.getContext()),
+            isRoomOwnerId: (...args) => bot.client.isRoomOwnerId(...args, this.getContext()),
+            getNumMessages: (...args) => bot.client.getNumMessages(...args, this.getContext()),
+            usernameToId: (...args) => bot.client.usernameToId(...args, this.getContext()),
+            usernameToInfo: (...args) => bot.client.usernameToInfo(...args, this.getContext())
+        }
     }
 
     /**
@@ -65,6 +78,12 @@ class Message {
         return this.data.content.htmldecode();
     }
 
+    /**
+     * @return {int} - the room context
+     */
+    getContext() {
+        return this.data["room_id"];
+    }
 
     /* The below was stolen directly from https://github.com/Zirak/SO-ChatBot/blob/master/master.js. I made a couple edits*/
 

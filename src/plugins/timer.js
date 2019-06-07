@@ -13,13 +13,13 @@ module.exports = function (bot) {
         func: (msg) => {
             if(msg.args.length < 3){
                 if(msg.args.length < 1){
-                    bot.client.send("Need more args");
+                    msg.roomContext.send("Need more args");
                     return;
                 }
                 if(msg.args[0] === "list"){
                     //TODO list current timers/reminders
                 } else {
-                    bot.client.send("Need more args");
+                    msg.roomContext.send("Need more args");
                 }
                 return;
             }
@@ -29,7 +29,7 @@ module.exports = function (bot) {
             }
             let time = convertTimeToMiliseconds(msg.args.pop());
             if(!time){
-                bot.client.send("Invalid time.");
+                msg.roomContext.send("Invalid time.");
                 return;
             }
             const content = `${user}, ${msg.args.join(" ")}`;
@@ -40,7 +40,7 @@ module.exports = function (bot) {
             });
             const index = timers.length;
             setTimeout(()=>{
-               bot.client.send(content);
+                msg.roomContext.send(content);
                timers.splice(index,1);
             },time);
             msg.reply("Ok. I'll remind.")

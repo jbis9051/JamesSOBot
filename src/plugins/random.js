@@ -10,11 +10,11 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg) => {
             if (msg.args.length < 2) {
-                bot.client.send("**Missing args**");
+                msg.roomContext.send("**Missing args**");
                 return;
             }
             if (!/^\d+$/.test((msg.args[0] + msg.args[1]).replace(/-/g, ""))) { // check if its all digits and replace the "-" incase it is negative
-                bot.client.send("**Invalid args. Must be two integers.**");
+                msg.roomContext.send("**Invalid args. Must be two integers.**");
                 return;
             }
             msg.args[0] = parseInt(msg.args[0]);

@@ -53,8 +53,8 @@ module.exports = function (bot) {
             ],
             ignore: true,
             permissions: ["all"],
-            func: () => {
-                bot.client.send(learn_object.output)
+            func: (msg) => {
+                msg.roomContext.send(learn_object.output)
             }
         });
     }
@@ -73,7 +73,7 @@ module.exports = function (bot) {
                 msg.reply("That command doesn't exist");
                 return;
             }
-            if (!(bot.isAdmin(msg.args[0]) || await bot.client.isRoomOwnerId(msg.getStaticUserUID()) || learn_list[msg.args[0]].creatorID === msg.getStaticUserUID())) { /* if the user is not an admin or a room owner or they created the command */
+            if (!(bot.isAdmin(msg.args[0]) || await msg.roomContext.isRoomOwnerId(msg.getStaticUserUID()) || learn_list[msg.args[0]].creatorID === msg.getStaticUserUID())) { /* if the user is not an admin or a room owner or they created the command */
                 msg.reply("You do not have permission to remove this command.");
                 return;
             }

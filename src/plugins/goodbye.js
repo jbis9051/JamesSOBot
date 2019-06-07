@@ -4,7 +4,7 @@ module.exports = function (bot) {
             return (msg.getContent() === "o/");
         },
         callback:(msg) => {
-            bot.client.send('\\o');
+            msg.roomContext.send('\\o');
         }
     });
 };

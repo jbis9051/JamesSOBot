@@ -71,7 +71,7 @@ The second is an elusive thing called the `fkey`.
 
 The `fkey` is unique per user session (it changes on login and logout). The `fkey` is also used for users viewing the chat who are not logged in.
 
-We aren't really sure what the `fkey` is exactly but it is required to view the chat and to send messages in the chat.
+The `fkey` is basically a CSRF token and it is required to view the chat and to send messages in the chat.
 
 The `fkey` can be found in either of the following ways while on a chat page:
 
@@ -104,7 +104,7 @@ If you don't hate `fkey`s already, you will by the end :)
 
 # Receiving Events (Messages + other stuff)
 
-For receiving events you have 2 options: WebSockets or Long Polling
+For receiving events you have 2 options: WebSockets or Long Polling.
 
 ## WebSockets
 
@@ -300,6 +300,8 @@ A standard message with image upload looks like this:
    }
 }
 ```
+
+// TODO explain multiple room
 
 The event type is determined by the `event_type` property in the `e` property.
 

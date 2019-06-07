@@ -15,11 +15,11 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg) => {
             if (msg.args.length < 1) {
-                bot.client.send("**Missing arg `person`**");
+                msg.roomContext.send("**Missing arg `person`**");
                 return;
             }
             const person = msg.args[0];
-            bot.client.send(welcome_msg.replace("{USERNAME}", person));
+            msg.roomContext.send(welcome_msg.replace("{USERNAME}", person));
         }
     });
     bot.addShutdownScript((msg) => {
@@ -38,8 +38,8 @@ module.exports = function (bot) {
             }
         },
         callback: async (msg) => {
-            if (await bot.client.getNumMessagesFromId(msg.getStaticUserUID()) < 2) {
-                bot.client.send(welcome_msg.replace('{USERNAME}', msg.getVariableUsername().replace(" ", "")));
+            if (await msg.roomContext.getNumMessagesFromId(msg.getStaticUserUID()) < 2) {
+                msg.roomContext.send(welcome_msg.replace('{USERNAME}', msg.getVariableUsername().replace(" ", "")));
             }
         }
     });
