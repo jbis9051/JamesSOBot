@@ -1,7 +1,13 @@
 const {Message} = require("./src/Message");
 const bot = require('./src/bot.js');
 const {Client} = require('./src/Client.js');
+const {ClientDebug} = require('./src/ClientDebug.js');
 
+/*
+bot.client = new ClientDebug(1,{
+    login: false,
+});
+ */
 bot.client = new Client(1);
 
 bot.client.on('ready', async () => {
@@ -24,7 +30,7 @@ bot.client.on('new-message', async msg => {
         return;
     }
     if (!msg.command) {
-        bot.client.send('Invalid command! Try ` help` for a list of available commands.');
+        msg.reply('Invalid command! Try `help` for a list of available commands.' + ('‍'.repeat(Math.random() * 10))); /* there is probably a better way of doing this */
         return;
     }
     if (!await bot.permissionCheck(msg.command, msg)) {
@@ -32,7 +38,7 @@ bot.client.on('new-message', async msg => {
         return;
     }
     try {
-        msg.command.func(msg);
+        await msg.command.func(msg);
     } catch (e) {
         console.error(e);
     }

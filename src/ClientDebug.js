@@ -2,36 +2,64 @@ const bot = require('./bot');
 const config = require('../config/config');
 const FileCookieStore = require('tough-cookie-filestore');
 const fs = require('fs');
-const WebSocket = require('ws');
 const EventEmitter = require('events');
 const cheerio = require('cheerio');
 const path = require('path');
 const request = require("request-promise");
+const readline = require('readline');
 
 /**
- * @class Client
- * @classdesc The Client. Handles everything from logging in to sending & receiving messages. It is environment specific and should be one of the few things needing to be changed, environment to environment.
- * @property {String} this.roomNum - The StackExchange room the bot should connect to
- * @property {int} this._id
- * @property {String} this.fkey
- * @property {String} this.wsurl
- * @property {WebSocket} this.ws
+ * @class ClientDebug
+ * @classdesc The ClientDebug allows you to send and receive messages directly from console.
+ * @property {String} this.roomNum - The StackExchange room the demo should emulate being in. Used for external requests.
+ * @property {Object} options
  */
-class Client extends EventEmitter {
-    constructor(roomNum) {
-        super(roomNum);
+class ClientDebug extends EventEmitter {
+    constructor(roomNum, options) {
+        super(roomNum, options);
         this.roomNum = roomNum;
         this._handleMessage = this._handleMessage.bind(this);
+        this._defaults = {
+            saveData: true,
+            login: true,
+            messageUsername: "JBis",
+            messageId: 7886229,
+        };
+        this.options = Object.assign({}, this._defaults, options);
     }
 
     init() {
+        var rl = readline.createInterface(process.stdin, process.stdout);
+        rl.prompt();
+        rl.on('line', (input) => {
+            const data = {};
+            data["r" + this.roomNum] = {
+                "e": [{
+                    "event_type": 1,
+                    "time_stamp": 1558448296,
+                    "content": input,
+                    "id": 94420223,
+                    "user_id": 7886229,
+                    "user_name": "JBis",
+                    "room_id": 1,
+                    "room_name": "Debugger Room",
+                    "message_id": 46278793
+                }
+                ],
+                "t": 94420223,
+                "d": 1
+            };
+            this._handleMessage(data);
+        });
         if (!fs.existsSync(path.join(__dirname, '..', 'data'))) {
             fs.mkdirSync(path.join(__dirname, '..', 'data'));
         }
-        this.browserSetup().then(() => this.connect()).catch(reason => {
-            console.error(reason);
-            throw reason;
-        });
+        if (this.options.login) {
+            this.browserSetup().then(() => this.connect()).catch(reason => {
+                console.error(reason);
+                throw reason;
+            });
+        }
     }
 
     async browserSetup() {
@@ -99,38 +127,13 @@ class Client extends EventEmitter {
 
     async setUpWS() {
         this.fkey = await this.getFKEY();
-        this.wsurl = await this.getWSURL();
-        const ws = new WebSocket(this.wsurl + "?l=99999999999", null, {
-            headers: {
-                "Origin": config.chatURL
-            }
-        });
-        const self = this; //I'm lazy and https://stackoverflow.com/a/3950207/7886229 got 22 upvotes so I know have at least 22 peoples support
-        ws.on('open', function () {
-            self.emit('ws-open');
-            self.emit('ready');
-        });
-        ws.on('message', function (data) {
-            self.emit('ws-message', data);
-            self._handleMessage(data);
-        });
-        ws.on('close', function (code) {
-            self.emit('ws-close', code);
-            console.log("Close: " + code);
-        });
-        ws.on('error', function (err) {
-            console.error(err);
-            self.emit('ws-error', err);
-        });
-        this.ws = ws;
     }
 
     _handleMessage(data) {
-        data = JSON.parse(data);
         if (!data["r" + this.roomNum].e) {
             return false;
         }
-        console.log(data["r" + this.roomNum].e[0]);
+        // console.log(data["r" + this.roomNum].e[0]);
         switch (data["r" + this.roomNum].e[0].event_type) {
             case 1: {
                 this.emit('new-message', data["r" + this.roomNum].e[0]);
@@ -243,31 +246,7 @@ class Client extends EventEmitter {
     }
 
     async send(msg) {
-        console.log("Sending: " + msg);
-        if (typeof msg !== "string") {
-            msg = JSON.stringify(msg);
-        }
-        const body = await request({
-            method: 'POST',
-            uri: `${config.chatURL}/chats/${this.roomNum}/messages/new`,
-            jar: this.cookieJar,
-            form: {
-                text: msg,
-                fkey: this.fkey
-            },
-        }).catch(error => {
-            bot.error(error.error);
-            const delay = error.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
-            if (delay) {
-                setTimeout(async () => {
-                    await this.send(msg);
-                }, (parseInt(delay) * 1000) + 0.25);
-            }
-        });
-        if (body) {
-            bot.log(body);
-        }
-        this.emit('send', msg);
+        console.log("Bot: " + msg);
     }
 
     async reply(msg, content) {
@@ -398,4 +377,4 @@ class Client extends EventEmitter {
     }
 }
 
-module.exports = {Client};
+module.exports = {ClientDebug};

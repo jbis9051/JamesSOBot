@@ -39,7 +39,7 @@ module.exports = function (bot) {
         },
         callback: async (msg) => {
             if (await bot.client.getNumMessagesFromId(msg.getStaticUserUID()) < 2) {
-                bot.client.send(welcome_msg.replace('{USERNAME}', msg.getVariableUsername()));
+                bot.client.send(welcome_msg.replace('{USERNAME}', msg.getVariableUsername().replace(" ", "")));
             }
         }
     });
