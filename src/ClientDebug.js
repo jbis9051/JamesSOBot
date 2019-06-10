@@ -41,7 +41,7 @@ class ClientDebug extends EventEmitter {
                     "id": 94420223,
                     "user_id": 7886229,
                     "user_name": "JBis",
-                    "room_id": 1,
+                    "room_id": this.roomNum,
                     "room_name": "Debugger Room",
                     "message_id": 46278793
                 }

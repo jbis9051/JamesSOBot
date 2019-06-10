@@ -34,7 +34,7 @@ bot.client.on('new-message', async msg => {
         return;
     }
     if (!await bot.permissionCheck(msg.command, msg)) {
-        bot.client.send("Your are not authorized to administer this command");
+        msg.reply("Your are not authorized to administer this command");
         return;
     }
     try {
@@ -65,5 +65,6 @@ require('./src/plugins/youmessedup.js')(bot);
 require('./src/plugins/applesupport.js')(bot);
 require('./src/plugins/learn.js')(bot);
 require('./src/plugins/calc.js')(bot);
+require('./src/plugins/betterecho.js')(bot);
 
 bot.client.init();

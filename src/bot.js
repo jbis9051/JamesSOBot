@@ -68,16 +68,24 @@ const bot = {
     /**
      * Searches for a command based on command shortcuts
      *
-     * @param cmdShortcut - shortcut of the command to search for
+     * @param {String|RegExp} cmdShortcut - shortcut of the command to search for
      * @return {boolean|Object} - the command found, or false if none was found
      */
     getCommand: (cmdShortcut) => {
-        if(!cmdShortcut){
+        if (!cmdShortcut) {
             return false;
         }
         const commandShortcutLowerCase = cmdShortcut.toLowerCase();
         for (const cmd of Object.keys(bot.commands)) {
-            if (bot.commands[cmd].shortcuts.includes(commandShortcutLowerCase)) {
+            if (bot.commands[cmd].shortcuts.some(
+                (shortcut) => {
+                    if (typeof shortcut === "object" && shortcut instanceof RegExp) {
+                        return shortcut.test(cmdShortcut);
+                    }
+                    return shortcut === commandShortcutLowerCase;
+                }
+            )
+            ) {
                 return bot.commands[cmd];
             }
         }
@@ -154,13 +162,13 @@ const bot = {
      * @return {boolean}
      */
     permissionCheck: async (command, msg) => {
-        for (let permissionsKey of command.permissions) {
+        return command.permissions.some(async permissionsKey => {
             switch (permissionsKey) {
                 case "all": {
                     return true;
                 }
                 case "OWNER": {
-                    return await bot.client.isRoomOwnerId(msg.getStaticUserUID());
+                    return await msg.roomContext.isRoomOwnerId(msg.getStaticUserUID());
                 }
                 default: {
                     if (config.users_groups[permissionsKey].includes(msg.getStaticUserUID())) {
@@ -168,8 +176,7 @@ const bot = {
                     }
                 }
             }
-        }
-        return false;
+        });
     },
     isAdmin(id) {
         return config.users_groups["admin"].includes(id);
@@ -205,7 +212,7 @@ const bot = {
      * @return {boolean}
      */
     isMyMsg(msg) {
-      return msg.getStaticUserUID() === bot.client._id
+        return msg.getStaticUserUID() === bot.client._id
     },
     validateMsg: (msg) => {
         return true;
@@ -216,14 +223,14 @@ const bot = {
      * @param {Message} msg - Message to pass to validation scripts
      * @return {boolean} - If the Message is valid
      */
-    validatorScriptRunner:(msg)=>{
-       for(let script of bot.validatorScripts){
-           if(!script.func(msg)){
-               bot.log("Validator Failed: " + script.name);
-               return false;
-           }
-       }
-       return true;
+    validatorScriptRunner: (msg) => {
+        for (let script of bot.validatorScripts) {
+            if (!script.func(msg)) {
+                bot.log("Validator Failed: " + script.name);
+                return false;
+            }
+        }
+        return true;
     },
     /**
      * Checks if listeners need to be ran and runs them if so
@@ -288,8 +295,8 @@ const bot = {
      * @param {String} name - Name of your validator script for logging purposes
      * @param {validatorCallback} func
      */
-    addValidatorScript:(name,func) =>{
-      bot.validatorScripts.push({name: name, func: func});
+    addValidatorScript: (name, func) => {
+        bot.validatorScripts.push({name: name, func: func});
     },
     /**
      * Callback for shutdown script.
@@ -327,7 +334,10 @@ const bot = {
      * @return {Promise<void>}
      */
     standard_request: async (url, callback) => {
-        await request({url, headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}}, callback);
+        await request({
+            url,
+            headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
+        }, callback);
     },
     /**
      * Selects data from HTML using the cheerio API
@@ -353,7 +363,7 @@ const bot = {
      * @param {GoogleCallback} callback
      * @return {Promise<void>}
      */
-    google_search: async (query, site, selector,selectorMatch,callback) => {
+    google_search: async (query, site, selector, selectorMatch, callback) => {
         /* if anyone wants to pay for API keys, feel free */
         const url = 'https://www.google.com/search?q=' + encodeURIComponent(query) + ((site) ? "%20site:" + site : "");
         bot.standard_request(url, (err, res, body) => {
@@ -361,17 +371,17 @@ const bot = {
                 const $ = cheerio.load(body);
                 let selected;
                 let title;
-                if (selector){
+                if (selector) {
                     selected = selector($);
-                }  else {
+                } else {
                     selected = $('.r').find('a').attr('href').replace('/url?q=', '').replace(/&sa=.*/, '');
                     title = $('.r').find('.LC20lb').html();
                 }
-                if(!selected.match(selectorMatch)){
+                if (!selected.match(selectorMatch)) {
                     console.error('Invalid Selector ' + selected);
                     callback(false);
                 }
-                if(title){
+                if (title) {
                     callback({url: selected, title: title});
                 } else {
                     callback(selected);
