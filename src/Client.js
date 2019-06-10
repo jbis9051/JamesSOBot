@@ -67,6 +67,15 @@ class Client extends EventEmitter {
 
     async setChatVars() {
         //this._id = data.my_id;
+        const resp = await request({
+            method: 'GET',
+            uri: config.siteUrl + '/users/current',
+            jar: this.cookieJar,
+            resolveWithFullResponse: true
+        });
+        if (resp.request.path === "/") {
+        }
+        this._id = parseInt(resp.request.path.match(/(?<=\/users\/)[0-9]+(?=\/)/)[0]);
     }
 
     async mainSiteLogin() {
