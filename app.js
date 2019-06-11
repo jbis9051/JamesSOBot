@@ -73,5 +73,6 @@ require('./src/plugins/applesupport.js')(bot);
 require('./src/plugins/learn.js')(bot);
 require('./src/plugins/calc.js')(bot);
 require('./src/plugins/betterecho.js')(bot);
+require('./src/plugins/afk.js')(bot);
 
 bot.client.init();

@@ -130,36 +130,9 @@ class ClientDebug extends EventEmitter {
     }
 
     _handleMessage(data) {
-        if (!data["r" + this.roomNum].e) {
-            return false;
-        }
-        // console.log(data["r" + this.roomNum].e[0]);
-        switch (data["r" + this.roomNum].e[0].event_type) {
-            case 1: {
-                this.emit('new-message', data["r" + this.roomNum].e[0]);
-                break;
-            }
-            case 8: {
-                this.emit('new-message', data["r" + this.roomNum].e[0]);
-                this.emit('direct-message', data["r" + this.roomNum].e[0]);
-                break;
-            }
-            case 2: {
-                this.emit('edit', data["r" + this.roomNum].e[0]);
-                break;
-            }
-            case 3: {
-                this.emit('user-join', data["r" + this.roomNum].e[0]);
-                break;
-            }
-            case 4: {
-                this.emit('user-leave', data["r" + this.roomNum].e[0]);
-                break;
-            }
-            default: {
-                this.emit('unknown-message', data["r" + this.roomNum].e[0]);
-            }
-        }
+        let room = this.roomNum;
+        // console.log(data["r" + room].e[0]);
+        this.emit(data["r" + room].e[0].event_type, data["r" + room].e[0]);
     }
 
     async getFKEY() {
