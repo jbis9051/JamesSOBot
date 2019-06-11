@@ -102,7 +102,7 @@ class Client extends EventEmitter {
                 password: config.password
             },
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5)  AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Safari/605.1.15'
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Safari/605.1.15'
             }
         });
         this.emit('main-site-login');
@@ -146,33 +146,8 @@ class Client extends EventEmitter {
             if (!this.roomNums.includes(room)) {
                 return false;
             }
-            console.log(data["r" + room].e[0]);
-            switch (data["r" + room].e[0].event_type) {
-                case 1: {
-                    this.emit('new-message', data["r" + room].e[0]);
-                    break;
-                }
-                case 8: {
-                    this.emit('new-message', data["r" + room].e[0]);
-                    this.emit('direct-message', data["r" + room].e[0]);
-                    break;
-                }
-                case 2: {
-                    this.emit('edit', data["r" + room].e[0]);
-                    break;
-                }
-                case 3: {
-                    this.emit('user-join', data["r" + room].e[0]);
-                    break;
-                }
-                case 4: {
-                    this.emit('user-leave', data["r" + room].e[0]);
-                    break;
-                }
-                default: {
-                    this.emit('unknown-message', data["r" + room].e[0]);
-                }
-            }
+            // console.log(data["r" + room].e[0]);
+            this.emit(data["r" + room].e[0].event_type, data["r" + room].e[0]);
         });
     }
 

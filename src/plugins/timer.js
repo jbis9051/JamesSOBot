@@ -32,7 +32,7 @@ module.exports = function (bot) {
                 msg.roomContext.send("Invalid time.");
                 return;
             }
-            const content = `${user}, ${msg.args.join(" ")}`;
+            const content = `${user}, ${msg.args.join(" ").htmlToMarkdown()}`;
             timers.push({
                 user: msg.getVariableUsername(),
                content: content,

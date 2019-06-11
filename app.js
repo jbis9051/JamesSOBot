@@ -1,4 +1,6 @@
-const {Message} = require("./src/Message");
+const {Message} = require("./src/events/Message");
+const {ChatEvent} = require('./src/events/ChatEvent.js');
+
 const bot = require('./src/bot.js');
 const {Client} = require('./src/Client.js');
 const {ClientDebug} = require('./src/ClientDebug.js');
@@ -13,7 +15,11 @@ bot.client = new Client([1]);
 bot.client.on('ready', async () => {
     bot.client.send('I am alive!', 1);
 });
-bot.client.on('new-message', async msg => {
+
+bot.client.on(ChatEvent.NEW_MESSAGE, processMessage);
+bot.client.on(ChatEvent.EDIT, processMessage);
+
+async function processMessage(msg) {
     msg = new Message(msg);
     if (!bot.validatorScriptRunner(msg)) {
         return;
@@ -42,7 +48,8 @@ bot.client.on('new-message', async msg => {
     } catch (e) {
         console.error(e);
     }
-});
+}
+
 require('./src/plugins/ban.js')(bot);
 
 require('./src/plugins/default/help.js')(bot);

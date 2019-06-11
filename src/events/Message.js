@@ -1,4 +1,5 @@
-const bot = require("./bot");
+const bot = require("../bot");
+const {ChatEvent} = require("./ChatEvent");
 
 /**
  * @class Message
@@ -9,13 +10,13 @@ const bot = require("./bot");
  * @property {String} this.commandCall - the command attempting to be called
  * @property {Object|boolean} this.command - the command object this message is calling or false if a command wasn't found
  */
-class Message {
+class Message extends ChatEvent {
     /**
      *
      * @param {Object} data - raw message data
      */
     constructor(data) {
-        this.data = data;
+        super(data);
         const msgSplit = this.getContent().split(" ");
         this.prefix = msgSplit.shift();
         if (msgSplit[0] === "sudo") {
@@ -39,8 +40,10 @@ class Message {
             getNumMessages: (...args) => bot.client.getNumMessages(...args, this.getContext()),
             usernameToId: (...args) => bot.client.usernameToId(...args, this.getContext()),
             usernameToInfo: (...args) => bot.client.usernameToInfo(...args, this.getContext())
-        }
+        };
+
     }
+
 
     /**
      * Reply's to `this` message with `content`
@@ -52,37 +55,12 @@ class Message {
     }
 
     /**
-     * Returns a unique identifier for the user that sent this message. Usually a numerical string.
-     *
-     * @return {String} - The unique identifier
-     */
-    getStaticUserUID() {
-        return this.data.user_id;
-    }
-
-    /**
-     * Returns a possibly variable friendly username. This may change so DO NOT rely on it for authorization/authentication.
-     *
-     * @return {String} - The friendly username
-     */
-    getVariableUsername() {
-        return this.data.user_name
-    }
-
-    /**
      * Returns the message's content
      *
      * @return {String} - message content
      */
     getContent() {
         return this.data.content.htmldecode();
-    }
-
-    /**
-     * @return {int} - the room context
-     */
-    getContext() {
-        return this.data["room_id"];
     }
 
     /* The below was stolen directly from https://github.com/Zirak/SO-ChatBot/blob/master/master.js. I made a couple edits*/

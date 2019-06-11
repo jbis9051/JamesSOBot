@@ -25,7 +25,7 @@ module.exports = function (bot) {
             }
 
             const name = msg.args.shift();
-            const output = msg.args.join(" ");
+            const output = msg.args.join(" ").htmlToMarkdown();
             const description = `User-taught Command: \`${output}\``;
             // let description = msgString.match(/(?<=\[).+(?=])/);
 

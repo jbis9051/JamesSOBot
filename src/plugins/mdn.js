@@ -1,4 +1,4 @@
-const {Message} = require('../Message.js');
+const {Message} = require('../events/Message.js');
 
 module.exports = function (bot) {
     bot.addCommand({
