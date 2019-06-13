@@ -162,21 +162,22 @@ const bot = {
      * @return {boolean}
      */
     permissionCheck: async (command, msg) => {
-        return command.permissions.some(async permissionsKey => {
-            switch (permissionsKey) {
-                case "all": {
-                    return true;
-                }
-                case "OWNER": {
-                    return await msg.roomContext.isRoomOwnerId(msg.getStaticUserUID());
-                }
-                default: {
-                    if (config.users_groups[permissionsKey].includes(msg.getStaticUserUID())) {
+        return (
+            command.permissions.some(permissionsKey => {
+                switch (permissionsKey) {
+                    case "all": {
                         return true;
                     }
+                    case "OWNER": {
+                        return false;
+                    }
+                    default: {
+                        return config.users_groups[permissionsKey].includes(msg.getStaticUserUID());
+                    }
                 }
-            }
-        });
+            })
+            || (command.permissions.includes("OWNER") && await msg.roomContext.isRoomOwnerId(msg.getStaticUserUID()))
+        )
     },
     isAdmin(id) {
         return config.users_groups["admin"].includes(id);
@@ -324,7 +325,7 @@ const bot = {
      * @return {Promise<void>}
      */
     json_request: async (url, callback) => {
-        await request(url, {json: true}, callback)
+        await request(url, {json: true,}, callback)
     },
     /**
      * Retrieves data from URL and passes it to the `callback`. If you need JSON than use the `json_request` function

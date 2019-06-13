@@ -52,7 +52,9 @@ class Client extends EventEmitter {
             }*/
 
             /* Or just clear out the file */
-            fs.writeFileSync(cookies_path, '{}');
+            if (!data.isJSON()) {
+                fs.writeFileSync(cookies_path, '{}');
+            }
         }
         this.cookieJar = request.jar(new FileCookieStore(cookies_path));
         return this;
@@ -73,9 +75,32 @@ class Client extends EventEmitter {
             jar: this.cookieJar,
             resolveWithFullResponse: true
         });
-        if (resp.request.path === "/") {
-        }
         this._id = parseInt(resp.request.path.match(/(?<=\/users\/)[0-9]+(?=\/)/)[0]);
+        let sites;
+        if (!fs.existsSync(path.join(__dirname, '..', 'data', 'sites'))) {
+            const resp = await request({
+                method: 'GET',
+                uri: 'https://api.stackexchange.com/2.2/sites',
+                qs: {
+                    pagesize: 999999999
+                },
+                gzip: true,
+                jar: this.cookieJar,
+            });
+            sites = JSON.parse(resp);
+            bot.saveData('sites', sites);
+        } else {
+            sites = bot.loadData('sites');
+        }
+        const siteURLRegex = config.siteUrl.replace(/http(s)?:\/\/(www\.)?/, '');
+        this.api_site_param = sites.items.find(
+            site =>
+                (site.aliases && site.aliases.map(
+                    siteURL =>
+                        siteURL.replace(/http(s)?:\/\/(www\.)?/, '')
+                ).includes(siteURLRegex))
+                || site.site_url === siteURLRegex
+        ).api_site_parameter;
     }
 
     async mainSiteLogin() {
@@ -116,22 +141,21 @@ class Client extends EventEmitter {
                 "Origin": config.chatURL
             }
         });
-        const self = this; //I'm lazy and https://stackoverflow.com/a/3950207/7886229 got 22 upvotes so I know have at least 22 peoples support
-        ws.on('open', function () {
-            self.emit('ws-open');
-            self.emit('ready');
+        ws.on('open', () => {
+            this.emit('ws-open');
+            this.emit('ready');
         });
-        ws.on('message', function (data) {
-            self.emit('ws-message', data);
-            self._handleMessage(data);
+        ws.on('message', (data) => {
+            this.emit('ws-message', data);
+            this._handleMessage(data);
         });
-        ws.on('close', function (code) {
-            self.emit('ws-close', code);
-            console.log("Close: " + code);
+        ws.on('close', (code) => {
+            this.emit('ws-close', code);
+            bot.log("Close: " + code);
         });
-        ws.on('error', function (err) {
+        ws.on('error', (err) => {
             console.error(err);
-            self.emit('ws-error', err);
+            this.emit('ws-error', err);
         });
         this.ws = ws;
     }
@@ -271,21 +295,6 @@ class Client extends EventEmitter {
         await this.send(`:${msg.data.message_id} ${content}`, msg.getContext())
     }
 
-    async getCurrentUsers() {
-        /* There's probably a better way to do this, but I can't find it
-         */
-        const data = await this.chatPage.evaluate(() => {
-            return {
-                users: (() => {
-                    let x = [];
-                    CHAT.RoomUsers.all().forEach(i => x.push(i));
-                    return x
-                })()
-            }
-        });
-        return data.users;
-    }
-
     async activeUsernameSearch(username, roomNum) {
         const body = await request({
             method: 'GET',
@@ -392,6 +401,20 @@ class Client extends EventEmitter {
     async isRoomOwnerId(id, roomNum) {
         const owners = await this.getRoomOwners(roomNum);
         return owners.some(o => o.id === id);
+    }
+
+
+    stats(id, api_site_param = this.api_site_param) {
+        return new Promise(resolve => {
+            request({
+                url: `https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`,
+                gzip: true,
+                json: true,
+                jar: this.cookieJar
+            }, (err, json) => {
+                resolve(json.body.items ? json.body.items[0] || 'User Not Found' : 'User Not Found');
+            });
+        })
     }
 }
 

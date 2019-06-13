@@ -29,7 +29,7 @@ async function processMessage(msg) {
         return;
     }
     if (!bot.validateMsg(msg)) {
-        bot.client.send('This command conflicts with law #3');
+        msg.roomContext.send('This command conflicts with law #3');
         return;
     }
     if (!bot.isCommandMsg(msg)) { /* is a command */
@@ -46,7 +46,7 @@ async function processMessage(msg) {
     try {
         await msg.command.func(msg);
     } catch (e) {
-        console.error(e);
+        bot.error(e);
     }
 }
 
@@ -74,5 +74,6 @@ require('./src/plugins/learn.js')(bot);
 require('./src/plugins/calc.js')(bot);
 require('./src/plugins/betterecho.js')(bot);
 require('./src/plugins/afk.js')(bot);
+require('./src/plugins/stat.js')(bot);
 
 bot.client.init();

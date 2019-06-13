@@ -1,0 +1,37 @@
+const {Message} = require('../events/Message');
+module.exports = function (bot) {
+    bot.addCommand({
+        name: "stat",
+        args: [],
+        description: "Gets info about a user",
+        shortcuts: [
+            "stats",
+            "stat",
+        ],
+        ignore: false,
+        permissions: ["all"],
+        func: async (msg) => {
+            if (msg.args.length < 1) {
+                msg.reply("**Missing Args**");
+                return;
+            }
+            const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await msg.roomContext.usernameToId(msg.args[0]);
+            const userData = await bot.client.stats(id, msg.args[1]);
+            // {"items":[{"badge_counts":{"bronze":15,"silver":4,"gold":1},"account_id":10715379,"is_employee":false,"last_modified_date":1560326454,"last_access_date":1560357081,"reputation_change_year":44,"reputation_change_quarter":22,"reputation_change_month":10,"reputation_change_week":10,"reputation_change_day":10,"reputation":334,"creation_date":1492547029,"user_type":"registered","user_id":7886229,"accept_rate":83,"website_url":"http://joshbrown.info","link":"https://stackoverflow.com/users/7886229/jbis","profile_image":"https://i.stack.imgur.com/8kBbg.png?s=128&g=1","display_name":"JBis"}],"has_more":false,"quota_max":300,"quota_remaining":287}
+            msg.roomContext.send(Message.codify("" +
+                `Username: ${userData.display_name}\n` +
+                `Reputation: ${userData.reputation}\n` +
+                `Reputation Change Month: ${userData.reputation_change_month}\n` +
+                `Last Accessed: ${(new Date(userData.last_access_date * 1000))}`));
+        }
+    });
+};
+
+/**
+ * Sends a fun fact
+ * @param expression - expression to evaluate
+ * @return {String} - result
+ */
+function calc(expression) {
+}
+
