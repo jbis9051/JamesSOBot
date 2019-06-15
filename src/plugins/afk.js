@@ -60,6 +60,7 @@ module.exports = function (bot) {
             };
             bot.saveData('afk_data', afk_data);
             bot.log(msg.getVariableUsername() + " is afk");
+            msg.reply("\\o")
         }
     });
 };

@@ -170,8 +170,9 @@ class Client extends EventEmitter {
             if (!this.roomNums.includes(room)) {
                 return false;
             }
-            // console.log(data["r" + room].e[0]);
-            this.emit(data["r" + room].e[0].event_type, data["r" + room].e[0]);
+            for (const event of data["r" + room].e) {
+                this.emit(event.event_type, event);
+            }
         });
     }
 
@@ -411,8 +412,12 @@ class Client extends EventEmitter {
                 gzip: true,
                 json: true,
                 jar: this.cookieJar
-            }, (err, json) => {
-                resolve(json.body.items ? json.body.items[0] || 'User Not Found' : 'User Not Found');
+            }, (err, resp, body) => {
+                if (resp.statusCode !== 200) {
+                    resolve(false);
+                } else {
+                    resolve(body.items ? body.items[0] || 'User Not Found' : 'User Not Found');
+                }
             });
         })
     }

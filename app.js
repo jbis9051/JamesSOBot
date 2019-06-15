@@ -44,7 +44,7 @@ async function processMessage(msg) {
         return;
     }
     try {
-        await msg.command.func(msg);
+        msg.command.func(msg);
     } catch (e) {
         bot.error(e);
     }
