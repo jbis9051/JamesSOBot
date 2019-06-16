@@ -413,10 +413,10 @@ class Client extends EventEmitter {
                 json: true,
                 jar: this.cookieJar
             }, (err, resp, body) => {
-                if (resp.statusCode !== 200) {
+                if (resp.statusCode !== 200 || !body.items) {
                     resolve(false);
                 } else {
-                    resolve(body.items ? body.items[0] || 'User Not Found' : 'User Not Found');
+                    resolve(body.items[0]);
                 }
             });
         })

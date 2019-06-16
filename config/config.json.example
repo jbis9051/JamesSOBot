@@ -1,11 +1,38 @@
 {
   "email": "myemail@example.com",
   "password": "password123",
+  "siteUrl": "https://stackoverflow.com",
+  "chatURL": "https://chat.stackoverflow.com",
   "users_groups":{
-     "admin": [
-          7886229
-     ]
+    "admin": [
+      7886229
+    ]
   },
-  "siteUrl": "https://stackexchange.com",
-  "chatURL": "https://chat.stackexchange.com"
+  "plugins": [
+    "ban.js",
+
+    "default/help.js",
+    "default/selfDestruct.js",
+    "default/status.js",
+    "default/info.js",
+    "default/life.js",
+    "default/welcome.js",
+
+    "joke.js",
+    "mdn.js",
+    "wiki.js",
+    "funfact.js",
+    "kill.js",
+    "timer.js",
+    "rules.js",
+    "goodbye.js",
+    "random.js",
+    "youmessedup.js",
+    "applesupport.js",
+    "learn.js",
+    "calc.js",
+    "betterecho.js",
+    "afk.js",
+    "stat.js"
+  ]
 }

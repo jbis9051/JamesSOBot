@@ -1,6 +1,8 @@
 const {Message} = require("./src/events/Message");
 const {ChatEvent} = require('./src/events/ChatEvent.js');
 
+const config = require('./config/config');
+
 const bot = require('./src/bot.js');
 const {Client} = require('./src/Client.js');
 const {ClientDebug} = require('./src/ClientDebug.js');
@@ -50,30 +52,6 @@ async function processMessage(msg) {
     }
 }
 
-require('./src/plugins/ban.js')(bot);
-
-require('./src/plugins/default/help.js')(bot);
-require('./src/plugins/default/selfDestruct.js')(bot);
-require('./src/plugins/default/status.js')(bot);
-require('./src/plugins/default/info.js')(bot);
-require('./src/plugins/default/life.js')(bot);
-require('./src/plugins/default/welcome.js')(bot);
-
-require('./src/plugins/joke.js')(bot);
-require('./src/plugins/mdn.js')(bot);
-require('./src/plugins/wiki.js')(bot);
-require('./src/plugins/funfact.js')(bot);
-require('./src/plugins/kill.js')(bot);
-require('./src/plugins/timer.js')(bot);
-require('./src/plugins/rules.js')(bot);
-require('./src/plugins/goodbye.js')(bot);
-require('./src/plugins/random.js')(bot);
-require('./src/plugins/youmessedup.js')(bot);
-require('./src/plugins/applesupport.js')(bot);
-require('./src/plugins/learn.js')(bot);
-require('./src/plugins/calc.js')(bot);
-require('./src/plugins/betterecho.js')(bot);
-require('./src/plugins/afk.js')(bot);
-require('./src/plugins/stat.js')(bot);
+config.plugins.forEach(plugin => require('./src/plugins/' + plugin)(bot));
 
 bot.client.init();

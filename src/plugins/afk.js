@@ -14,6 +14,9 @@ module.exports = function (bot) {
             return true
         },
         callback: (msg) => {
+            if (bot.isMyMsg(msg)) {
+                return;
+            }
             const username = msg.getVariableUsername().replace(/ /g, '');
             if (isAFK(username)
                 && Date.now() - afk_data[username].afkSince >= gracePeriod
