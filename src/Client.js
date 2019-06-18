@@ -154,7 +154,7 @@ class Client extends EventEmitter {
             bot.log("Close: " + code);
         });
         ws.on('error', (err) => {
-            console.error(err);
+            bot.error("Error: " + code);
             this.emit('ws-error', err);
         });
         this.ws = ws;

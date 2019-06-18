@@ -49,7 +49,7 @@ module.exports = function (bot) {
             args: [],
             description: learn_object.description,
             shortcuts: [
-                learn_object.name
+                learn_object.name.toLowerCase()
             ],
             ignore: true,
             permissions: ["all"],
@@ -62,7 +62,7 @@ module.exports = function (bot) {
     bot.addCommand({
         name: "unlearn",
         args: [""],
-        description: "Unlearns a command",
+        description: "Unlearns a learned command command",
         shortcuts: [
             "unlearn"
         ],

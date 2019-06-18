@@ -8,7 +8,7 @@ module.exports = function (bot) {
             "disable"
         ],
         ignore: false,
-        permissions: ["admin"],
+        permissions: ["admin", "OWNER"],
         func: (msg) => {
             if (!msg.sudo) {
                 msg.roomContext.send("Try `sudo`");
@@ -27,7 +27,7 @@ module.exports = function (bot) {
             "enable"
         ],
         ignore: false,
-        permissions: ["admin"],
+        permissions: ["admin", "OWNER"],
         func: (msg) => {
             if (live) {
                 msg.roomContext.send("I'm already alive...");

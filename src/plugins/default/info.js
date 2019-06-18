@@ -2,7 +2,7 @@ module.exports = function (bot) {
     bot.addCommand({
             name: "info",
             args: [],
-            description: "Gives information about me",
+        description: "Gives information about the bot",
             shortcuts: [
                 "info"
             ],

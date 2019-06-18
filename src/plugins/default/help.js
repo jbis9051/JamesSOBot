@@ -9,6 +9,7 @@ module.exports = function (bot) {
         ignore: false,
         permissions: ["all"],
         func: (msg) => {
+            /*
             let exportText = "";
             Object.keys(bot.commands).forEach(e => {
                 e = bot.getCommand(e);
@@ -17,6 +18,8 @@ module.exports = function (bot) {
                 }
             });
             msg.roomContext.send(exportText);
+             */
+            msg.reply("Command documentation and syntax can be found [here](https://github.com/jbis9051/SO-ChatBot/blob/master/docs/COMMANDS.md).")
         }
     })
 };

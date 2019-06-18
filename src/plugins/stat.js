@@ -15,8 +15,8 @@ module.exports = function (bot) {
                 msg.reply("**Missing Args**");
                 return;
             }
-            const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await msg.roomContext.usernameToId(msg.args[0]);
-            const userData = await bot.client.stats(id, msg.args[1]);
+            const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await msg.roomContext.usernameToId(msg.args.join());
+            const userData = await bot.client.stats(id);
             if (!userData) {
                 msg.reply("Unable to find user");
                 return;
