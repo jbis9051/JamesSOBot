@@ -7,6 +7,7 @@ module.exports = function (bot) {
         shortcuts: [
             "disable"
         ],
+        examples: ["|| sudo disable"],
         ignore: false,
         permissions: ["admin", "OWNER"],
         func: (msg) => {
@@ -26,6 +27,7 @@ module.exports = function (bot) {
         shortcuts: [
             "enable"
         ],
+        examples: ["|| enable"],
         ignore: false,
         permissions: ["admin", "OWNER"],
         func: (msg) => {

@@ -9,6 +9,7 @@ module.exports = function (bot) {
         shortcuts: [
             "kill",
         ],
+        examples: ["|| kill self"],
         ignore: false,
         permissions: ["all"],
         func: async (msg) => {

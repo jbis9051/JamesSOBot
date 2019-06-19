@@ -6,6 +6,7 @@ module.exports = function (bot) {
             shortcuts: [
                 "info"
             ],
+        examples: ["|| info"],
             ignore: false,
             permissions: ["all"],
             func: (msg) => {

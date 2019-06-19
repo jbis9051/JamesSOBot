@@ -1,6 +1,6 @@
 const config = require('../config/config.json');
-const bot = require("./bot");
-
+const {Bot} = require("./bot.js");
+const {Client} = require("./Client.js");
 let md_doc = `
 # Command Documentation
 
@@ -12,6 +12,7 @@ let md_doc = `
 
 let defaults = [];
 let plugins = [];
+const bot = new Bot(new Client("", "", []));
 let learned = Object.values(bot.loadData("learn_list"));
 
 config.plugins.forEach(plugin => {
@@ -53,7 +54,7 @@ ${command.permissions.map(el => "- " + el).join("\n")}
            
 **Example**
 
-- 
+${command.examples.map(el => "- \`" + el + "\`").join("\n")}
 
 **Shortcuts**
 
@@ -79,7 +80,7 @@ ${command.permissions.map(el => "- " + el).join("\n")}
            
 **Example**
 
-- 
+${command.examples.map(el => "- `" + el + "`").join("\n")}
 
 **Shortcuts**
 

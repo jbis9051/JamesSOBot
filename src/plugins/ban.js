@@ -29,6 +29,7 @@ module.exports = function (bot) {
         shortcuts: [
             "ban"
         ],
+        examples: ["|| ban @JBis", "|| ban JBis", "|| ban 7886229"],
         ignore: false,
         permissions: ["OWNER", "admin"],
         func: async (msg) => {
@@ -61,6 +62,7 @@ module.exports = function (bot) {
         shortcuts: [
             "unban"
         ],
+        examples: ["|| unban @JBis", "|| unban JBis", "|| unban 7886229"],
         ignore: false,
         permissions: ["OWNER", "admin"],
         func: async (msg) => {

@@ -10,6 +10,7 @@ module.exports = function (bot) {
         shortcuts: [
             "mdn"
         ],
+        examples: ["|| mdn array sort"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {

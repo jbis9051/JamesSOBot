@@ -1,4 +1,3 @@
-const bot = require('./bot');
 const config = require('../config/config');
 const FileCookieStore = require('tough-cookie-filestore');
 const fs = require('fs');
@@ -7,22 +6,35 @@ const EventEmitter = require('events');
 const cheerio = require('cheerio');
 const path = require('path');
 const request = require("request-promise");
+const {Message} = require("./events/Message");
+const {ChatEvent} = require("./events/ChatEvent");
 
 /**
  * @class Client
  * @classdesc The Client. Handles everything from logging in to sending & receiving messages. It is environment specific and should be one of the few things needing to be changed, environment to environment.
- * @property {Array} this.roomNum - The StackExchange rooms the bot should connect to
+ * @property {Array} this.roomNum - The StackExchange rooms the Bot should connect to
  * @property {int} this._id
  * @property {String} this.fkey
  * @property {String} this.wsurl
  * @property {WebSocket} this.ws
  */
 class Client extends EventEmitter {
-    constructor(roomNums) {
-        super(roomNums);
+    /**
+     *
+     * @param siteURL - The site url - for example https://stackoverflow.com
+     * @param chatURL - the chat url - for example https://chat.stackoverflow.com
+     * @param roomNums - array of room ids to connect to
+     * @param {Bot} bot
+     */
+    constructor(siteURL, chatURL, roomNums, bot) {
+        super(siteURL, chatURL, roomNums);
+        this.siteURL = siteURL;
+        this.chatURL = chatURL;
         this.roomNums = roomNums;
+        this.bot = bot;
         this.mainRoomNum = this.roomNums[0];
-        this._handleMessage = this._handleMessage.bind(this);
+        this.on(ChatEvent.NEW_MESSAGE, this.bot.processMessage.bind(bot));
+        this.on(ChatEvent.EDIT, this.bot.processMessage.bind(bot));
     }
 
     init() {
@@ -33,11 +45,12 @@ class Client extends EventEmitter {
             console.error(reason);
             throw reason;
         });
+        return this;
     }
 
     async browserSetup() {
         /* The following is quite possibly the worst code in the repository, but I have to do this because FileCookieStore has shitty code and will save invalid JSON files, crashing the app next time you run it. */
-        const cookies_path = path.join(__dirname, '..', 'data', 'cookies.json');
+        const cookies_path = path.join(__dirname, '..', 'data', this.bot.saveFolder, 'cookies.json');
         if (!fs.existsSync(cookies_path)) {
             fs.writeFileSync(cookies_path, '{}');
         } else {
@@ -71,13 +84,13 @@ class Client extends EventEmitter {
         //this._id = data.my_id;
         const resp = await request({
             method: 'GET',
-            uri: config.siteUrl + '/users/current',
+            uri: this.siteURL + '/users/current',
             jar: this.cookieJar,
             resolveWithFullResponse: true
         });
         this._id = parseInt(resp.request.path.match(/(?<=\/users\/)[0-9]+(?=\/)/)[0]);
-        let sites;
-        if (!fs.existsSync(path.join(__dirname, '..', 'data', 'sites'))) {
+        let sites = this.bot.loadGlobalData('sites');
+        if (!sites) {
             const resp = await request({
                 method: 'GET',
                 uri: 'https://api.stackexchange.com/2.2/sites',
@@ -88,25 +101,24 @@ class Client extends EventEmitter {
                 jar: this.cookieJar,
             });
             sites = JSON.parse(resp);
-            bot.saveData('sites', sites);
-        } else {
-            sites = bot.loadData('sites');
+            this.bot.saveGlobalData('sites', sites);
         }
-        const siteURLRegex = config.siteUrl.replace(/http(s)?:\/\/(www\.)?/, '');
+        const siteURLRegex = this.siteURL.replace(/http(s)?:\/\/(www\.)?/, '');
         this.api_site_param = sites.items.find(
-            site =>
-                (site.aliases && site.aliases.map(
-                    siteURL =>
-                        siteURL.replace(/http(s)?:\/\/(www\.)?/, '')
-                ).includes(siteURLRegex))
-                || site.site_url === siteURLRegex
+            site => {
+                return (site.aliases && site.aliases.map(
+                    siteURL => {
+                        return siteURL.replace(/http(s)?:\/\/(www\.)?/, '');
+                    }).includes(siteURLRegex))
+                    || site.site_url.replace(/http(s)?:\/\/(www\.)?/, '') === siteURLRegex;
+            }
         ).api_site_parameter;
     }
 
     async mainSiteLogin() {
         const resp = await request({
             method: 'GET',
-            uri: config.siteUrl + '/users/login',
+            uri: this.siteURL + '/users/login',
             jar: this.cookieJar,
             resolveWithFullResponse: true
         });
@@ -118,7 +130,7 @@ class Client extends EventEmitter {
         const fkey = $('input[name="fkey"]').val();
         const body = await request({
             method: 'POST',
-            uri: config.siteUrl + '/users/login',
+            uri: this.siteURL + '/users/login',
             jar: this.cookieJar,
             followAllRedirects: true,
             form: {
@@ -138,7 +150,7 @@ class Client extends EventEmitter {
         this.wsurl = await this.getWSURL(this.mainRoomNum);
         const ws = new WebSocket(this.wsurl + "?l=99999999999", null, {
             headers: {
-                "Origin": config.chatURL
+                "Origin": this.chatURL
             }
         });
         ws.on('open', () => {
@@ -151,10 +163,10 @@ class Client extends EventEmitter {
         });
         ws.on('close', (code) => {
             this.emit('ws-close', code);
-            bot.log("Close: " + code);
+            this.bot.log("Close: " + code);
         });
         ws.on('error', (err) => {
-            bot.error("Error: " + code);
+            this.bot.error("Error: " + code);
             this.emit('ws-error', err);
         });
         this.ws = ws;
@@ -171,7 +183,12 @@ class Client extends EventEmitter {
                 return false;
             }
             for (const event of data["r" + room].e) {
-                this.emit(event.event_type, event);
+                this.emit(event.event_type, new Message(event, this));
+                this.bot.customClientListners.forEach(l => {
+                    if (l.on === event.event_type) {
+                        l.callback(event, this);
+                    }
+                })
             }
         });
     }
@@ -179,7 +196,7 @@ class Client extends EventEmitter {
     async getFKEY(roomNum) {
         const body = await request({
             method: 'GET',
-            uri: `${config.chatURL}/rooms/${roomNum}`,
+            uri: `${this.chatURL}/rooms/${roomNum}`,
             jar: this.cookieJar,
         });
         const $ = cheerio.load(body);
@@ -190,7 +207,7 @@ class Client extends EventEmitter {
         const wsurl = await this.getWSURL(roomNum);
         const ws = new WebSocket(wsurl + "?l=99999999999", null, {
             headers: {
-                "Origin": config.chatURL
+                "Origin": this.chatURL
             }
         });
         ws.on('open', () => {
@@ -202,7 +219,7 @@ class Client extends EventEmitter {
     async getWSURL(roomNum) {
         const json = await request({
             method: 'POST',
-            uri: config.chatURL + '/ws-auth',
+            uri: this.chatURL + '/ws-auth',
             jar: this.cookieJar,
             form: {
                 roomid: roomNum,
@@ -215,7 +232,7 @@ class Client extends EventEmitter {
     async getLPARAM(roomNum) {
         const json = await request({
             method: 'POST',
-            uri: `${config.chatURL}/chats/${roomNum}/events`,
+            uri: `${this.chatURL}/chats/${roomNum}/events`,
             jar: this.cookieJar,
             body: {
                 fkey: this.fkey,
@@ -271,14 +288,14 @@ class Client extends EventEmitter {
         }
         const body = await request({
             method: 'POST',
-            uri: `${config.chatURL}/chats/${roomNum}/messages/new`,
+            uri: `${this.chatURL}/chats/${roomNum}/messages/new`,
             jar: this.cookieJar,
             form: {
                 text: msg,
                 fkey: this.fkey
             },
         }).catch(error => {
-            bot.error(error.error);
+            this.bot.error(error.error);
             const delay = error.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
             if (delay) {
                 setTimeout(async () => {
@@ -287,7 +304,7 @@ class Client extends EventEmitter {
             }
         });
         if (body) {
-            bot.log(body);
+            this.bot.log(body);
         }
         this.emit('send', msg);
     }
@@ -299,7 +316,7 @@ class Client extends EventEmitter {
     async activeUsernameSearch(username, roomNum) {
         const body = await request({
             method: 'GET',
-            uri: `${config.chatURL}/rooms/pingable/${roomNum}`,
+            uri: `${this.chatURL}/rooms/pingable/${roomNum}`,
             jar: this.cookieJar,
         });
         const array = JSON.parse(body).filter(a => a[1].replace(" ", "") === username.replace("@", ""));
@@ -312,7 +329,7 @@ class Client extends EventEmitter {
     async usernameSearch(query, limit = 50) {
         const body = await request({
             method: 'GET',
-            uri: `${config.chatURL}/users/search`,
+            uri: `${this.chatURL}/users/search`,
             qs: {
                 q: query,
                 limit: limit
@@ -331,13 +348,21 @@ class Client extends EventEmitter {
     async idToInfo(id, roomNum) {
         const body = await request({
             method: 'POST',
-            uri: `${config.chatURL}/user/info`,
+            uri: `${this.chatURL}/user/info`,
             form: {
                 ids: id,
                 roomId: roomNum
             },
         });
         return JSON.parse(body).users[0];
+    }
+
+    async chatIDToSiteID(id) {
+        const body = await request({
+            method: 'GET',
+            uri: `${this.chatURL}/users/thumbs/${id}`,
+        });
+        return JSON.parse(body).profileUrl.match(/\d+/)[0];
     }
 
     async usernameToInfo(username, roomNum) {
@@ -350,7 +375,7 @@ class Client extends EventEmitter {
 
     getNumMessagesFromId(id, roomNum) {
         return new Promise(resolve => {
-            bot.standard_request(`${config.chatURL}/users/${id}`, (err, res, body) => {
+            this.bot.standard_request(`${this.chatURL}/users/${id}`, (err, res, body) => {
                 try {
                     const $ = cheerio.load(body);
                     const numMessages = parseInt($(`#room-${roomNum} .room-message-count`).attr('title').match(/^\d+/)[0]);
@@ -377,7 +402,7 @@ class Client extends EventEmitter {
      */
     getRoomOwners(roomNum) {
         return new Promise((resolve, reject) => {
-            bot.standard_request(`${config.chatURL}/rooms/info/${roomNum}`, (err, res, body) => {
+            this.bot.standard_request(`${this.chatURL}/rooms/info/${roomNum}`, (err, res, body) => {
                 try {
                     const $ = cheerio.load(body);
                     resolve(

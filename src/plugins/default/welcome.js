@@ -13,6 +13,7 @@ module.exports = function (bot) {
         shortcuts: [
             "welcome"
         ],
+        examples: ["|| welcome @JBis", "|| welcome JBis"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {
@@ -34,7 +35,7 @@ module.exports = function (bot) {
     });
     bot.RegisterListener({
         func: (msg) => {
-            if (bot.isMyMsg(msg)) {
+            if (msg.isMyEvent()) {
                 return false;
             }
             if (people_seen.includes(msg.getStaticUserUID())) {

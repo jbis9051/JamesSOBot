@@ -2,11 +2,13 @@ module.exports = function (bot) {
     bot.addCommand({
         name: "echo",
         args: [],
-        description: "",
+        description: "Bot echo's what you say",
+
         shortcuts: [
             "echo",
             "betterecho",
         ],
+        examples: ["|| echo hi"],
         ignore: true,
         permissions: ["all"],
         func: (msg) => {

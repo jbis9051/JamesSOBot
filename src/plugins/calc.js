@@ -21,6 +21,7 @@ module.exports = function (bot) {
             "calculator",
             "c"
         ],
+        examples: ["|| calc 5^2", "|| calc 9*2"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {

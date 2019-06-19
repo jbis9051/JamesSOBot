@@ -8,6 +8,7 @@ module.exports = function (bot) {
             "timer",
             "remind",
         ],
+        examples: ["|| remind @JBis hi jbis 10s", "|| remind @JBis hi jbis 5m", "|| remind @JBis hi jbis 5h"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {

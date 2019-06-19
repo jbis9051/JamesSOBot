@@ -7,6 +7,7 @@ module.exports = function (bot) {
             "funfact",
             "ff"
         ],
+        examples: ["|| funfact"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {

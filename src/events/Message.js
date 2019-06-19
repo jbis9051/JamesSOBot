@@ -1,5 +1,6 @@
-const bot = require("../bot");
 const {ChatEvent} = require("./ChatEvent");
+
+require('../utils');
 
 /**
  * @class Message
@@ -14,9 +15,11 @@ class Message extends ChatEvent {
     /**
      *
      * @param {Object} data - raw message data
+     * @param {Client} client - client that the message came from
      */
-    constructor(data) {
-        super(data);
+    constructor(data, client) {
+        super(data, client);
+        this.client = client;
         const msgSplit = this.getContent().split(" ");
         this.prefix = msgSplit.shift();
         if (msgSplit[0] === "sudo") {
@@ -27,19 +30,19 @@ class Message extends ChatEvent {
         }
         this.commandCall = msgSplit.shift();
         this.args = msgSplit;
-        this.command = bot.getCommand(this.commandCall);
+        this.command = this.client.bot.getCommand(this.commandCall);
 
         this.roomContext = {
-            send: (...args) => bot.client.send(...args, this.getContext()),
-            activeUsernameSearch: (...args) => bot.client.activeUsernameSearch(...args, this.getContext()),
-            idToInfo: (...args) => bot.client.idToInfo(...args, this.getContext()),
-            getNumMessagesFromId: (...args) => bot.client.getNumMessagesFromId(...args, this.getContext()),
-            getRoomOwners: (...args) => bot.client.getRoomOwners(...args, this.getContext()),
-            isRoomOwnerUsername: (...args) => bot.client.isRoomOwnerUsername(...args, this.getContext()),
-            isRoomOwnerId: (...args) => bot.client.isRoomOwnerId(...args, this.getContext()),
-            getNumMessages: (...args) => bot.client.getNumMessages(...args, this.getContext()),
-            usernameToId: (...args) => bot.client.usernameToId(...args, this.getContext()),
-            usernameToInfo: (...args) => bot.client.usernameToInfo(...args, this.getContext())
+            send: (...args) => this.client.send(...args, this.getContext()),
+            activeUsernameSearch: (...args) => this.client.activeUsernameSearch(...args, this.getContext()),
+            idToInfo: (...args) => this.client.idToInfo(...args, this.getContext()),
+            getNumMessagesFromId: (...args) => this.client.getNumMessagesFromId(...args, this.getContext()),
+            getRoomOwners: (...args) => this.client.getRoomOwners(...args, this.getContext()),
+            isRoomOwnerUsername: (...args) => this.client.isRoomOwnerUsername(...args, this.getContext()),
+            isRoomOwnerId: (...args) => this.client.isRoomOwnerId(...args, this.getContext()),
+            getNumMessages: (...args) => this.client.getNumMessages(...args, this.getContext()),
+            usernameToId: (...args) => this.client.usernameToId(...args, this.getContext()),
+            usernameToInfo: (...args) => this.client.usernameToInfo(...args, this.getContext())
         };
 
     }
@@ -51,7 +54,7 @@ class Message extends ChatEvent {
      * @param {String} content
      */
     reply(content) {
-        bot.client.reply(this, content)
+        this.client.reply(this, content)
     }
 
     /**

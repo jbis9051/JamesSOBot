@@ -13,6 +13,7 @@ module.exports = function (bot) {
             "androiddocs",
             "droiddocs"
         ],
+        examples: ["|| adoc bluetooth"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {

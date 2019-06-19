@@ -9,6 +9,7 @@ module.exports = function (bot) {
         shortcuts: [
             "learn"
         ],
+        examples: ["|| learn shortcut output", "|| learn tbh to be honest"],
         ignore: false,
         permissions: ["all"],
         func: async (msg) => {
@@ -66,6 +67,7 @@ module.exports = function (bot) {
         shortcuts: [
             "unlearn"
         ],
+        examples: ["|| unlearn tbh"],
         ignore: false,
         permissions: ["all"],
         func: async (msg) => {

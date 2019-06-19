@@ -10,6 +10,7 @@ module.exports = function (bot) {
         shortcuts: [
             "aps"
         ],
+        examples: ["|| aps forgot Apple ID password"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {

@@ -1,10 +1,19 @@
 class ChatEvent {
-    constructor(data) {
+    constructor(data, client) {
+        this.client = client;
         this.data = data;
         this.id = data.id;
         this.type = data["event_type"];
     }
 
+    /**
+     * Checks whether a Message object author is the bot
+     *
+     * @return {boolean}
+     */
+    isMyEvent() {
+        return this.getStaticUserUID() === this.client._id
+    }
 
     /**
      * @return {int} - the room context

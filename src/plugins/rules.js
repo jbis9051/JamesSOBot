@@ -7,6 +7,7 @@ module.exports = function (bot) {
             "rules",
             "laws"
         ],
+        examples: ["|| laws"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {

@@ -314,9 +314,9 @@ Returns whether a Message object's sender has sufficient privileges to activate 
 
 
 
-#### isMyMsg(msg) 
+#### isMyEvent(msg) 
 
-Checks whether a Message object author is the bot
+Checks whether a Event object author is the bot
 
 
 

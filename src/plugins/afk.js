@@ -14,7 +14,7 @@ module.exports = function (bot) {
             return true
         },
         callback: (msg) => {
-            if (bot.isMyMsg(msg)) {
+            if (msg.isMyEvent()) {
                 return;
             }
             const username = msg.getVariableUsername().replace(/ /g, '');
@@ -52,6 +52,7 @@ module.exports = function (bot) {
         shortcuts: [
             "afk"
         ],
+        examples: ["|| welcome @JBis", "|| welcome JBis"],
         ignore: false,
         permissions: ["all"],
         func: async (msg) => {

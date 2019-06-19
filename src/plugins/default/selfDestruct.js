@@ -13,6 +13,7 @@ module.exports = function (bot) {
               "just_do_it",
               "shutdown",
           ],
+          examples: ["|| sudo restart"],
           ignore: false,
           permissions: ["admin"],
           func: (msg) => {

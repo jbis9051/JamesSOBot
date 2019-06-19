@@ -6,6 +6,7 @@ module.exports = function (bot) {
         shortcuts: [
             "random",
         ],
+        examples: ["|| random 2 30", "|| random -2 30", "|| random 30 18"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {

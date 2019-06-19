@@ -5,39 +5,76 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
 
-require('./utils');
 
-const bot = {
-    client: null,
+const {Message} = require("./events/Message");
+const {ChatEvent} = require('./events/ChatEvent.js');
 
-    shutdown_scripts: [],
-    commands: {},
-    listeners: [],
-    validatorScripts: [],
+class Bot {
+    constructor(plugins, saveFolderName) {
+        this.saveFolder = saveFolderName;
+        if (!fs.existsSync(path.join(__dirname, "..", "data", this.saveFolder))) {
+            fs.mkdirSync(path.join(__dirname, "..", "data", this.saveFolder));
+        }
+        this.shutdown_scripts = [];
+        this.commands = {};
+        this.listeners = [];
+        this.validatorScripts = [];
+        this.customClientListners = [];
+        this.info = {
+            start: Date.now(),
+            name: "James",
+        };
+        plugins.forEach(plugin => require('./plugins/' + plugin)(this));
+    }
 
-
-    user_groups: config.users_groups,
-    info: {
-        start: Date.now(),
-        name: "James",
-    },
+    async processMessage(msg) {
+        if (!this.validatorScriptRunner(msg)) {
+            return;
+        }
+        this.ListenerCheck(msg);
+        if (msg.isMyEvent()) {
+            return;
+        }
+        if (!this.validateMsg(msg)) {
+            msg.roomContext.send('This command conflicts with law #3');
+            return;
+        }
+        if (!this.isCommandMsg(msg)) { /* is a command */
+            return;
+        }
+        if (!msg.command) {
+            msg.reply('Invalid command! Try `help` for a list of available commands.' + ('.‍'.repeat(Math.random() * 10))); /* there is probably a better way of doing this */
+            return;
+        }
+        if (!await this.permissionCheck(msg.command, msg)) {
+            msg.reply("Your are not authorized to administer this command");
+            return;
+        }
+        try {
+            msg.command.func(msg);
+        } catch (e) {
+            this.error(e);
+        }
+    }
 
     /**
      * Logs messages
      *
      * @param {String} str
      */
-    log: (str) => {
+    log(str) {
         console.log((new Date()).toString() + " - " + str);
-    },
+    }
+
     /**
      * Logs Errors
      *
      * @param {String} str
      */
-    error: (str) => {
+    error(str) {
         console.error((new Date()).toString() + " - " + str);
-    },
+    }
+
     /**
      * A function that is to be including in a command
      *
@@ -52,32 +89,34 @@ const bot = {
      * @param {Array} cmd.shortcuts - Keywords that activate this command. If the Message's commandCall matches any of these shortcuts, this command will be activated.
      * @param {Boolean} cmd.ignore - Should this command be hidden from the help menu?
      * @param {Array} cmd.permissions - Array of groups allowed to use this command. Each entry should line up to group in `config.json["users_groups"]`.
+     * @param {Array} cmd.examples - Example commands. Only used for descriptive purposes.
      * @param {CommandFunction} cmd.func - The function to call when the command is activated
      */
-    addCommand: (cmd) => {
+    addCommand(cmd) {
         if (!cmd.func || !cmd.name) {
             console.error("Invalid command");
             return;
         }
-        bot.commands[cmd.name] = cmd;
-    },
+        this.commands[cmd.name] = cmd;
+    }
 
-    deleteCommand: (cmd) => {
-        delete bot.commands[cmd.name];
-    },
+    deleteCommand(cmd) {
+        delete this.commands[cmd.name];
+    }
+
     /**
      * Searches for a command based on command shortcuts
      *
      * @param {String|RegExp} cmdShortcut - shortcut of the command to search for
      * @return {boolean|Object} - the command found, or false if none was found
      */
-    getCommand: (cmdShortcut) => {
+    getCommand(cmdShortcut) {
         if (!cmdShortcut) {
             return false;
         }
         const commandShortcutLowerCase = cmdShortcut.toLowerCase();
-        for (const cmd of Object.keys(bot.commands)) {
-            if (bot.commands[cmd].shortcuts.some(
+        for (const cmd of Object.keys(this.commands)) {
+            if (this.commands[cmd].shortcuts.some(
                 (shortcut) => {
                     if (typeof shortcut === "object" && shortcut instanceof RegExp) {
                         return shortcut.test(cmdShortcut);
@@ -86,74 +125,81 @@ const bot = {
                 }
             )
             ) {
-                return bot.commands[cmd];
+                return this.commands[cmd];
             }
         }
         return false;
-    },
+    }
+
     /**
      * Searches for a command based on command name
      *
      * @param cmdName - Name of the command to search for
      * @return {boolean|Object} - the command found, or false if none was found
      */
-    getCommandFromName: (cmdName) => {
-        for (const cmd of Object.keys(bot.commands)) {
-            if (bot.commands[cmd].name === cmdName) {
-                return bot.commands[cmd];
+    getCommandFromName(cmdName) {
+        for (const cmd of Object.keys(this.commands)) {
+            if (this.commands[cmd].name === cmdName) {
+                return this.commands[cmd];
             }
         }
         return false;
-    },
+    }
+
     /**
      * Returns whether a command under a name exists
      *
      * @param cmdName - command name to search for
      * @return {boolean} - if the command exists
      */
-    commandExists: (cmdName) => {
-        return bot.commands.hasOwnProperty(cmdName);
-    },
+    commandExists(cmdName) {
+        return this.commands.hasOwnProperty(cmdName);
+    }
+
     /**
      * Shuts down the command after attempting to call shutdown scripts
      *
      * @param {Message} msg
      */
-    shutdown: (msg) => {
+    shutdown(msg) {
         try {
-            bot.shutdown_scripts.forEach(async e => await e(msg));
+            this.shutdown_scripts.forEach(async e => await e(msg));
         } catch (e) {
             process.exit();
         }
         process.exit();
-    },
+    }
+
     /**
      * Returns whether a space delimited string contains a command prefix
      *
      * @param {String} str - string to check
      * @return {Boolean}
      */
-    isCommand: (str) => {
-        return bot.isCommandPrefix(str.split(" ")[0].toLowerCase());
-    },
+    isCommand(str) {
+        return this.isCommandPrefix(str.split(" ")[0].toLowerCase());
+    }
+
     /**
      * Returns whether a string is a command prefix defined in `lang.json.prefix` array
      *
      * @param {String} str - string to check
      * @return {Boolean}
      */
-    isCommandPrefix: (str) => {
+    isCommandPrefix(str) {
         return lang.cmd.prefix.includes(str);
-    },
+    }
+
     /**
      * Returns whether a message contains a command prefix
      *
      * @param {Message} msg - Message to check
      * @return {Boolean}
      */
-    isCommandMsg: (msg) => {
-        return bot.isCommand(msg.getContent())
-    },
+    isCommandMsg(msg) {
+        return this.isCommand(msg.getContent())
+    }
+
     /**
      * Returns whether a Message object's sender has sufficient privileges to activate the `command`
      *
@@ -161,7 +207,7 @@ const bot = {
      * @param {Message} msg
      * @return {boolean}
      */
-    permissionCheck: async (command, msg) => {
+    async permissionCheck(command, msg) {
         return (
             command.permissions.some(permissionsKey => {
                 switch (permissionsKey) {
@@ -178,17 +224,19 @@ const bot = {
             })
             || (command.permissions.includes("OWNER") && await msg.roomContext.isRoomOwnerId(msg.getStaticUserUID()))
         )
-    },
+    }
+
     isAdmin(id) {
         return config.users_groups["admin"].includes(id);
-    },
+    }
+
     /**
      * @deprecated
      *
      * @param msg
      * @return {{args: string[], prefix: string, sudo: boolean}}
      */
-    format: (msg) => {
+    format(msg) {
         const msgSplit = msg.getContent().split(" ");
         if (msgSplit[1] === "sudo") {
             const prefix = msgSplit.shift();
@@ -205,46 +253,40 @@ const bot = {
                 args: msgSplit,
             }
         }
-    },
-    /**
-     * Checks whether a Message object author is the bot
-     *
-     * @param {Message} msg - Message to check
-     * @return {boolean}
-     */
-    isMyMsg(msg) {
-        return msg.getStaticUserUID() === bot.client._id
-    },
-    validateMsg: (msg) => {
+    }
+
+    validateMsg(msg) {
         return true;
-    },
+    }
+
     /**
      * Runs validator scripts and returns true if all return true, other wise false
      *
      * @param {Message} msg - Message to pass to validation scripts
      * @return {boolean} - If the Message is valid
      */
-    validatorScriptRunner: (msg) => {
-        for (let script of bot.validatorScripts) {
+    validatorScriptRunner(msg) {
+        for (let script of this.validatorScripts) {
             if (!script.func(msg)) {
-                bot.log("Validator Failed: " + script.name);
+                this.log("Validator Failed: " + script.name);
                 return false;
             }
         }
         return true;
-    },
+    }
+
     /**
      * Checks if listeners need to be ran and runs them if so
      *
      * @param {Message} msg - Message to pass to listeners
      */
-    ListenerCheck: (msg) => {
-        bot.listeners.forEach((value, index) => {
+    ListenerCheck(msg) {
+        this.listeners.forEach((value, index) => {
             if (value.func(msg)) {
                 value.callback(msg);
             }
         });
-    },
+    }
 
     /**
      * Callback for ListenerFunction to check if callback needs to be run
@@ -268,21 +310,26 @@ const bot = {
      * @param {shouldRun} listener.func
      * @param {listenerFunction} listener.callback
      */
-    RegisterListener: (listener) => {
+    RegisterListener(listener) {
         if (!listener.func || !listener.callback) {
             console.error("Invalid Listener");
             return;
         }
-        bot.listeners.push(listener);
-    },
+        this.listeners.push(listener);
+    }
+
     /**
      * Gives direct access to Client events. This is very low-level and is not needed in most cases.
      *
      * @borrows NodeJS#EventEmitter#on
      */
-    RegisterClientListener: (on, callback) => {
-        bot.client.on(on, callback);
-    },
+    RegisterClientListener(on, callback) {
+        this.customClientListners.push({
+            on: on,
+            callback: callback,
+        });
+    }
+
     /**
      * Callback for validator function.
      *
@@ -296,9 +343,10 @@ const bot = {
      * @param {String} name - Name of your validator script for logging purposes
      * @param {validatorCallback} func
      */
-    addValidatorScript: (name, func) => {
-        bot.validatorScripts.push({name: name, func: func});
-    },
+    addValidatorScript(name, func) {
+        this.validatorScripts.push({name: name, func: func});
+    }
+
     /**
      * Callback for shutdown script.
      *
@@ -310,9 +358,10 @@ const bot = {
      *
      * @param {shutdownScript} script - script to run
      */
-    addShutdownScript: (script) => {
-        bot.shutdown_scripts.push(script);
-    },
+    addShutdownScript(script) {
+        this.shutdown_scripts.push(script);
+    }
+
     /**
      * @callback RequestCallback
      * @borrows request
@@ -324,9 +373,10 @@ const bot = {
      * @param {RequestCallback} callback - callback to pass
      * @return {Promise<void>}
      */
-    json_request: async (url, callback) => {
+    async json_request(url, callback) {
         await request(url, {json: true,}, callback)
-    },
+    }
+
     /**
      * Retrieves data from URL and passes it to the `callback`. If you need JSON than use the `json_request` function
      *
@@ -334,18 +384,20 @@ const bot = {
      * @param {RequestCallback} callback
      * @return {Promise<void>}
      */
-    standard_request: async (url, callback) => {
+    async standard_request(url, callback) {
         await request({
             url,
             headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
         }, callback);
-    },
+    }
+
     /**
      * Selects data from HTML using the cheerio API
      *
      * @param {cheerio} body - Cheerio selector
      * @callback SelectorFunction
      */
+
     /**
      * Callback for selected Google Search content
      *
@@ -364,10 +416,10 @@ const bot = {
      * @param {GoogleCallback} callback
      * @return {Promise<void>}
      */
-    google_search: async (query, site, selector, selectorMatch, callback) => {
+    async google_search(query, site, selector, selectorMatch, callback) {
         /* if anyone wants to pay for API keys, feel free */
         const url = 'https://www.google.com/search?q=' + encodeURIComponent(query) + ((site) ? "%20site:" + site : "");
-        bot.standard_request(url, (err, res, body) => {
+        this.standard_request(url, (err, res, body) => {
             try {
                 const $ = cheerio.load(body);
                 let selected;
@@ -392,19 +444,37 @@ const bot = {
                 callback(false);
             }
         });
-    },
+    }
+
     saveData(name, data) {
         if (typeof data !== "string") {
             data = JSON.stringify(data);
         }
-        fs.writeFileSync(path.join(__dirname, '..', 'data', name), data);
-    },
+        fs.writeFileSync(path.join(__dirname, '..', 'data', this.saveFolder, name), data);
+    }
+
     loadData(name) {
+        if (!fs.existsSync(path.join(__dirname, '..', 'data', this.saveFolder, name))) {
+            return false;
+        }
+        const data = fs.readFileSync(path.join(__dirname, '..', 'data', this.saveFolder, name)).toString();
+        return data.isJSON() ? JSON.parse(data) : data;
+    }
+
+    saveGlobalData(name, data) {
+        if (typeof data !== "string") {
+            data = JSON.stringify(data);
+        }
+        fs.writeFileSync(path.join(__dirname, '..', 'data', name), data);
+    }
+
+    loadGlobalData(name) {
         if (!fs.existsSync(path.join(__dirname, '..', 'data', name))) {
             return false;
         }
         const data = fs.readFileSync(path.join(__dirname, '..', 'data', name)).toString();
         return data.isJSON() ? JSON.parse(data) : data;
     }
-};
-module.exports = bot;
+}
+
+module.exports = {Bot};

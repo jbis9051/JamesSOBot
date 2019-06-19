@@ -2,10 +2,11 @@ module.exports = function (bot) {
     bot.addCommand({
             name: "status",
             args: [],
-            description: "Displays bot status",
+        description: "Used to check if the bot is alive.",
             shortcuts: [
                 "status"
             ],
+        examples: ["|| status"],
             ignore: false,
             permissions: ["all"],
             func: (msg) => {
@@ -14,9 +15,11 @@ module.exports = function (bot) {
         },
     )
 };
+
 /**
  * Used to check if the bot is alive.
  *
  * @return {String} - describes status
  */
-function status() {}
+function status() {
+}

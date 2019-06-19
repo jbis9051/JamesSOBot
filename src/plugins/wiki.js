@@ -17,6 +17,7 @@ module.exports = function (bot) {
             "lookup",
             "search",
         ],
+        examples: ["|| wiki Alan Turing"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {
