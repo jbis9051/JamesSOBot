@@ -33,8 +33,9 @@ class Client extends EventEmitter {
         this.roomNums = roomNums;
         this.bot = bot;
         this.mainRoomNum = this.roomNums[0];
-        this.on(ChatEvent.NEW_MESSAGE, this.bot.processMessage.bind(bot));
-        this.on(ChatEvent.EDIT, this.bot.processMessage.bind(bot));
+        this.bot.processMessage = this.bot.processMessage.bind(this.bot);
+        this.on(ChatEvent.NEW_MESSAGE, e => this.bot.processMessage(new Message(e, this)));
+        this.on(ChatEvent.EDIT, e => this.bot.processMessage(new Message(e, this)));
     }
 
     init() {
@@ -183,7 +184,7 @@ class Client extends EventEmitter {
                 return false;
             }
             for (const event of data["r" + room].e) {
-                this.emit(event.event_type, new Message(event, this));
+                this.emit(event.event_type, event);
                 this.bot.customClientListners.forEach(l => {
                     if (l.on === event.event_type) {
                         l.callback(event, this);
@@ -288,7 +289,7 @@ class Client extends EventEmitter {
         }
         const body = await request({
             method: 'POST',
-            uri: `${this.chatURL}/chats/${roomNum}/messages/new`,
+            uri: `${this.chatURL}/chats${roomNum}/messages/new`,
             jar: this.cookieJar,
             form: {
                 text: msg,
