@@ -45,7 +45,7 @@ class Client extends EventEmitter {
         this.browserSetup().then(() => this.connect()).catch(reason => {
             console.error(reason);
             throw reason;
-        });
+        }).then(() => setInterval(async () => this.roomNums.forEach(await this.joinRoom.bind(this)), 21600000));
         return this;
     }
 
@@ -165,6 +165,7 @@ class Client extends EventEmitter {
         ws.on('close', (code) => {
             this.emit('ws-close', code);
             this.bot.log("Close: " + code);
+            this.setUpWS();
         });
         ws.on('error', (err) => {
             this.bot.error("Error: " + code);
@@ -289,7 +290,7 @@ class Client extends EventEmitter {
         }
         const body = await request({
             method: 'POST',
-            uri: `${this.chatURL}/chats${roomNum}/messages/new`,
+            uri: `${this.chatURL}/chats/${roomNum}/messages/new`,
             jar: this.cookieJar,
             form: {
                 text: msg,

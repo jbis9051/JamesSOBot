@@ -762,3 +762,42 @@ You can use `^\d+` regex to parse the number:
 ```
 
 If this number is 0, the user has not chatted yet.
+
+# Chat Rooms
+
+## Room Types
+
+| Type | Description | Icon |
+|-----|---------------|-----|
+| Public | anyone may enter and talk | N/A|
+| Gallery | anyone may enter, but only approved users can talk | |
+| Private | only approved users may enter this room (this should only be used for moderation purposes) | |
+
+## Gallery 
+
+Gallery rooms, such as the [Android room](https://chat.stackoverflow.com/rooms/15/android) require users to "request" access before they can talk.
+
+A request access `request` will look like:
+
+```javascript
+const page = await this.browser.newPage();
+await page.setRequestInterception(true);
+page.on('request', interceptedRequest => {
+    const data = {
+        'headers': {
+            'content-type': 'application/x-www-form-urlencoded',
+            'origin': 'https://chat.stackoverflow.com',
+        },
+        'method': 'POST',
+        'postData': `roomId=${this.roomNum}&fkey=${this.fkey}`,
+    };
+    interceptedRequest.continue(data);
+});
+const response = await page.goto(`${config.chatURL}/rooms/requestaccess`);
+```
+
+**Note**: Cookies are required (obviously)
+
+## Access
+
+// TODO
