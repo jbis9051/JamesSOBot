@@ -21,10 +21,16 @@ The chat, being a subdomain (`chat.`) of the main site, has access to the main s
 
 The login form can be accessed directly at `siteURL + "/users/login"`. If the site detects you are already logged in, it will redirect you to the home page. This allows you to check if you are already logged in by checking the URL:
 ```javascript
-await this.mainPage.goto(config.siteUrl + '/users/login'); /* load the login url like `https://stackoveflow.com/users/login` */
-if (!this.mainPage.url().includes("/users/login")) { /* if you are still on the page, and haven't been redicrected to the main site, `https://stackoveflow.com`, then you need to login */
+const resp = await request({
+    method: 'GET',
+    uri: this.siteURL + '/users/login',
+    jar: this.cookieJar,
+    resolveWithFullResponse: true
+});
+if (resp.request.path === "/") { // if we are redirected to the homepage (https://stackoverflow.com) the path will be "/"
     console.log("Already Logged in Yey!");
-}      
+    return;
+}    
 ```
 
 **Note:** Although you are logged in, you may be provided with new cookies. If you are saving cookies, it is suggested that you save cookies after you are redirected.
@@ -39,6 +45,23 @@ await this.mainPage.keyboard.type(config.email);
 await this.mainPage.focus('#password');
 await this.mainPage.keyboard.type(config.password);
 await this.mainPage.click('#submit-button');
+```
+Instead you can make a `POST` request to `/users/login`. If you are using this method you MUST submit the fkey (CSRF token). This is located in a hidden input field with the `name` as `fkey`. 
+```javascript
+const resp = /* request to /users/login */;
+const $ = cheerio.load(resp.body); 
+const fkey = $('input[name="fkey"]').val();
+const body = await request({
+    method: 'POST',
+    uri: this.siteURL + '/users/login',
+    jar: this.cookieJar,
+    followAllRedirects: true,
+    form: {
+        fkey: fkey,
+        email: config.email,
+        password: config.password
+    }
+});
 ```
 
 Once the submit button is clicked, you are redirected (It doesn't use AJAX to log you in).
@@ -130,22 +153,16 @@ The response is JSON containing a single url key with the websocket as it's valu
 Example code:
 
 ```javascript
-const page = await this.browser.newPage();
-await page.setRequestInterception(true);
-page.on('request', interceptedRequest => {
-    const data = {
-        'headers': {
-            'content-type': 'application/x-www-form-urlencoded',
-         },
-             'method': 'POST',
-             'postData': `roomid=${this.roomNum}&fkey=${this.fkey}`,
-         };
-         interceptedRequest.continue(data);
-    });
-const response = await page.goto(config.chatURL + '/ws-auth');
-const content = await response.text();
-this.emit('main-site-login');
-return JSON.parse(content).url;
+const json = await request({
+    method: 'POST',
+    uri: this.chatURL + '/ws-auth',
+    jar: this.cookieJar,
+    form: {
+        roomid: roomNum,
+        fkey: this.fkey,
+    },
+});
+return JSON.parse(json).url;
 ```
 
 ### Connecting to the WebSocket
@@ -168,21 +185,15 @@ String time = post(CHAT_DOMAIN + "/chats/<room number>/events", cookies, PostDat
 In JavaScript, it roughly looks like this
 
 ```
-const page = await this.browser.newPage();
-await page.setRequestInterception(true);
-page.on('request', interceptedRequest => {
-    const data = {
-        'headers': {
-            'content-type': 'application/x-www-form-urlencoded',
-         },
-         'method': 'POST',
-         'postData': `fkey=${this.fkey}`,
-     };
-     interceptedRequest.continue(data);
+const json = await request({
+    method: 'POST',
+    uri: this.chatURL + `/chats/${this.roomNum}/events`,
+    jar: this.cookieJar,
+    form: {
+        fkey: this.fkey,
+    },
 });
-const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/events`);
-const content = await response.text();
-return JSON.parse(content).time;
+return JSON.parse(json).time;
 ```
 
 2. Just set it to `?l=99999999999`
@@ -394,19 +405,15 @@ To send, make a POST request to `chatURL + '/chats/[room num]/messages/new'` wit
 Here's an example
 
 ```javascript
-const page = await this.browser.newPage();
-await page.setRequestInterception(true);
-page.on('request', interceptedRequest => {
-    const data = {
-        'headers': {
-            'content-type': 'application/x-www-form-urlencoded',
-        },
-        'method': 'POST',
-        'postData': `text=${encodeURIComponent(msg)}&fkey=${this.fkey}`,
-    };
-    interceptedRequest.continue(data);
+const body = await request({
+    method: 'POST',
+    uri: `${this.chatURL}/chats/${roomNum}/messages/new`,
+    jar: this.cookieJar,
+    form: {
+        text: "Hello",
+        fkey: this.fkey
+    },
 });
-const response = await page.goto(`${config.chatURL}/chats/${this.roomNum}/messages/new`);
 ```
 
 The Response will be one of the following:
@@ -423,16 +430,16 @@ The Response will be one of the following:
 **Detect and Set Timeout for Throttle Sample Code**
 
 ```javascript
-const text = await response.text();
-await page.close();
-const delay = text.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
-if(delay){
-    setTimeout(()=>{
-        this.send(msg);
-    },(parseInt(delay)*1000) + 0.25);
-}
-
-``` 
+const body = await request([...]).catch(error => { //request same as above, but catch errors
+    this.bot.error(error.error);
+    const delay = error.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
+    if (delay) {
+        setTimeout(async () => {
+            await this.send(msg, roomNum);
+        }, (parseInt(delay) * 1000) + 0.25);
+    }
+});
+```
 
 ## Editing Messages
 
@@ -467,16 +474,15 @@ Make a `GET` request to `chatURL + '/rooms/pingable/ + roomNum`, with your login
 
 
 ```javascript
- const body = await request({
-            method: 'GET',
-            uri: `${config.chatURL}/rooms/pingable/${this.roomNum}`,
-            jar: this.cookieJar,
-        });
-        const array = JSON.parse(body).filter(a => a[1] === username); 
-        if(array.length === 0){
-            return false;
-        }
-        const id = array[0][0];
+const body = await request({
+    method: 'GET',
+    uri: `${config.chatURL}/rooms/pingable/${this.roomNum}`,
+    jar: this.cookieJar,
+});
+const array = JSON.parse(body).filter(a => a[1] === username);if (array.length === 0) {
+    return false;
+}
+const id = array[0][0];
 ```
 
 An example response looks like this:
@@ -666,19 +672,15 @@ Here is a sample request and response
 Request:
 
 ```javascript
-const page = await this.browser.newPage();
-await page.setRequestInterception(true);
-page.on('request', interceptedRequest => {
-    const data = {
-        'headers': {
-            'content-type': 'application/x-www-form-urlencoded',
-        },
-        'method': 'POST',
-        'postData': `ids=7886229&roomId=1`,
-    };
-    interceptedRequest.continue(data);
-});
-const response = await page.goto(`${config.chatURL}/user/info`);
+ const body = await request({
+            method: 'POST',
+            uri: `${this.chatURL}/user/info`,
+            form: {
+                ids: id,
+                roomId: roomNum
+            },
+        });
+        return JSON.parse(body);
 ```
 
 Response
@@ -780,20 +782,19 @@ Gallery rooms, such as the [Android room](https://chat.stackoverflow.com/rooms/1
 A request access `request` will look like:
 
 ```javascript
-const page = await this.browser.newPage();
-await page.setRequestInterception(true);
-page.on('request', interceptedRequest => {
-    const data = {
-        'headers': {
-            'content-type': 'application/x-www-form-urlencoded',
-            'origin': 'https://chat.stackoverflow.com',
-        },
-        'method': 'POST',
-        'postData': `roomId=${this.roomNum}&fkey=${this.fkey}`,
-    };
-    interceptedRequest.continue(data);
+const body = await request({
+    method: 'POST',
+    uri: `${this.chatURL}/rooms/requestaccess`,
+    form: {
+        roomId: this.roomNum,
+        fkey: this.fkey
+    },
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Origin': this.chatURL,
+    }
 });
-const response = await page.goto(`${config.chatURL}/rooms/requestaccess`);
+return JSON.parse(body);
 ```
 
 **Note**: Cookies are required (obviously)
