@@ -1,5 +1,6 @@
 {
-  "name": "so-chatbot-boilerplate",
+  "name": "so-chatbot",
+  "description": "A module for creating chat bots with presets for Discord and StackExchange.",
   "version": "1.0.0",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",

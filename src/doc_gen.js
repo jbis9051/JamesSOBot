@@ -1,6 +1,6 @@
 const config = require('../config/config.json');
 const {Bot} = require("./bot.js");
-const {Client} = require("./platform/StackExchange/Client.js");
+const Client = require("./platform/StackExchange/StackExchangeClient.js");
 let md_doc = `
 # Command Documentation
 

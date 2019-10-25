@@ -1,7 +1,7 @@
 const config = require('../../../config/config');
 
 const {Bot} = require('../../bot.js');
-const {Client} = require('./Client.js');
+const {Client} = require('./DiscordClient.js');
 
 const bot = new Bot(config.plugins, "metadiscussion");
 

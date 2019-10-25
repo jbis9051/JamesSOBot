@@ -24,7 +24,7 @@ class Bot {
             start: Date.now(),
             name: "James",
         };
-        plugins.forEach(plugin => require('./plugins/' + plugin)(this));
+        plugins.forEach(plugin => plugin(this));
     }
 
     async processMessage(msg) {

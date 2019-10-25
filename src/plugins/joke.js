@@ -16,7 +16,7 @@ module.exports = function (bot) {
             }
             bot.json_request('https://official-joke-api.appspot.com/jokes/programming/random', (err, res, body) => {
                 if(!body){
-                    msg.reply("Error getting Joke");
+                    msg.replyDirect("Error getting Joke");
                     return;
                 }
                 body = body[0];

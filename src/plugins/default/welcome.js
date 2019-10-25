@@ -23,7 +23,7 @@ module.exports = function (bot) {
             if (welcome_messages[msg.getContext()]) {
                 msg.roomContext.send(welcome_messages[msg.getContext()].replace("{USERNAME}", person.replace("@", '')));
             } else {
-                msg.reply("No welcome message listed.")
+                msg.replyDirect("No welcome message listed.")
             }
 
         }

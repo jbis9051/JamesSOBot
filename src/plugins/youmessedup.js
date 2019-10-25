@@ -4,7 +4,7 @@ module.exports = function (bot) {
             return /^\|\|[A-Za-z]+/.test(msg.getContent());
         },
         callback:(msg) => {
-           msg.reply("Use a space between `||` and your command. For example: `|| help`")
+            msg.replyDirect("Use a space between `||` and your command. For example: `|| help`")
         }
     });
     bot.RegisterListener({
@@ -12,7 +12,7 @@ module.exports = function (bot) {
             return /^!! *.+/.test(msg.getContent()) && msg.getContext() === 193540;
         },
         callback: (msg) => {
-            msg.reply("This bot does not use exclamation points `!!`, instead use the pipe character `||`. For example: `|| help`")
+            msg.replyDirect("This bot does not use exclamation points `!!`, instead use the pipe character `||`. For example: `|| help`")
         }
     });
 };

@@ -1,23 +1,23 @@
 const config = require('../../../config/config');
 const fs = require('fs');
 const Discord = require('discord.js');
-const EventEmitter = require('events');
 const cheerio = require('cheerio');
 const path = require('path');
 const request = require("request-promise");
 const {Message} = require("../../events/Message");
 const {ChatEvent} = require("../../events/ChatEvent");
+const Client = require("../../Client.js");
 
 /**
- * @class Client
- * @classdesc The Client. Handles everything from logging in to sending & receiving messages.
+ * @class DiscordClient
+ * @classdesc The DiscordClient. Handles everything from logging in to sending & receiving messages.
  * @property {Array} this.roomNum - The StackExchange rooms the Bot should connect to
  * @property {int} this._id
  * @property {String} this.fkey
  * @property {String} this.wsurl
  * @property {WebSocket} this.ws
  */
-class Client extends EventEmitter {
+class DiscordClient extends Client {
     /**
      *
      * @param mainRoom
@@ -81,7 +81,7 @@ class Client extends EventEmitter {
         this.emit('send', msg);
     }
 
-    async reply(msg, content) {
+    async replyDirect(msg, content) {
         await this.send(content, msg.getContext())
     }
 
@@ -135,4 +135,4 @@ class Client extends EventEmitter {
     }
 }
 
-module.exports = {Client};
+module.exports = {Client: DiscordClient};

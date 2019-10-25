@@ -26,7 +26,7 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg) => {
             if (msg.args[0] === "docs") {
-                msg.reply("The calc command uses math.js. Checkout the docs [here](https://mathjs.org/docs/index.html)");
+                msg.replyDirect("The calc command uses math.js. Checkout the docs [here](https://mathjs.org/docs/index.html)");
                 return;
             }
             requestEval(msg);

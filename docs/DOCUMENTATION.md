@@ -410,7 +410,7 @@ Register a msg listener. This bypasses the command checks and allows direct acce
 
 #### RegisterClientListener() 
 
-Gives direct access to Client events. This is very low-level and is not needed in most cases.
+Gives direct access to StackExchangeClient events. This is very low-level and is not needed in most cases.
 
 
 
@@ -595,7 +595,7 @@ Allows you to retrieve data from Google Search
 
 
 
-#### Message.reply(content) 
+#### Message.replyDirect(content) 
 
 Reply's to `this` message with `content`
 

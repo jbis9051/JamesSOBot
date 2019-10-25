@@ -17,11 +17,11 @@ module.exports = function (bot) {
                 bot.getCommand(msg.args[0]) /* if its already registered a command */
                 && !(learn_list.hasOwnProperty(msg.args[0]) && learn_list[msg.args[0]].creatorID === msg.getStaticUserUID()) /* unless its a learned command and you have permission to overwrite it */
             ) {
-                msg.reply("Command with that shortcut already exists");
+                msg.replyDirect("Command with that shortcut already exists");
                 return;
             }
             if (msg.args.length < 2) {
-                msg.reply("Invalid Number of args");
+                msg.replyDirect("Invalid Number of args");
                 return;
             }
 
@@ -40,7 +40,7 @@ module.exports = function (bot) {
             };
             addLearnCommand(learn_list[name]);
             bot.saveData('learn_list', learn_list);
-            msg.reply(name + " has been added");
+            msg.replyDirect(name + " has been added");
         }
     });
 
@@ -72,17 +72,17 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: async (msg) => {
             if (!learn_list.hasOwnProperty(msg.args[0])) {
-                msg.reply("That command doesn't exist");
+                msg.replyDirect("That command doesn't exist");
                 return;
             }
             if (!(bot.isAdmin(msg.args[0]) || await msg.roomContext.isRoomOwnerId(msg.getStaticUserUID()) || learn_list[msg.args[0]].creatorID === msg.getStaticUserUID())) { /* if the user is not an admin or a room owner or they created the command */
-                msg.reply("You do not have permission to remove this command.");
+                msg.replyDirect("You do not have permission to remove this command.");
                 return;
             }
             delete learn_list[msg.args[0]];
             bot.deleteCommand(bot.getCommandFromName(msg.args[0]));
             bot.saveData('learn_list', learn_list);
-            msg.reply(msg.args[0] + " has been unlearned");
+            msg.replyDirect(msg.args[0] + " has been unlearned");
         }
     });
 };

@@ -44,7 +44,7 @@ module.exports = function (bot) {
                 msg.roomContext.send(content);
                timers.splice(index,1);
             },time);
-            msg.reply("Ok. I'll remind.")
+            msg.replyDirect("Ok. I'll remind.")
         }
     });
 };

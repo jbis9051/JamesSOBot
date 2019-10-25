@@ -21,9 +21,9 @@ module.exports = function (bot) {
             bot.google_search(msg.args.join(" "), "developer.mozilla.org", null, /^https:\/\/developer\.mozilla\.org\/.*$/,
                 (data)=> {
                     if (data) {
-                        msg.reply(Message.link(data.title, data.url));
+                        msg.replyDirect(Message.link(data.title, data.url));
                     } else {
-                        msg.reply('An error occurred with the request.');
+                        msg.replyDirect('An error occurred with the request.');
                     }
                 });
         },

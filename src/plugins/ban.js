@@ -5,7 +5,7 @@ module.exports = function (bot) {
     bot.addValidatorScript("Ban List", (msg) => {
         if (isBan(msg.getStaticUserUID())) {
             if (!isTold(msg.getStaticUserUID())) {
-                msg.reply("You have been ban.");
+                msg.replyDirect("You have been ban.");
                 ban_user_data[msg.getStaticUserUID()].told = true;
                 bot.saveData('ban_data', ban_user_data);
             }
@@ -35,15 +35,15 @@ module.exports = function (bot) {
         func: async (msg) => {
             const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await msg.roomContext.usernameToId(msg.args[0]);
             if (!id) {
-                msg.reply("Error: User not found");
+                msg.replyDirect("Error: User not found");
                 return;
             }
             if (isBan(id)) {
-                msg.reply("That user is already ban.");
+                msg.replyDirect("That user is already ban.");
                 return;
             }
             if (bot.isAdmin(id) || await msg.roomContext.isRoomOwnerId(id)) {
-                msg.reply("That user cannot be ban");
+                msg.replyDirect("That user cannot be ban");
                 return;
             }
             ban_user_data[id] = {
@@ -52,7 +52,7 @@ module.exports = function (bot) {
                 date_ban: (new Date()).toString(),
             };
             bot.saveData('ban_data', ban_user_data);
-            msg.reply(msg.args[0] + " has been banned");
+            msg.replyDirect(msg.args[0] + " has been banned");
         }
     });
     bot.addCommand({
@@ -68,16 +68,16 @@ module.exports = function (bot) {
         func: async (msg) => {
             const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await msg.roomContext.usernameToId(msg.args[0]);
             if (!id) {
-                msg.reply("Error: User not found");
+                msg.replyDirect("Error: User not found");
                 return;
             }
             if (!isBan(id)) {
-                msg.reply("That user is not ban.");
+                msg.replyDirect("That user is not ban.");
                 return;
             }
             delete ban_user_data[id];
             bot.saveData('ban_data', ban_user_data);
-            msg.reply(msg.args[0] + " has been unban");
+            msg.replyDirect(msg.args[0] + " has been unban");
         }
     });
 };

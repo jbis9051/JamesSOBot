@@ -20,7 +20,7 @@ module.exports = function (bot) {
             }
             msg.args[0] = parseInt(msg.args[0]);
             msg.args[1] = parseInt(msg.args[1]);
-            msg.reply(getRandomIntInclusive(Math.min(msg.args[0],msg.args[1]),Math.max(msg.args[0],msg.args[1])))
+            msg.replyDirect(getRandomIntInclusive(Math.min(msg.args[0], msg.args[1]), Math.max(msg.args[0], msg.args[1])))
         }
     });
 };

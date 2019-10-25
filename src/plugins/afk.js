@@ -32,7 +32,7 @@ module.exports = function (bot) {
                     isAFK(person)
                     && Date.now() - lastTell >= rateLimit
                 ) {
-                    msg.reply(person + ' is afk: ' + afk_data[person].msg);
+                    msg.replyDirect(person + ' is afk: ' + afk_data[person].msg);
                     afk_data[person].lastPing = Date.now();
                     lastTell = Date.now();
                     bot.saveData('afk_data', afk_data);
@@ -64,7 +64,7 @@ module.exports = function (bot) {
             };
             bot.saveData('afk_data', afk_data);
             bot.log(msg.getVariableUsername() + " is afk");
-            msg.reply("\\o")
+            msg.replyDirect("\\o")
         }
     });
 };

@@ -53,8 +53,8 @@ class Message extends ChatEvent {
      *
      * @param {String} content
      */
-    reply(content) {
-        this.client.reply(this, content)
+    replyDirect(content) {
+        this.client.replyDirect(this, content)
     }
 
     /**

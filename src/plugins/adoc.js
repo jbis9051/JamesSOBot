@@ -24,9 +24,9 @@ module.exports = function (bot) {
             bot.google_search(msg.args.join(" "), "developer.android.com/reference", null, /^https:\/\/developer\.android\.com\/reference\/.*$/,
                 (data) => {
                     if (data) {
-                        msg.reply(Message.link(data.title, data.url));
+                        msg.replyDirect(Message.link(data.title, data.url));
                     } else {
-                        msg.reply('An error occurred with the request.');
+                        msg.replyDirect('An error occurred with the request.');
                     }
                 });
         },
