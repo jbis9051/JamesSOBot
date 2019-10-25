@@ -44,6 +44,9 @@ module.exports = function (bot) {
             const text = msg.getRawContent().replace(/<br>/g, "\n").replace(/<.+>/g, "").htmldecode();
             if (bot.permissionCheck(bot.getCommandFromName("eval"), msg) && /^\|\|> ./.test(text)) {
                 msg.code = text.replace('||>', '');
+                if (/^\s*{/.test(msg.code) && /}\s*$/.test(msg.code)) {
+                    msg.code = '(' + msg.code + ')';
+                }
                 return true;
             }
             return false;
