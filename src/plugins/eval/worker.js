@@ -39,18 +39,10 @@ const whitey = {
     encodeURI: 1,
     encodeURIComponent: 1,
     eval: 1,
-    /* our own function
-    exec: 1,
-    global: 1,
     isFinite: 1,
     isNaN: 1,
-    onmessage: 1,
     parseFloat: 1,
     parseInt: 1,
-    postMessage: 1,
-    self: 1,
-    undefined: 1,
-    whitey: 1,*/
     /* typedarrays and shit */
     ArrayBuffer: 1,
     Blob: 1,
@@ -109,7 +101,7 @@ function exec(code) {
 try {
     done(false, JSON.stringify(exec(code)));
 } catch (e) {
-    done(false, e.toString());
+    done(false, JSON.stringify(e.toString()));
 }
 
 

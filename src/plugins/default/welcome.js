@@ -1,9 +1,7 @@
 let people_seen;
 module.exports = function (bot) {
     people_seen = bot.loadData('people_seen') || [];
-    const welcome_messages = {
-        193540: "@{USERNAME} Welcome to the Test My Bot chat. Feel free to test @JamesBot using `|| command args` syntax. You can also discuss and ask questions about bot creation.  StackOverflow and StackOverflow Chat rules apply. Be nice and don't ask to ask, just ask. Chat API Documentation can be found [here](https://github.com/jbis9051/JamesSOBot/blob/master/docs/CHAT_API.md)"
-    };
+    const welcome_messages = require('../../../config/config.json').welcome_msg;
     bot.addCommand({
         name: "welcome",
         args: [
@@ -22,7 +20,7 @@ module.exports = function (bot) {
                 return;
             }
             const person = msg.args[0];
-            if (welcome_messages.hasOwnProperty(msg.getContext())) {
+            if (welcome_messages[msg.getContext()]) {
                 msg.roomContext.send(welcome_messages[msg.getContext()].replace("{USERNAME}", person.replace("@", '')));
             } else {
                 msg.reply("No welcome message listed.")
@@ -47,7 +45,7 @@ module.exports = function (bot) {
         },
         callback: async (msg) => {
             if (await msg.roomContext.getNumMessagesFromId(msg.getStaticUserUID()) < 2) {
-                if (welcome_messages.hasOwnProperty(msg.getContext())) {
+                if (welcome_messages[msg.getContext()]) {
                     msg.roomContext.send(welcome_messages[msg.getContext()].replace('{USERNAME}', msg.getVariableUsername().replace(" ", "")));
                 }
             }

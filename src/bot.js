@@ -28,6 +28,7 @@ class Bot {
     }
 
     async processMessage(msg) {
+        console.log(msg.getContent());
         if (!this.validatorScriptRunner(msg)) {
             return;
         }
@@ -47,7 +48,7 @@ class Bot {
             return;
         }
         if (!await this.permissionCheck(msg.command, msg)) {
-            msg.reply("Your are not authorized to administer this command");
+            msg.reply("You are not authorized to administer this command");
             return;
         }
         try {

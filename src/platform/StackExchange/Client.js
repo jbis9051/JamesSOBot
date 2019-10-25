@@ -1,4 +1,4 @@
-const config = require('../config/config');
+const config = require('../../../config/config');
 const FileCookieStore = require('tough-cookie-filestore');
 const fs = require('fs');
 const WebSocket = require('ws');
@@ -6,12 +6,12 @@ const EventEmitter = require('events');
 const cheerio = require('cheerio');
 const path = require('path');
 const request = require("request-promise");
-const {Message} = require("./events/Message");
-const {ChatEvent} = require("./events/ChatEvent");
+const {Message} = require("../../events/Message");
+const {ChatEvent} = require("../../events/ChatEvent");
 
 /**
  * @class Client
- * @classdesc The Client. Handles everything from logging in to sending & receiving messages. It is environment specific and should be one of the few things needing to be changed, environment to environment.
+ * @classdesc The Client. Handles everything from logging in to sending & receiving messages.
  * @property {Array} this.roomNum - The StackExchange rooms the Bot should connect to
  * @property {int} this._id
  * @property {String} this.fkey
@@ -27,7 +27,7 @@ class Client extends EventEmitter {
      * @param {Bot} bot
      */
     constructor(siteURL, chatURL, roomNums, bot) {
-        super(siteURL, chatURL, roomNums);
+        super();
         this.siteURL = siteURL;
         this.chatURL = chatURL;
         this.roomNums = roomNums;
@@ -52,6 +52,7 @@ class Client extends EventEmitter {
     async browserSetup() {
         /* The following is quite possibly the worst code in the repository, but I have to do this because FileCookieStore has shitty code and will save invalid JSON files, crashing the app next time you run it. */
         const cookies_path = path.join(__dirname, '..', 'data', this.bot.saveFolder, 'cookies.json');
+        fs.mkdirSync(path.join(__dirname, '..', 'data', this.bot.saveFolder), {recursive: true});
         if (!fs.existsSync(cookies_path)) {
             fs.writeFileSync(cookies_path, '{}');
         } else {

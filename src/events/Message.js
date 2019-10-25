@@ -67,7 +67,7 @@ class Message extends ChatEvent {
     }
 
     getRawContent() {
-        return this.data.content.htmldecode();
+        return this.data.content;
     }
 
     /* The below was stolen directly from https://github.com/Zirak/SO-ChatBot/blob/master/master.js. I made a couple edits*/

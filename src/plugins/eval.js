@@ -1,4 +1,5 @@
 const eval = require('./eval/index');
+require('../utils.js');
 /**
  *
  * @param {Bot} bot
@@ -19,20 +20,35 @@ module.exports = function (bot) {
         },
     });
 
+    function truncate(str) {
+        if (typeof str === "string" && str.length > 400) {
+            return str.slice(0, 400);
+        } else {
+            return str;
+        }
+    }
+
     async function _run(code, msg) {
         const val = await eval(code);
+        val.result = truncate(val.result);
         if (val.error) {
             msg.reply(`Error running script: \`${val.result}\``);
             return;
         }
-        msg.reply(`\`${val.result}\` Logged: \`${val.logged.join(" ").trim()}\``);
+        let logged = truncate(val.logged.join(", "));
+        msg.reply(`\`${val.result}\` Logged: \`${logged}\``);
     }
 
     bot.RegisterListener({
         func: (msg) => {
-            return bot.permissionCheck(bot.getCommandFromName("eval"), msg) && /^\|\|>.*$/.test(msg.getContent());
+            const text = msg.getRawContent().replace(/<br>/g, "\n").replace(/<.+>/g, "").htmldecode();
+            if (bot.permissionCheck(bot.getCommandFromName("eval"), msg) && /^\|\|> ./.test(text)) {
+                msg.code = text.replace('||>', '');
+                return true;
+            }
+            return false;
         },
-        callback: (msg) => _run(msg.getContent().replace('||>', ''), msg)
+        callback: (msg) => _run(msg.code, msg)
     });
 };
 

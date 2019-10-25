@@ -1,21 +1,19 @@
 {
   "email": "myemail@example.com",
   "password": "password123",
-  "users_groups":{
+  "users_groups": {
     "admin": [
       7886229
     ]
   },
   "plugins": [
     "ban.js",
-
     "default/help.js",
     "default/selfDestruct.js",
     "default/status.js",
     "default/info.js",
     "default/life.js",
     "default/welcome.js",
-
     "joke.js",
     "mdn.js",
     "wiki.js",
