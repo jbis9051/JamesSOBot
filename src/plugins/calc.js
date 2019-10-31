@@ -4,9 +4,9 @@ module.exports = function (bot) {
         /* mathjs has some vulnerabilitiy issues with it's evaluation function. So let's just use their API. Exploit them all you want! " */
         bot.standard_request('http://api.mathjs.org/v4/?expr=' + encodeURIComponent(msg.args.join(" ")), (error, response, body) => {
             if (!(response.statusCode === 200 || response.statusCode === 400)) {
-                msg.reply("Error with request");
+                msg.replyDirect("Error with request");
             } else {
-                msg.reply(`"${body}"`)
+                msg.replyDirect(`"${body}"`)
             }
         });
     }

@@ -242,6 +242,24 @@ Calculates an expression using Math.js
 - `echo`
 - `betterecho`
 
+## eval
+
+
+
+**Permissions**
+
+- all
+           
+**Example**
+
+- `|| eval console.log('Hello World!');`
+- `||> console.log('Hello World!');`
+- `!!> console.log('Hello World!');`
+
+**Shortcuts**
+
+- `eval`
+
 ## funfact
 
 Sends a fun fact

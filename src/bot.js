@@ -44,11 +44,11 @@ class Bot {
             return;
         }
         if (!msg.command) {
-            msg.reply('Invalid command! Try `help` for a list of available commands.' + ('.‍'.repeat(Math.random() * 10))); /* there is probably a better way of doing this */
+            msg.replyDirect('Invalid command! Try `help` for a list of available commands.' + ('.‍'.repeat(Math.random() * 10))); /* there is probably a better way of doing this */
             return;
         }
         if (!await this.permissionCheck(msg.command, msg)) {
-            msg.reply("You are not authorized to administer this command");
+            msg.replyDirect("You are not authorized to administer this command");
             return;
         }
         try {
