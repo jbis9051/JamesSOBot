@@ -124,8 +124,8 @@ Welcomes a new user to the room with a message
            
 **Example**
 
-- `|| welecome @JBis`
-- `|| welecome JBis`
+- `|| welcome @JBis`
+- `|| welcome JBis`
 
 **Shortcuts**
 

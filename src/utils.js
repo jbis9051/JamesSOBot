@@ -54,6 +54,6 @@ String.prototype.htmlToMarkdown = function () {
         if (typeof delim === "function") {
             return tags_to_markdown[tag].apply(tags_to_markdown, [entire_string, tag, innerText]);
         }
-        return delim + text + delim;
+        return delim + innerText + delim;
     }
 };

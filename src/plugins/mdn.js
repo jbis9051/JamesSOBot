@@ -21,13 +21,28 @@ module.exports = function (bot) {
             bot.google_search(msg.args.join(" "), "developer.mozilla.org", null, /^https:\/\/developer\.mozilla\.org\/.*$/,
                 (data)=> {
                     if (data) {
-                        msg.replyDirect(Message.link(data.title, data.url));
+                        msg.replyDirect(Message.link(data.title, data.url).htmldecode());
                     } else {
                         msg.replyDirect('An error occurred with the request.');
                     }
                 });
         },
-    })
+    });
+    bot.RegisterListener({
+        func: (msg) => {
+            const text = msg.getRawContent().replace(/<br>/g, "\n").replace(/<.+>/g, "").htmldecode();
+            if (bot.permissionCheck(bot.getCommandFromName("eval"), msg) && /^(\|\|>|>\|\||!!>) ./.test(text)) {
+                const trigger = text.match(/^(\|\|>|>\|\||!!>) ./)[1];
+                msg.code = text.replace(trigger, '');
+                if (/^\s*{/.test(msg.code) && /}\s*$/.test(msg.code)) {
+                    msg.code = '(' + msg.code + ')';
+                }
+                return true;
+            }
+            return false;
+        },
+        callback: (msg) => _run(msg.code, msg)
+    });
 };
 /**
  * Searches for query on MDN
