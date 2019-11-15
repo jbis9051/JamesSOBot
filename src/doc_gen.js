@@ -1,6 +1,10 @@
-const config = require('../config/config.json');
-const {Bot} = require("./bot.js");
-const Client = require("./platform/StackExchange/StackExchangeClient.js");
+const config = require('../config/config');
+
+const {Bot} = require('./bot.js');
+const {Client} = require('./Client.js');
+
+const bot = new Bot([], "fake");
+
 let md_doc = `
 # Command Documentation
 
@@ -12,11 +16,11 @@ let md_doc = `
 
 let defaults = [];
 let plugins = [];
-const bot = new Bot(new Client("", "", []));
+
 let learned = Object.values(bot.loadData("learn_list"));
 
 config.plugins.forEach(plugin => {
-    if (plugin.includes("default/")) {
+    if (plugin.startsWith("default/")) {
         bot.addCommand = defaults.push.bind(defaults);
     } else if (plugin === "learn.js") {
         return;

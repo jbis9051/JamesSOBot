@@ -22,6 +22,15 @@ class Message extends ChatEvent {
         this.client = client;
         const msgSplit = this.getContent().split(" ");
         this.prefix = msgSplit.shift();
+
+        const match = this.prefix.match(/^(\|\|>?)([^ >]+)/);  // correct commands without space
+
+        if (match) {
+            this.prefix = match[1];
+            msgSplit.unshift(match[2]);
+            this.data.content = this.prefix + " " + msgSplit.join(" ")
+        }
+
         if (msgSplit[0] === "sudo") {
             this.sudo = true;
             msgSplit.shift();
@@ -111,4 +120,5 @@ class Message extends ChatEvent {
         }).join('\n');
     }
 }
+
 module.exports = {Message};

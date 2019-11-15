@@ -11,19 +11,19 @@ module.exports = function (bot) {
         shortcuts: [
             "welcome"
         ],
-        examples: ["|| welcome @JBis", "|| welcome JBis"],
+        examples: ["|| welcome @JBis", "|| welcome JBis", "|| welcome"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {
             if (msg.args.length < 1) {
-                msg.roomContext.send("**Missing arg `person`**");
+                msg.roomContext.send(welcome_messages[msg.getContext()].replace("@{USERNAME}", ''));
                 return;
             }
             const person = msg.args[0];
             if (welcome_messages[msg.getContext()]) {
                 msg.roomContext.send(welcome_messages[msg.getContext()].replace("{USERNAME}", person.replace("@", '')));
             } else {
-                msg.replyDirect("No welcome message listed.")
+                msg.roomContext.send("No welcome message listed.")
             }
 
         }

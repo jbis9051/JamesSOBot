@@ -21,9 +21,9 @@ module.exports = function (bot) {
             bot.google_search(msg.args.join(" "), "support.apple.com", null, /^https:\/\/support\.apple\.com\/.*$/,
                 (data) => {
                     if (data) {
-                        msg.replyDirect(Message.link(data.title, data.url));
+                        msg.roomContext.send(Message.link(data.title, data.url));
                     } else {
-                        msg.replyDirect('An error occurred with the request.');
+                        msg.roomContext.send('An error occurred with the request.');
                     }
                 });
         },

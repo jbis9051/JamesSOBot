@@ -21,7 +21,7 @@ module.exports = function (bot) {
                 return;
             }
             if (msg.args.length < 2) {
-                msg.replyDirect("Invalid Number of args");
+                msg.roomContext.send("Invalid Number of args");
                 return;
             }
 
@@ -40,7 +40,7 @@ module.exports = function (bot) {
             };
             addLearnCommand(learn_list[name]);
             bot.saveData('learn_list', learn_list);
-            msg.replyDirect(name + " has been added");
+            msg.roomContext.send(name + " has been added");
         }
     });
 
@@ -72,17 +72,17 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: async (msg) => {
             if (!learn_list.hasOwnProperty(msg.args[0])) {
-                msg.replyDirect("That command doesn't exist");
+                msg.roomContext.send("That command doesn't exist");
                 return;
             }
             if (!(bot.isAdmin(msg.args[0]) || await msg.roomContext.isRoomOwnerId(msg.getStaticUserUID()) || learn_list[msg.args[0]].creatorID === msg.getStaticUserUID())) { /* if the user is not an admin or a room owner or they created the command */
-                msg.replyDirect("You do not have permission to remove this command.");
+                msg.roomContext.send("You do not have permission to remove this command.");
                 return;
             }
             delete learn_list[msg.args[0]];
             bot.deleteCommand(bot.getCommandFromName(msg.args[0]));
             bot.saveData('learn_list', learn_list);
-            msg.replyDirect(msg.args[0] + " has been unlearned");
+            msg.roomContext.send(msg.args[0] + " has been unlearned");
         }
     });
 };

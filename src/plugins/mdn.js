@@ -21,13 +21,14 @@ module.exports = function (bot) {
             bot.google_search(msg.args.join(" "), "developer.mozilla.org", null, /^https:\/\/developer\.mozilla\.org\/.*$/,
                 (data)=> {
                     if (data) {
-                        msg.replyDirect(Message.link(data.title, data.url).htmldecode());
+                        msg.roomContext.send(Message.link(data.title, data.url).htmldecode());
                     } else {
-                        msg.replyDirect('An error occurred with the request.');
+                        msg.roomContext.send('An error occurred with the request.');
                     }
                 });
         },
     });
+    /*
     bot.RegisterListener({
         func: (msg) => {
             const text = msg.getRawContent().replace(/<br>/g, "\n").replace(/<.+>/g, "").htmldecode();
@@ -42,7 +43,7 @@ module.exports = function (bot) {
             return false;
         },
         callback: (msg) => _run(msg.code, msg)
-    });
+    });*/
 };
 /**
  * Searches for query on MDN

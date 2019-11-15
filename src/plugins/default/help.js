@@ -20,7 +20,7 @@ module.exports = function (bot) {
             });
             msg.roomContext.send(exportText);
              */
-            msg.replyDirect("Command documentation and syntax can be found [here](https://github.com/jbis9051/SO-ChatBot/blob/master/docs/COMMANDS.md).")
+            msg.roomContext.send("Command documentation and syntax can be found [here](https://github.com/jbis9051/SO-ChatBot/blob/master/docs/COMMANDS.md).")
         }
     })
 };

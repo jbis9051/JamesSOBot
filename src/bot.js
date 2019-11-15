@@ -429,7 +429,7 @@ class Bot {
                     selected = selector($);
                 } else {
                     selected = $('.r').find('a').attr('href').replace('/url?q=', '').replace(/&sa=.*/, '');
-                    title = $('.r').find('.LC20lb').html();
+                    title = $('.r').find('.LC20lb').find('span').html();
                 }
                 if (!selected.match(selectorMatch)) {
                     console.error('Invalid Selector ' + selected);

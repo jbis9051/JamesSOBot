@@ -77,7 +77,7 @@ Gives information about the bot
 
 ## status
 
-Displays bot status
+Used to check if the bot is alive.
 
 **Permissions**
 
@@ -126,6 +126,7 @@ Welcomes a new user to the room with a message
 
 - `|| welcome @JBis`
 - `|| welcome JBis`
+- `|| welcome`
 
 **Shortcuts**
 
@@ -144,8 +145,8 @@ Add an afk message
            
 **Example**
 
-- `|| afk eating lunch`
-- `|| afk`
+- `|| welcome @JBis`
+- `|| welcome JBis`
 
 **Shortcuts**
 
@@ -227,7 +228,7 @@ Calculates an expression using Math.js
 
 ## echo
 
-
+Bot echo's what you say
 
 **Permissions**
 
@@ -244,7 +245,7 @@ Calculates an expression using Math.js
 
 ## eval
 
-
+Evaluates JS
 
 **Permissions**
 
@@ -259,6 +260,23 @@ Calculates an expression using Math.js
 **Shortcuts**
 
 - `eval`
+
+## formatting
+
+Message about formatting to an optional person
+
+**Permissions**
+
+- all
+           
+**Example**
+
+- `|| formatting @JBis`
+- `|| formatting`
+
+**Shortcuts**
+
+- `formatting`
 
 ## funfact
 
@@ -468,7 +486,3 @@ Looks query up on Wikipedia
 - `lookup`
 - `search`
 
-# Learned Commands
-
-
-##
