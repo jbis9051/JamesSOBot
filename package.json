@@ -8,6 +8,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "discord.js": "^11.5.1",
+    "isolated-vm": "^2.0.1",
     "request": "latest",
     "request-promise": "^4.2.4",
     "tough-cookie-filestore": "0.0.1",
