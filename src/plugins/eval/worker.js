@@ -76,7 +76,7 @@ function clearObj(obj, prop) {
     }
 }
 
-[global, Object.getPrototypeOf(global)].forEach(function (obj) {
+[global, Object.getPrototypeOf(global), module, Object.getPrototypeOf(module)].forEach(function (obj) {
     Object.getOwnPropertyNames(obj).forEach(function (prop) {
         if (whitey.hasOwnProperty(prop) || prop === "hasOwnProperty") {
             return;
@@ -94,14 +94,25 @@ const console = {
 console.error = console.info = console.debug = console.log;
 
 function exec(code) {
-    clearObj(module, require);
+    require = undefined;
     return eval(`undefined;\n${code}`);
+}
+
+function execIIFE(code) {
+    require = undefined;
+    return eval(`undefined;\n(()=> { ${code} })()`);
 }
 
 try {
     done(false, JSON.stringify(exec(code)));
 } catch (e) {
-    done(false, JSON.stringify(e.toString()));
+    try {
+        if (e.message !== "Illegal return statement") {
+            throw e;
+        }
+        done(false, JSON.stringify(execIIFE(code)));
+    } catch (e) {
+        done(false, JSON.stringify(e.toString()));
+    }
 }
-
 

@@ -464,6 +464,29 @@ Deleting, like editing, needs to be done within two minutes of the message being
 
 The endpoint used here is `<chat host>/messages/<message id>/delete`, again posting the fkey. 
 
+## Moving messages
+
+In order to move a message, the user must be a room owner. 
+
+To move a message make a POST request to `/admin/movePosts/<room message is from>'` with the following parameters
+
+- fkey
+- to - Room id where you want to move the message to,
+- ids - message id(s) to move. If multiple, separated by a comma with no trailing spaces
+
+```javascript
+const body = await request({
+    method: 'POST',
+    uri: `${this.chatURL}/admin/movePosts/${msg.getContext()}`,
+    jar: this.cookieJar,
+    form: {
+        fkey:fkey,
+        to: 23262, // trash can https://chat.stackoverflow.com/rooms/23262/trash-can
+        ids: msg.id
+    },
+});
+```
+
 # User Information
 
 ## Username to id

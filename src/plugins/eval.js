@@ -55,12 +55,3 @@ module.exports = function (bot) {
         callback: (msg) => _run(msg.code, msg)
     });
 };
-
-/**
- * Searches for query on Android Developer Docs
- *
- * @param {String} query
- * @return {String} - An Android Doc article based on your `query`
- */
-function adocs(query) {
-}

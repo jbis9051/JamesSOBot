@@ -257,29 +257,6 @@ class StackExchangeClient extends Client {
         return false;
     }
 
-    /**
-     * @deprecated
-     *
-     * @return {boolean|Object}
-     */
-    async addCookies(cookies) {
-        if (typeof cookies === "string") {
-            JSON.parse(cookies);
-        }
-        await this.mainPage.setCookie(...cookies);
-    }
-
-    /**
-     * @deprecated
-     *
-     */
-    static saveCookies(cookies) {
-        if (typeof cookies !== "string") {
-            cookies = JSON.stringify(cookies);
-        }
-        fs.writeFileSync(path.join(__dirname, '..', 'data', 'cookies'), cookies);
-    }
-
     static cookiesToString(cookies) {
         return cookies.reduce((acc, cookie) => acc + cookie.name + "=" + cookie.value + "; ", []);
     }
@@ -448,6 +425,10 @@ class StackExchangeClient extends Client {
                 }
             });
         })
+    }
+
+    async moveTo(fromRoom, toRoom, messageIds) {
+        //   this.bot.standard_request(`${this.}`)
     }
 }
 

@@ -32,7 +32,7 @@ class ChatEvent {
     /**
      * Returns a unique identifier for the user that sent this message. Usually a numerical string.
      *
-     * @return {String} - The unique identifier
+     * @return {number} - The unique identifier
      */
     getStaticUserUID() {
         return this.data.user_id;
