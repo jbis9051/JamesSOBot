@@ -4,7 +4,9 @@ module.exports = function (bot) {
             args: [],
         description: "Used to check if the bot is alive.",
             shortcuts: [
-                "status"
+                "status",
+                "poke",
+                "test"
             ],
         examples: ["|| status"],
             ignore: false,

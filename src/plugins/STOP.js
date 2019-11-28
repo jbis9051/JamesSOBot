@@ -7,7 +7,7 @@ module.exports = function (bot) {
         SISTITE: 'MALLEUS TEMPUS!'
     };
     const re = new RegExp(
-        '(' +
+        ' (' +
         Object.keys(hammers).map(escape).join('|') +
         ')[\\.!?]?$'
     );
