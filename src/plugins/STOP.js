@@ -7,7 +7,7 @@ module.exports = function (bot) {
         SISTITE: 'MALLEUS TEMPUS!'
     };
     const re = new RegExp(
-        '(' +
+        '([\\s.]+|^)(' +
         Object.keys(hammers).map(escape).join('|') +
         ')[\\.!?]?$'
     );
@@ -18,7 +18,7 @@ module.exports = function (bot) {
                 res = re.exec(sentence);
 
             if (res) {
-                msg.roomContext.send(hammers[res[1]]);
+                msg.roomContext.send(hammers[res[2]]);
             }
         }
     })
