@@ -42,6 +42,9 @@ class Client extends EventEmitter {
 
     async moveTo(fromRoom, toRoom, messageIds) {
     }
+
+    async edit(id, newContent, roomNum) {
+    }
 }
 
 module.exports = Client;

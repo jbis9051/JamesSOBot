@@ -51,7 +51,8 @@ class Message extends ChatEvent {
             isRoomOwnerId: (...args) => this.client.isRoomOwnerId(...args, this.getContext()),
             getNumMessages: (...args) => this.client.getNumMessages(...args, this.getContext()),
             usernameToId: (...args) => this.client.usernameToId(...args, this.getContext()),
-            usernameToInfo: (...args) => this.client.usernameToInfo(...args, this.getContext())
+            usernameToInfo: (...args) => this.client.usernameToInfo(...args, this.getContext()),
+            edit: (...args) => this.client.edit(...args, this.getContext())
         };
 
     }

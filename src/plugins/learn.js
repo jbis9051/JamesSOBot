@@ -56,7 +56,13 @@ module.exports = function (bot) {
             ignore: true,
             permissions: ["all"],
             func: (msg) => {
-                msg.roomContext.send(learn_object.output)
+                msg.roomContext.send(learn_object.output).then(id => {
+                    if (learn_object.output.endsWith(".gif")) {
+                        setTimeout(() => {
+                            msg.roomContext.edit(id, `> ${learn_object.output}`); // get the annoying gifs away after a timeout
+                        }, 60000);
+                    }
+                })
             }
         });
     }

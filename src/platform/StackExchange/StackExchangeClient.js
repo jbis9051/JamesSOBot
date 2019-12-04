@@ -261,36 +261,43 @@ class StackExchangeClient extends Client {
         return cookies.reduce((acc, cookie) => acc + cookie.name + "=" + cookie.value + "; ", []);
     }
 
-    async send(msg, roomNum) {
-        console.log("Sending: " + msg);
-        if (typeof msg !== "string") {
-            msg = JSON.stringify(msg);
-        }
-        const body = await request({
-            method: 'POST',
-            uri: `${this.chatURL}/chats/${roomNum}/messages/new`,
-            jar: this.cookieJar,
-            form: {
-                text: msg,
-                fkey: this.fkey
-            },
-        }).catch(error => {
-            this.bot.error(error.error);
-            const delay = error.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
-            if (delay) {
-                setTimeout(async () => {
-                    await this.send(msg, roomNum);
-                }, (parseInt(delay) * 1000) + 0.25);
+    send(msg, roomNum) {
+        return new Promise(async resolve => {
+            console.log("Sending: " + msg);
+            if (typeof msg !== "string") {
+                msg = JSON.stringify(msg);
             }
+            request({
+                method: 'POST',
+                uri: `${this.chatURL}/chats/${roomNum}/messages/new`,
+                jar: this.cookieJar,
+                form: {
+                    text: msg,
+                    fkey: this.fkey
+                },
+            }).then(body => {
+                this.bot.log(body);
+                this.emit('send', msg);
+                try {
+                    resolve(JSON.parse(body).id);
+                } catch (e) {
+                    resolve(null)
+                }
+            }).catch(error => {
+                this.bot.error(error.error);
+                const delay = error.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
+                if (delay) {
+                    setTimeout(async () => {
+                        resolve(await this.send(msg, roomNum));
+                    }, (parseInt(delay) * 1000) + 0.25);
+                }
+            });
+
         });
-        if (body) {
-            this.bot.log(body);
-        }
-        this.emit('send', msg);
     }
 
-    async replyDirect(msg, content) {
-        await this.send(`:${msg.data.message_id} ${content}`, msg.getContext())
+    replyDirect(msg, content) {
+        return this.send(`:${msg.data.message_id} ${content}`, msg.getContext())
     }
 
     async activeUsernameSearch(username, roomNum) {
@@ -429,6 +436,38 @@ class StackExchangeClient extends Client {
 
     async moveTo(fromRoom, toRoom, messageIds) {
         //   this.bot.standard_request(`${this.}`)
+    }
+
+    edit(id, newContent, roomNum) {
+        return new Promise(async resolve => {
+            console.log("Sending: " + newContent);
+            if (typeof newContent !== "string") {
+                newContent = JSON.stringify(newContent);
+            }
+            request({
+                method: 'POST',
+                uri: `${this.chatURL}/messages/${id}`,
+                jar: this.cookieJar,
+                headers: {
+                    referer: `${this.chatURL}/rooms/${roomNum}`
+                },
+                form: {
+                    text: newContent,
+                    fkey: this.fkey
+                },
+            })
+                .then(resolve)
+                .catch(error => {
+                    this.bot.error(error.error);
+                    const delay = error.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
+                    if (delay) {
+                        setTimeout(async () => {
+                            resolve(await this.edit(id, newContent, roomNum));
+                        }, (parseInt(delay) * 1000) + 0.25);
+                    }
+                });
+
+        });
     }
 }
 

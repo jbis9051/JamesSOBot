@@ -445,6 +445,14 @@ const body = await request([...]).catch(error => { //request same as above, but 
 
 Editing messages needs to be done within two minutes of the message being posted, due to SE restrictions. Editing can be achieved by posting to `<chat domain>/messages/<message id>`, and posting with the fkey parameter and a parameter called `text` containing the new content. `<chat domain>` is again the chat site you want to handle (i.e. `https://chat.stackoverflow.com`, and `<message id>` is the ID of the message you want to edit. Both of these are naturally without brackets. 
 
+You most also include a `Referer` header with the room number:
+
+```json
+{
+  "Referer": "https://chat.stackoverflow.com/rooms/<room num>"
+}
+```
+
 If the message isn't yours, or the edit window has elapsed, this will fail. 
 
 Example POST data:
@@ -452,11 +460,36 @@ Example POST data:
 ```json
 {
     "fkey": "fkey here",
-    "text": "This is where you add the new content of the message
+    "text": "This is where you add the new content of the message"
 }
 ```
 
-// TODO
+```javascript
+request({
+    method: 'POST',
+    uri: `${this.chatURL}/messages/${id}`,
+    jar: this.cookieJar,
+    headers: {
+        referer: `${this.chatURL}/rooms/${roomNum}`
+    },
+    form: {
+        text: "This is where you add the new content of the message",
+        fkey: this.fkey
+    },
+})
+```
+
+The Response will be one of the following:
+
+| Response  | Description   |
+| ------------- | ------------- |
+| `"ok"` | Successful  |
+| `"You can only edit your own messages"` | You tried to edit a message that wasn't yours. Check your message id. |
+| `"It is too late to edit this message"` | Message was too old to be edited. There's a 2 min limit. |
+| `302 Found: /error?aspxerrorpath=/messages/<meesage id>` | Some other error occurred you are redirected via http code 302 to an html error page. |
+| `"You cannot write or edit messages in this room"` | You probably forgot the referer with the correct room. |
+| `You can perform this action again in X second(s)` | There's a throttle on how fast you can edit message and you've reached it. Simply wait that amount of seconds and retry. |
+
 
 ## Deleting messages
 
