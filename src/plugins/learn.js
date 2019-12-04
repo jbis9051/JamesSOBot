@@ -49,6 +49,7 @@ module.exports = function (bot) {
             name: learn_object.name,
             args: [],
             description: learn_object.description,
+            creator: learn_object.creator,
             shortcuts: [
                 learn_object.name.toLowerCase()
             ],
