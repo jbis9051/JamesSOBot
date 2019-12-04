@@ -8,7 +8,8 @@ module.exports = function (bot) {
         ],
         description: "Searches for query on Apple Support",
         shortcuts: [
-            "aps"
+            "aps",
+            "apple"
         ],
         examples: ["|| aps forgot Apple ID password"],
         ignore: false,

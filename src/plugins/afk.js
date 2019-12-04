@@ -52,7 +52,7 @@ module.exports = function (bot) {
         shortcuts: [
             "afk"
         ],
-        examples: ["|| welcome @JBis", "|| welcome JBis"],
+        examples: ["|| afk bla", "|| afk foo"],
         ignore: false,
         permissions: ["all"],
         func: async (msg) => {
@@ -64,7 +64,7 @@ module.exports = function (bot) {
             };
             bot.saveData('afk_data', afk_data);
             bot.log(msg.getVariableUsername() + " is afk");
-            msg.replyDirect("\\o")
+            msg.replyDirect("bye " + msg.getVariableUsername())
         }
     });
 };

@@ -1,16 +1,18 @@
-const lang = require('../config/lang.json');
+const Events = require('events');
 const request = require('request');
-const config = require('../config/config.json');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
 
+const lang = require('../config/lang.json');
+const config = require('../config/config.json');
 
 const {Message} = require("./events/Message");
 const {ChatEvent} = require('./events/ChatEvent.js');
 
-class Bot {
+class Bot extends Events.EventEmitter {
     constructor(plugins, saveFolderName) {
+        super();
         this.saveFolder = saveFolderName;
         if (!fs.existsSync(path.join(__dirname, "..", "data", this.saveFolder))) {
             fs.mkdirSync(path.join(__dirname, "..", "data", this.saveFolder));
@@ -37,18 +39,18 @@ class Bot {
             return;
         }
         if (!this.validateMsg(msg)) {
-            msg.roomContext.send('This command conflicts with law #3');
+            this.emit("invalid-message", msg);
             return;
         }
         if (!this.isCommandMsg(msg)) { /* is a command */
             return;
         }
         if (!msg.command) {
-            msg.replyDirect('Invalid command! Try `help` for a list of available commands.' + ('.‍'.repeat(Math.random() * 10))); /* there is probably a better way of doing this */
+            this.emit("no-command", msg);
             return;
         }
         if (!await this.permissionCheck(msg.command, msg)) {
-            msg.replyDirect("You are not authorized to administer this command");
+            this.emit("not-authorized", msg);
             return;
         }
         try {
