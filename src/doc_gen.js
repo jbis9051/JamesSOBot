@@ -17,7 +17,7 @@ let md_doc = `
 let defaults = [];
 let plugins = [];
 
-let learned = Object.values(bot.loadData("learn_list"));
+let learned = Object.values((new Bot([], "stackoverflow")).loadData("learn_list"));
 
 config.plugins.forEach(plugin => {
     if (plugin.startsWith("default/")) {
