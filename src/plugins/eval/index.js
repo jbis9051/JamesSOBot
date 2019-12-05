@@ -34,8 +34,7 @@ module.exports = (code, timeout = 500) => new Promise((resolve, reject) => {
 
     compiled_sandbox_script.runSync(context);
 
-    const code_to_run = `runCode(\`${code.replace(/\\/g, "\\").replace(/`/g, '\\`')}\`)`;
-
+    const code_to_run = `runCode(\`${code.replace(/\\/g, "\\\\").replace(/`/g, '\\`')}\`)`;
     try {
         isolate.compileScriptSync(code_to_run).runSync(context, {timeout: timeout});
     } catch (e) {
