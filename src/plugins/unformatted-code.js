@@ -53,7 +53,9 @@ module.exports = function (bot) {
                 response += " For posting large code blocks, use a paste site like like https://gist.github.com, http://hastebin.com, http://pastie.org or a demo site like https://jsbin.com/";
             }
             if (response) {
-                msg.replyDirect(response);
+                msg.moveTo(23262).finally(_ => {
+                    msg.roomContext.send(`@${msg.getVariableUsername().replace(/ /g, "")} ${response}`);
+                });
             }
         }
     });

@@ -290,6 +290,8 @@ class StackExchangeClient extends Client {
                     setTimeout(async () => {
                         resolve(await this.send(msg, roomNum));
                     }, (parseInt(delay) * 1000) + 0.25);
+                } else {
+                    resolve();
                 }
             });
 
@@ -434,8 +436,32 @@ class StackExchangeClient extends Client {
         })
     }
 
-    async moveTo(fromRoom, toRoom, messageIds) {
-        //   this.bot.standard_request(`${this.}`)
+    moveTo(fromRoom, toRoom, messageIds) {
+        return new Promise(async resolve => {
+            request({
+                method: 'POST',
+                uri: `${this.chatURL}/admin/movePosts/${fromRoom}`,
+                jar: this.cookieJar,
+                form: {
+                    ids: messageIds.join(","),
+                    to: toRoom,
+                    fkey: this.fkey
+                },
+            })
+                .then(resolve)
+                .catch(error => {
+                    this.bot.error(error.error);
+                    const delay = error.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
+                    if (delay) {
+                        setTimeout(async () => {
+                            resolve(await this.moveTo(fromRoom, toRoom, messageIds));
+                        }, (parseInt(delay) * 1000) + 0.25);
+                    } else {
+                        resolve();
+                    }
+                });
+
+        });
     }
 
     edit(id, newContent, roomNum) {
@@ -464,6 +490,8 @@ class StackExchangeClient extends Client {
                         setTimeout(async () => {
                             resolve(await this.edit(id, newContent, roomNum));
                         }, (parseInt(delay) * 1000) + 0.25);
+                    } else {
+                        resolve();
                     }
                 });
 

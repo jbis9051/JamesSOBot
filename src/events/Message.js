@@ -22,6 +22,7 @@ class Message extends ChatEvent {
         this.client = client;
         const msgSplit = this.getContent().split(" ");
         this.prefix = msgSplit.shift();
+        this.messageId = data.message_id;
 
         const match = this.prefix.match(/^(\|\|>?)([^ >]+)/);  // correct commands without space
 
@@ -52,7 +53,7 @@ class Message extends ChatEvent {
             getNumMessages: (...args) => this.client.getNumMessages(...args, this.getContext()),
             usernameToId: (...args) => this.client.usernameToId(...args, this.getContext()),
             usernameToInfo: (...args) => this.client.usernameToInfo(...args, this.getContext()),
-            edit: (...args) => this.client.edit(...args, this.getContext())
+            edit: (...args) => this.client.edit(...args, this.getContext()),
         };
 
     }
@@ -65,6 +66,10 @@ class Message extends ChatEvent {
      */
     replyDirect(content) {
         this.client.replyDirect(this, content)
+    }
+
+    moveTo(toRoom) {
+        return this.client.moveTo(this.getContext(), toRoom, [this.messageId])
     }
 
     /**
