@@ -5,11 +5,11 @@ module.exports = function (bot) {
     bot.addCommand({
         name: "learn",
         args: ["shortcut", "output"],
-        description: "Teaches a bot a command. Will output the `output` when `|| shortcut` is called",
+        description: "Teaches a bot a command. Will output the `output` when `|| shortcut` is called. You can also add args by wrapping the arg number (starting with 1) in curly brackets. If you would like to escape spaces (like for a link) wrap the index in regular brackets.",
         shortcuts: [
             "learn"
         ],
-        examples: ["|| learn shortcut output", "|| learn tbh to be honest"],
+        examples: ["|| learn shortcut output", "|| learn tbh to be honest", "|| learn hbd Happy Birthday {1}!", "|| learn vampire_redirect https://lmgtfy.com/?q=[1]"],
         ignore: false,
         permissions: ["all"],
         func: async (msg) => {
@@ -56,13 +56,31 @@ module.exports = function (bot) {
             ignore: true,
             permissions: ["all"],
             func: (msg) => {
-                msg.roomContext.send(learn_object.output).then(id => {
-                    if (learn_object.output.endsWith(".gif")) {
+                let output = learn_object.output;
+                Array.from(
+                    msg.args
+                        .join(" ") // get em back to the original args
+                        .matchAll(/(["'])((?:(?!\1).)*)(\1)/) // match all args https://stackoverflow.com/a/8057827/7886229
+                )
+                    .map(matches => {
+                        if (matches[2]) { // we have a quoter
+                            return matches[2].substring(0, matches[2].length) // am i the only one that has to look this up everytime i use it?
+                        } else {
+                            return matches[4] // otherwise just return the match
+                        }
+                    })
+                    .forEach((arg, index) => {
+                        output = output
+                            .replace(new RegExp('\\{' + (index + 1) + '\\}', 'g'), arg)
+                            .replace(new RegExp('\\[' + (index + 1) + '\\]', 'g'), arg.replace(/[\s]/g, "%20"))
+                    });
+                msg.roomContext.send(output).then(id => {
+                    if (output.endsWith(".gif")) {
                         setTimeout(() => {
-                            msg.roomContext.edit(id, `> ${learn_object.output}`); // get the annoying gifs away after a timeout
+                            msg.roomContext.edit(id, `> ${output}`); // get the annoying gifs away after a timeout
                         }, 60000);
                     }
-                })
+                });
             }
         });
     }

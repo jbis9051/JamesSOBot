@@ -21,7 +21,7 @@ module.exports = function (bot) {
                 msg.roomContext.send("No manual entry for " + msg.args[0]);
                 return;
             }
-            let stringToSend = `\`${command.name}\`: "${command.description || ""}" `;
+            let stringToSend = `[\`${command.name}\`](https://github.com/jbis9051/JamesSOBot/blob/master/docs/COMMANDS.md#${command.name}): "${command.description || ""}" `;
             if (command.creator) {
                 stringToSend += "Creator: " + command.creator
             } else {

@@ -7,6 +7,7 @@ module.exports = function (bot) {
         shortcuts: [
             "echo",
             "betterecho",
+            "say"
         ],
         examples: ["|| echo hi"],
         ignore: true,

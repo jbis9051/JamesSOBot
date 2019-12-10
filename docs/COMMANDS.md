@@ -271,6 +271,7 @@ Bot echo's what you say
 
 - `echo`
 - `betterecho`
+- `say`
 
 ## eval
 
@@ -375,7 +376,7 @@ Lists the laws
 
 ## learn
 
-Teaches a bot a command. Will output the `output` when `|| shortcut` is called
+Teaches a bot a command. Will output the `output` when `|| shortcut` is called. You can also add args by wrapping the arg number (starting with 1) in curly brackets. If you would like to escape spaces (like for a link) wrap the index in regular brackets.
 
 **Permissions**
 
@@ -385,6 +386,8 @@ Teaches a bot a command. Will output the `output` when `|| shortcut` is called
 
 - `|| learn shortcut output`
 - `|| learn tbh to be honest`
+- `|| learn hbd Happy Birthday {1}!`
+- `|| learn vampire_redirect https://lmgtfy.com/?q=[1]`
 
 **Shortcuts**
 
@@ -589,6 +592,17 @@ User-taught command: `https://i.stack.imgur.com/sxbZF.png`
 **Creator ID:** 1015495
 
 **Date Created:** 2017-07-12T17:44:23.819Z
+
+
+## `|| "turn`
+
+User-taught Command: `down for what?"`
+
+**Creator:** Mauker
+
+**Creator ID:** 4070469
+
+**Date Created:** Tue Dec 10 2019 14:06:13 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| (4337654<<1)+1`
@@ -1183,6 +1197,17 @@ User-taught command: `https://media.giphy.com/media/qdkzom7bF0tYk/giphy.gif`
 **Creator ID:** 4581014
 
 **Date Created:** 2017-07-11T13:36:36.625Z
+
+
+## `|| ballbreaker`
+
+User-taught Command: `!https://media.giphy.com/media/4pMX5rJ4PYAEM/giphy.gif`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Tue Dec 10 2019 14:20:28 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| ballcat`
@@ -1944,6 +1969,17 @@ User-taught command: `Get The Fudge Out !!`
 **Date Created:** 2015-06-29T06:06:05.388Z
 
 
+## `|| charge_your_electronics`
+
+User-taught Command: `https://chat.stackoverflow.com/transcript/message/24208024#24208024`
+
+**Creator:** AdamMc331
+
+**Creator ID:** 3131147
+
+**Date Created:** Tue Dec 10 2019 14:13:15 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| chatfaq`
 
 User-taught command: `Please see [FAQ#$0](http://chat.stackoverflow.com/faq#%240)`
@@ -2085,6 +2121,17 @@ User-taught command: `http://cdn.supercell.com/supercell.com/150211144610/all/th
 **Creator ID:** 3087778
 
 **Date Created:** 2015-06-17T09:44:15.141Z
+
+
+## `|| code_bourbon`
+
+User-taught Command: `!https://www.totalwine.com/dynamic/490x/media/sys_master/twmmedia/hbe/he6/11170726314014.png`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Tue Dec 10 2019 14:14:55 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| coffee`
@@ -3165,6 +3212,17 @@ User-taught command: `this is the flash..how can I help u`
 **Date Created:** 2015-07-28T11:13:58.036Z
 
 
+## `|| flatearth`
+
+User-taught Command: `https://assets.kakhiel.nl/uploads/image_fragment/111810/file/default_plat5.jpg`
+
+**Creator:** JBis
+
+**Creator ID:** 7886229
+
+**Date Created:** Fri Dec 06 2019 18:22:51 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| foass`
 
 User-taught command: (\w+) (\w+) `$1 $2`
@@ -3484,6 +3542,17 @@ User-taught command: `http://chat.stackoverflow.com/transcript/29074?m=24732813#
 **Date Created:** 2015-07-30T15:42:26.489Z
 
 
+## `|| gasoline`
+
+User-taught Command: `https://thumbs.gfycat.com/MeanSmoothItaliangreyhound-mobile.mp4`
+
+**Creator:** ballBreaker
+
+**Creator ID:** 3968793
+
+**Date Created:** Tue Dec 10 2019 14:27:43 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| gayclubs`
 
 User-taught command: ` http://chat.stackoverflow.com/transcript/message/8333542#8333542`
@@ -3779,6 +3848,17 @@ User-taught command: `http://fc07.deviantart.net/fs14/f/2007/030/0/9/Hitler_lemo
 **Creator ID:** undefined
 
 **Date Created:** 2014-05-13T20:57:08.718Z
+
+
+## `|| halp`
+
+User-taught Command: `Google it`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Tue Dec 10 2019 16:30:48 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| hammertime`
@@ -5266,6 +5346,28 @@ User-taught command: `https://i.imgur.com/MGFj4Ml.jpg`
 **Date Created:** 2018-07-06T10:15:05.486Z
 
 
+## `|| locate_keystore`
+
+User-taught Command: `!https://cdn.shopify.com/s/files/1/0322/6897/files/404-permalink.png?432866230176278629`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Tue Dec 10 2019 14:12:41 GMT-0500 (Eastern Standard Time)
+
+
+## `|| lofi`
+
+User-taught Command: `https://www.youtube.com/watch?v=DfNXZ-VLcFc`
+
+**Creator:** Mehdi B.
+
+**Creator ID:** 9997227
+
+**Date Created:** Tue Dec 10 2019 14:25:34 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| loktarownsm&ms`
 
 User-taught command: `http://chat.stackoverflow.com/transcript/message/20346611#20346611`
@@ -5396,6 +5498,17 @@ User-taught command: `http://i.imgur.com/sHXF8.gif`
 **Creator ID:** 5858238
 
 **Date Created:** 2017-07-13T10:01:26.160Z
+
+
+## `|| ly`
+
+User-taught Command: `https://data.whicdn.com/images/95202541/original.jpg`
+
+**Creator:** grrigore
+
+**Creator ID:** 7972851
+
+**Date Created:** Tue Dec 10 2019 14:12:38 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| mac`
@@ -6740,6 +6853,17 @@ User-taught command: `8eur081n23780cunq802mecr0iqwemiqr2u3489r234802tvnue89uqw9n
 **Date Created:** 2017-08-16T01:49:24.968Z
 
 
+## `|| qa`
+
+User-taught Command: `https://www.youtube.com/watch?v=aoWGh6t9xEA`
+
+**Creator:** grrigore
+
+**Creator ID:** 7972851
+
+**Date Created:** Tue Dec 10 2019 16:42:04 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| quickmaths`
 
 User-taught command: `Boom! 2+2=4-1=3 Quick maths!`
@@ -6782,6 +6906,17 @@ User-taught command: `https://i.kym-cdn.com/entries/icons/original/000/000/063/R
 **Creator ID:** 8300809
 
 **Date Created:** 2018-07-24T10:29:28.222Z
+
+
+## `|| raghav`
+
+User-taught Command: `LIES.`
+
+**Creator:** grrigore
+
+**Creator ID:** 7972851
+
+**Date Created:** Tue Dec 10 2019 14:11:20 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| rand`
@@ -6859,6 +6994,17 @@ User-taught command: ` http://i.stack.imgur.com/XChUc.gif`
 **Creator ID:** undefined
 
 **Date Created:** 2014-04-15T06:12:01.445Z
+
+
+## `|| recover_keystore`
+
+User-taught Command: `FILE NOT FOUND`
+
+**Creator:** Mauker
+
+**Creator ID:** 4070469
+
+**Date Created:** Tue Dec 10 2019 14:11:43 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| redo`
@@ -7266,6 +7412,17 @@ User-taught command: `https://i.stack.imgur.com/OQaIG.png`
 **Creator ID:** 447356
 
 **Date Created:** 2017-08-01T13:28:07.602Z
+
+
+## `|| show_password`
+
+User-taught Command: `************`
+
+**Creator:** grrigore
+
+**Creator ID:** 7972851
+
+**Date Created:** Tue Dec 10 2019 16:48:25 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| showboobs`
@@ -8357,6 +8514,17 @@ User-taught command: `http://i.imgur.com/vWfpbsE.jpg`
 **Date Created:** 2017-04-18T20:46:02.243Z
 
 
+## `|| vampire_redirect`
+
+User-taught Command: `https://lmgtfy.com/?q=[1]`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Tue Dec 10 2019 18:23:08 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| viola`
 
 User-taught command: `https://chat.stackoverflow.com/transcript/17?m=32565578#32565578`
@@ -8839,6 +9007,28 @@ User-taught command: `http://blog.codinghorror.com/content/images/uploads/2007/0
 **Creator ID:** 3846058
 
 **Date Created:** 2015-04-16T13:30:33.197Z
+
+
+## `|| womper`
+
+User-taught Command: `Goooooooooooooooooooooooooooooooooooooood Morning Everyone!!!!!!!`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Tue Dec 10 2019 16:28:42 GMT-0500 (Eastern Standard Time)
+
+
+## `|| womper_surprised`
+
+User-taught Command: `https://i.imgur.com/gNyGnwB.png`
+
+**Creator:** Mauker
+
+**Creator ID:** 4070469
+
+**Date Created:** Tue Dec 10 2019 14:08:43 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| woosh`
