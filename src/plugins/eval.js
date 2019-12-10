@@ -16,7 +16,7 @@ module.exports = function (bot) {
         ignore: false,
         permissions: ["all"],
         func: (msg) => {
-            _run(msg.args.join(" "), msg);
+            _run(msg.args.join(" ")).then(response => msg.replyDirect(response));
         },
     });
 
@@ -28,15 +28,17 @@ module.exports = function (bot) {
         }
     }
 
-    async function _run(code, msg) {
+    async function _run(code) {
+        if (/^\s*{/.test(code) && /}\s*$/.test(code)) {
+            code = '(' + code + ')';
+        }
         const val = await eval(code);
         val.result = truncate(val.result);
         if (val.error) {
-            msg.replyDirect(`Error running script: \`${val.result}\``);
-            return;
+            return `Error running script: \`${val.result}\``;
         }
         let logged = truncate(val.logged.join(", "));
-        msg.replyDirect(`\`${val.result}\` Logged: \`${logged}\``);
+        return `\`${val.result}\` Logged: \`${logged}\``;
     }
 
     bot.RegisterListener({
@@ -45,13 +47,10 @@ module.exports = function (bot) {
             if (bot.permissionCheck(bot.getCommandFromName("eval"), msg) && /^(\|\|>|>\|\||!!>) ./.test(text)) {
                 const trigger = text.match(/^(\|\|>|>\|\||!!>) ./)[1];
                 msg.code = text.replace(trigger, '');
-                if (/^\s*{/.test(msg.code) && /}\s*$/.test(msg.code)) {
-                    msg.code = '(' + msg.code + ')';
-                }
                 return true;
             }
             return false;
         },
-        callback: (msg) => _run(msg.code, msg)
+        callback: (msg) => _run(msg.code).then(response => msg.replyDirect(response))
     });
 };

@@ -58,9 +58,18 @@ class Message extends ChatEvent {
 
     }
 
+    /**
+     * Mention a user in a reply.
+     *
+     * @param {String} content
+     * @return {Promise<*>}
+     */
+    softReply(content) {
+        return this.roomContext.send(`@${this.getVariableUsername().replace(/\s/g, '')} ${content}`)
+    }
 
     /**
-     * Reply's to `this` message with `content`
+     * Directly reply to `this` message with `content`
      *
      * @param {String} content
      */

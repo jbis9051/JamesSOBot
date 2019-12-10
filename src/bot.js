@@ -13,9 +13,9 @@ const {ChatEvent} = require('./events/ChatEvent.js');
 class Bot extends Events.EventEmitter {
     constructor(plugins, saveFolderName) {
         super();
-        this.saveFolder = saveFolderName;
-        if (!fs.existsSync(path.join(__dirname, "..", "data", this.saveFolder))) {
-            fs.mkdirSync(path.join(__dirname, "..", "data", this.saveFolder));
+        this.saveFolder = path.join(__dirname, '..', 'data', saveFolderName);
+        if (!fs.existsSync(this.saveFolder)) {
+            fs.mkdirSync(this.saveFolder);
         }
         this.shutdown_scripts = [];
         this.commands = {};
@@ -87,9 +87,10 @@ class Bot extends Events.EventEmitter {
     /**
      *
      * @param {Object} cmd - Command to add
-     * @param {String} cmd.name - The name of the command. NOT used to identify a command is being called from a Message (If the name is "test", that doesn't mean that a message calling the command"test" will actually activate this command. If you wan't "test" to call this command, add it to the `shortcuts` array.)
+     * @param {String} cmd.name - The name of the command. NOT used to identify a command is being called from a Message (If the name is "test", that doesn't mean that a message calling the command "test" will actually activate this command. If you wan't "test" to call this command, add it to the `shortcuts` array.)
+     * @param {String} cmd.description - A description of the command.
      * @param {Array} cmd.args - A description of the args this command accepts. Only used for descriptive purposes.
-     * @param {Array} cmd.shortcuts - Keywords that activate this command. If the Message's commandCall matches any of these shortcuts, this command will be activated.
+     * @param {Array<String|RegExp>} cmd.shortcuts - Keywords that activate this command. If the Message's commandCall matches any of these shortcuts, this command will be activated.
      * @param {Boolean} cmd.ignore - Should this command be hidden from the help menu?
      * @param {Array} cmd.permissions - Array of groups allowed to use this command. Each entry should line up to group in `config.json["users_groups"]`.
      * @param {Array} cmd.examples - Example commands. Only used for descriptive purposes.
@@ -453,14 +454,14 @@ class Bot extends Events.EventEmitter {
         if (typeof data !== "string") {
             data = JSON.stringify(data);
         }
-        fs.writeFileSync(path.join(__dirname, '..', 'data', this.saveFolder, name), data);
+        fs.writeFileSync(path.join(this.saveFolder, name), data);
     }
 
     loadData(name) {
-        if (!fs.existsSync(path.join(__dirname, '..', 'data', this.saveFolder, name))) {
+        if (!fs.existsSync(path.join(this.saveFolder, name))) {
             return false;
         }
-        const data = fs.readFileSync(path.join(__dirname, '..', 'data', this.saveFolder, name)).toString();
+        const data = fs.readFileSync(path.join(this.saveFolder, name)).toString();
         return data.isJSON() ? JSON.parse(data) : data;
     }
 

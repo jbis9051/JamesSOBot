@@ -3,11 +3,37 @@
 
 *A better version of the help menu*
 
+To interact with the bot simply enter your command with the following prefix:`||`.
+
+```
+|| commandName arg1 arg2 arg3
+```
+
+The [eval](#eval) command has a shortcut of `||>`. See the examples in the eval section for how to use this.
+
+The eval is sandboxed. If you find a vulnerability please contact me or a Room Owner immediately. They will be able to shut down the bot until it is fixed.
+
 ----
 
 
 # Default Plugins
 
+
+## backup
+
+Backup data to Gist and posts a link
+
+**Permissions**
+
+- admin
+           
+**Example**
+
+- `|| backup`
+
+**Shortcuts**
+
+- `backup`
 
 ## disable
 
@@ -147,8 +173,8 @@ Add an afk message
            
 **Example**
 
-- `|| welcome @JBis`
-- `|| welcome JBis`
+- `|| afk bla`
+- `|| afk foo`
 
 **Shortcuts**
 
@@ -188,6 +214,7 @@ Searches for query on Apple Support
 **Shortcuts**
 
 - `aps`
+- `apple`
 
 ## ban
 
@@ -505,6 +532,8 @@ Looks query up on Wikipedia
 - `search`
 
 # Learned Commands
+
+These are commands created by users of the bot, not by me. Many were imported from the previous bot. I am not responsible for these commands, however, if you find one that is offensive and/or against Stack Exchange's policy please open an issue and it may be removed. 
 
 
 ## `|| :p`
