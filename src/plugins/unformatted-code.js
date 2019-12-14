@@ -1,6 +1,6 @@
 const config = require('../../config/config');
 
-const format_message = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq).";
+const format_message = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
 
 module.exports = function (bot) {
     bot.addCommand({

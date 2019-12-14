@@ -60,7 +60,7 @@ module.exports = function (bot) {
                 Array.from(
                     msg.args
                         .join(" ") // get em back to the original args
-                        .matchAll(/(["'])((?:(?!\1).)*)(\1)/) // match all args https://stackoverflow.com/a/8057827/7886229
+                        .matchAll(/(["'])((?:(?!\1).)*)(\1)|([^\s]+)/) // match all args https://stackoverflow.com/a/8057827/7886229
                 )
                     .map(matches => {
                         if (matches[2]) { // we have a quoter

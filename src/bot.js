@@ -432,7 +432,7 @@ class Bot extends Events.EventEmitter {
                     selected = selector($);
                 } else {
                     selected = $('.r').find('a').attr('href').replace('/url?q=', '').replace(/&sa=.*/, '');
-                    title = $('.r').find('.LC20lb').find('span').html();
+                    title = $('.r').find('.LC20lb').html();
                 }
                 if (!selected.match(selectorMatch)) {
                     console.error('Invalid Selector ' + selected);
