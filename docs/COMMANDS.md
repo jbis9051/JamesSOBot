@@ -15,6 +15,8 @@ The eval is sandboxed. If you find a vulnerability please contact me or a Room O
 
 ----
 
+Learned Commands can be found here: [Learned Commands](https://github.com/jbis9051/JamesSOBot/blob/master/docs/COMMANDS.md#learned-commands)
+
 
 # Default Plugins
 
