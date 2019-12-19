@@ -391,7 +391,7 @@ class Bot extends Events.EventEmitter {
     async standard_request(url, callback) {
         await request({
             url,
-            headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
+            headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:10.0) Gecko/20100101 Firefox/12.0'}
         }, callback);
     }
 
@@ -431,12 +431,13 @@ class Bot extends Events.EventEmitter {
                 if (selector) {
                     selected = selector($);
                 } else {
-                    selected = $('.r').find('a').attr('href').replace(/\/url?.*&url=/, '');
+                    selected = $('.r > a').attr('href').replace(/\/url?.*&url=/, '');
                     title = $('.r').find('.LC20lb').html();
                 }
                 if (!selected.match(selectorMatch)) {
                     console.error('Invalid Selector ' + selected);
                     callback(false);
+                    return;
                 }
                 if (title) {
                     callback({url: selected, title: title});
