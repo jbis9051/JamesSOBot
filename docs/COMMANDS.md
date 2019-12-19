@@ -3,6 +3,8 @@
 
 *A better version of the help menu*
 
+[Learned Commands can be found here](#learned-commands)
+
 To interact with the bot simply enter your command with the following prefix:`||`.
 
 ```
@@ -255,6 +257,25 @@ Calculates an expression using Math.js
 - `calculator`
 - `c`
 
+## choose
+
+Chooses an option from a space delimited string of options. Strips 'or's .
+
+**Permissions**
+
+- all
+           
+**Example**
+
+- `|| choose heads tails`
+- `|| choose 1 2 3 or 4`
+
+**Shortcuts**
+
+- `choose`
+- `pick`
+- `choice`
+
 ## echo
 
 Bot echo's what you say
@@ -376,7 +397,7 @@ Lists the laws
 
 ## learn
 
-Teaches a bot a command. Will output the `output` when `|| shortcut` is called. You can also add args by wrapping the arg number (starting with 1) in curly brackets. If you would like to escape spaces (like for a link) wrap the index in regular brackets.
+Teaches a bot a command. Will output the `output` when `|| shortcut` is called. You can also add args by wrapping the arg number (starting with 1) in curly brackets. If you would like to escape spaces (like for a link) wrap the index in regular brackets. You can also use `{a}` to include all the arguments and `[a]` to encode them all.
 
 **Permissions**
 
@@ -1133,6 +1154,17 @@ User-taught command: `mad`
 **Date Created:** 2015-03-20T08:48:16.239Z
 
 
+## `|| bad_search`
+
+User-taught Command: `[{1}](https://www.bing.com/search/?q=[1])`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Wed Dec 11 2019 16:52:59 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| badanusday`
 
 User-taught command: `http://i.imgur.com/UFIIhY3.jpg`
@@ -1826,6 +1858,17 @@ User-taught command: `http://chat.stackoverflow.com/transcript/message/20948884#
 **Date Created:** 2015-01-13T23:08:37.341Z
 
 
+## `|| carl`
+
+User-taught Command: `!https://i.imgur.com/QkbTyEs.jpg`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Fri Dec 13 2019 12:54:06 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| casesensitive`
 
 User-taught command: `shit`
@@ -1835,6 +1878,17 @@ User-taught command: `shit`
 **Creator ID:** 3183756
 
 **Date Created:** 2015-10-28T11:59:55.757Z
+
+
+## `|| cat`
+
+User-taught Command: `!https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F2.bp.blogspot.com%2F-xryaIKjlDTg%2FUAbznSk8IgI%2FAAAAAAAAQII%2F-imC98usNf8%2Fs1600%2Ffunny-cat-pictures-007-006.jpg&f=1&nofb=1`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Wed Dec 11 2019 14:06:32 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| catboat`
@@ -1912,17 +1966,6 @@ User-taught command: `https://static1.squarespace.com/static/52faaa94e4b03ff7dae
 **Creator ID:** 5858238
 
 **Date Created:** 2017-07-13T10:02:55.849Z
-
-
-## `|| cats`
-
-User-taught command: `:3 :3 :3`
-
-**Creator:** Hans1984
-
-**Creator ID:** 4581014
-
-**Date Created:** 2017-03-20T09:04:19.016Z
 
 
 ## `|| catslap`
@@ -2112,6 +2155,17 @@ User-taught command: ` http://whyareyoustupid.com/wp-content/uploads/I-am-not-a-
 **Date Created:** 2015-07-22T18:24:51.325Z
 
 
+## `|| cMAbuse`
+
+User-taught Command: `cM stop bullying me!`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Tue Dec 17 2019 19:15:20 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| coc`
 
 User-taught command: `http://cdn.supercell.com/supercell.com/150211144610/all/themes/supercell/img/parallax/coc_logo.png`
@@ -2253,6 +2307,17 @@ User-taught command: `http://chat.stackoverflow.com/transcript/message/24495580#
 **Creator ID:** 3459110
 
 **Date Created:** 2015-07-16T15:44:51.583Z
+
+
+## `|| confirm`
+
+User-taught Command: `I can confirm that {1} are accurate.`
+
+**Creator:** JBis
+
+**Creator ID:** 7886229
+
+**Date Created:** Wed Dec 18 2019 17:39:00 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| conspiracy`
@@ -2847,6 +2912,17 @@ User-taught command: ` https://www.youtube.com/watch?v=8Gv0H-vPoDc`
 **Creator ID:** undefined
 
 **Date Created:** 2014-10-06T11:31:07.233Z
+
+
+## `|| entangle`
+
+User-taught Command: `*your target stops moving*`
+
+**Creator:** Tim
+
+**Creator ID:** 1843331
+
+**Date Created:** Mon Dec 16 2019 07:49:03 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| epic`
@@ -3663,6 +3739,17 @@ User-taught command: `http://lmgtfy.com/?q=$0`
 **Date Created:** 2015-03-27T13:55:44.801Z
 
 
+## `|| google`
+
+User-taught Command: `[{1}](https://www.google.com/search?q=[1])`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Wed Dec 11 2019 16:56:09 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| googl𝖾`
 
 User-taught command: `[*](https://www.youtube.com/watch?v=kfVsfOSbJY0) [Canada officially enters recession - Yahoo News](https://www.youtube.com/watch?v=kfVsfOSbJY0) ; [Canada is in recession - Business Insider](https://www.youtube.com/watch?v=kfVsfOSbJY0) ; [Canadian economy enters recession - BBC News - BBC.com](https://www.youtube.com/watch?v=kfVsfOSbJY0)`
@@ -3870,6 +3957,17 @@ User-taught command: `STOP`
 **Creator ID:** 785745
 
 **Date Created:** 2015-06-19T18:16:56.232Z
+
+
+## `|| hangman`
+
+User-taught Command: `https://chat.stackoverflow.com/transcript/15?m=47859599#47859599`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Tue Dec 17 2019 18:58:46 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| hans`
@@ -4090,6 +4188,17 @@ User-taught command: `Hello`
 **Creator ID:** undefined
 
 **Date Created:** 2014-10-15T03:54:36.093Z
+
+
+## `|| hiDave`
+
+User-taught Command: `Dave, you're lame`
+
+**Creator:** codeMagic
+
+**Creator ID:** 1380752
+
+**Date Created:** Wed Dec 11 2019 15:20:54 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| highfive`
@@ -5346,6 +5455,17 @@ User-taught command: `https://i.imgur.com/MGFj4Ml.jpg`
 **Date Created:** 2018-07-06T10:15:05.486Z
 
 
+## `|| lmgtfy`
+
+User-taught Command: `[{1}](https://www.lmgtfy.com?q=[1])`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Wed Dec 11 2019 15:31:47 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| locate_keystore`
 
 User-taught Command: `!https://cdn.shopify.com/s/files/1/0322/6897/files/404-permalink.png?432866230176278629`
@@ -5951,6 +6071,17 @@ User-taught command: `https://pics.me.me/a-poor-runaway-puppy-covered-in-mud-was
 **Date Created:** 2017-08-04T09:39:16.592Z
 
 
+## `|| murat`
+
+User-taught Command: `nerds`
+
+**Creator:** grrigore
+
+**Creator ID:** 7972851
+
+**Date Created:** Thu Dec 19 2019 06:54:08 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| music`
 
 User-taught command: `[Music here!](https://www.youtube.com/watch?v=OPf0YbXqDm0&index=1&list=PLtKflzylNF7oeUpW60X0r4n8ncHBNSpR1)`
@@ -6169,6 +6300,17 @@ User-taught command: ` https://www.youtube.com/watch?v=WAOxY_nHdew`
 **Creator ID:** undefined
 
 **Date Created:** 2014-05-22T20:24:21.889Z
+
+
+## `|| norris`
+
+User-taught Command: `!https://images-na.ssl-images-amazon.com/images/I/51IY4ohvfUL.jpg`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Wed Dec 18 2019 14:15:25 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| notbad`
@@ -7557,6 +7699,17 @@ User-taught command: `http://i.imgur.com/oP09zVN.jpg`
 **Date Created:** 2014-04-28T17:17:14.400Z
 
 
+## `|| snare`
+
+User-taught Command: `*budum chhh*`
+
+**Creator:** JBis
+
+**Creator ID:** 7886229
+
+**Date Created:** Mon Dec 16 2019 07:48:27 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| so-dark`
 
 User-taught command: `https://chrome.google.com/webstore/detail/so-dark-chat-%20/bbkjccfnenmgidehjhaabamobpbaaghh?hl=en`
@@ -8459,6 +8612,17 @@ User-taught command: `http://i.stack.imgur.com/MFJCg.jpg`
 **Date Created:** 2018-03-22T08:20:24.918Z
 
 
+## `|| urban`
+
+User-taught Command: `[{1}](https://www.urbandictionary.com/define.php?term=[1])`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Wed Dec 11 2019 15:34:13 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| uselesschienis`
 
 User-taught command: useless `Uselesschien`
@@ -8512,17 +8676,6 @@ User-taught command: `http://i.imgur.com/vWfpbsE.jpg`
 **Creator ID:** 3499931
 
 **Date Created:** 2017-04-18T20:46:02.243Z
-
-
-## `|| vampire_redirect`
-
-User-taught Command: `https://lmgtfy.com/?q=[1]`
-
-**Creator:** Dave S
-
-**Creator ID:** 2680506
-
-**Date Created:** Tue Dec 10 2019 18:23:08 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| viola`
@@ -9011,13 +9164,35 @@ User-taught command: `http://blog.codinghorror.com/content/images/uploads/2007/0
 
 ## `|| womper`
 
-User-taught Command: `Goooooooooooooooooooooooooooooooooooooood Morning Everyone!!!!!!!`
+User-taught Command: `Goooooooooooooooooooooooooooooooooooood Morning Everyone!!!!!! :D`
+
+**Creator:** Carl Anderson
+
+**Creator ID:** 2171147
+
+**Date Created:** Fri Dec 13 2019 12:48:08 GMT-0500 (Eastern Standard Time)
+
+
+## `|| womper_missile`
+
+User-taught Command: `Goooooooooooooooooooooooooooooooooooood Morning {1}!!!!!! :D`
 
 **Creator:** Dave S
 
 **Creator ID:** 2680506
 
-**Date Created:** Tue Dec 10 2019 16:28:42 GMT-0500 (Eastern Standard Time)
+**Date Created:** Wed Dec 18 2019 14:06:48 GMT-0500 (Eastern Standard Time)
+
+
+## `|| womper_nam`
+
+User-taught Command: `Goooooooooooooooooooooooooooooooooooood Morning Vietnam!!!!!! :D`
+
+**Creator:** JBis
+
+**Creator ID:** 7886229
+
+**Date Created:** Thu Dec 19 2019 08:45:23 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| womper_surprised`

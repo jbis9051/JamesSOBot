@@ -431,7 +431,7 @@ class Bot extends Events.EventEmitter {
                 if (selector) {
                     selected = selector($);
                 } else {
-                    selected = $('.r').find('a').attr('href').replace('/url?q=', '').replace(/&sa=.*/, '');
+                    selected = $('.r').find('a').attr('href').replace(/\/url?.*&url=/, '');
                     title = $('.r').find('.LC20lb').html();
                 }
                 if (!selected.match(selectorMatch)) {

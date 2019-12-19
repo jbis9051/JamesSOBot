@@ -10,6 +10,8 @@ let md_doc = `
 
 *A better version of the help menu*
 
+[Learned Commands can be found here](#learnedcommands)
+
 To interact with the bot simply enter your command with the following prefix:\`||\`.
 
 \`\`\`

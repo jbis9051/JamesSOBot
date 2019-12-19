@@ -5,7 +5,7 @@ module.exports = function (bot) {
     bot.addCommand({
         name: "learn",
         args: ["shortcut", "output"],
-        description: "Teaches a bot a command. Will output the `output` when `|| shortcut` is called. You can also add args by wrapping the arg number (starting with 1) in curly brackets. If you would like to escape spaces (like for a link) wrap the index in regular brackets.",
+        description: "Teaches a bot a command. Will output the `output` when `|| shortcut` is called. You can also add args by wrapping the arg number (starting with 1) in curly brackets. If you would like to escape spaces (like for a link) wrap the index in regular brackets. You can also use `{a}` to include all the arguments and `[a]` to encode them all.",
         shortcuts: [
             "learn"
         ],
@@ -72,12 +72,17 @@ module.exports = function (bot) {
                     .forEach((arg, index) => {
                         output = output
                             .replace(new RegExp('\\{' + (index + 1) + '\\}', 'g'), arg)
-                            .replace(new RegExp('\\[' + (index + 1) + '\\]', 'g'), arg.replace(/[\s]/g, "%20"))
+                            .replace(new RegExp('\\[' + (index + 1) + '\\]', 'g'), encodeURIComponent(arg))
                     });
+                output = output
+                    .replace(/{a}/g, msg.args.join(" "))
+                    .replace(/\[a]/g, encodeURIComponent(msg.args.join(" ")));
+
                 msg.roomContext.send(output).then(id => {
-                    if (output.endsWith(".gif")) {
+                    const imageExtensions = ["png", "jpg", "jpeg", "gif"];
+                    if (imageExtensions.includes(output.substring(output.lastIndexOf(".") + 1))) {
                         setTimeout(() => {
-                            msg.roomContext.edit(id, `> ${output}`); // get the annoying gifs away after a timeout
+                            msg.roomContext.edit(id, `> ${output}`); // get the annoying images away after a timeout
                         }, 60000);
                     }
                 });
