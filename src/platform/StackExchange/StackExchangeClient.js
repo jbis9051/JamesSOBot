@@ -308,7 +308,7 @@ class StackExchangeClient extends Client {
             uri: `${this.chatURL}/rooms/pingable/${roomNum}`,
             jar: this.cookieJar,
         });
-        const array = JSON.parse(body).filter(a => a[1].replace(" ", "") === username.replace("@", ""));
+        const array = JSON.parse(body).filter(a => a[1].toUpperCase() === username.replace("@", "").toUpperCase());
         if (array.length === 0) {
             return false;
         }

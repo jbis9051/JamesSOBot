@@ -12,11 +12,19 @@ module.exports = function (bot) {
         ignore: false,
         permissions: ["all"],
         func: async (msg) => {
-            if (msg.args.length < 1) {
-                msg.roomContext.send("**Missing Args**");
-                return;
+            let id;
+            if (msg.args.length === 0) {
+                id = msg.getStaticUserUID();
+            } else if (msg.args.length === 1 && /^\d+$/.test(msg.args[0])) {
+                id = parseInt(msg.args[0]);
+            } else {
+                id = await msg.roomContext.usernameToId(msg.args.join(" "));
+                if (!id) {
+                    msg.roomContext.send("Unable to find user. This can happen if they have not been in the room in awhile.");
+                    return;
+                }
             }
-            const id = /^\d+$/.test(msg.args[0]) ? parseInt(msg.args[0]) : await msg.roomContext.usernameToId(msg.args.join());
+
             const siteid = await msg.client.chatIDToSiteID(id);
             const userData = await msg.client.stats(siteid);
             if (!userData) {
