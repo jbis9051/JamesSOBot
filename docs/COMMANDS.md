@@ -17,8 +17,6 @@ The eval is sandboxed. If you find a vulnerability please contact me or a Room O
 
 ----
 
-Learned Commands can be found here: [Learned Commands](https://github.com/jbis9051/JamesSOBot/blob/master/docs/COMMANDS.md#learned-commands)
-
 
 # Default Plugins
 
@@ -538,6 +536,7 @@ Unlearns a learned command command
 **Shortcuts**
 
 - `unlearn`
+- `forget`
 
 ## wiki
 
@@ -5743,6 +5742,17 @@ User-taught command: `http://output.jsbin.com/yenumu#$1#$2`
 **Date Created:** 2015-10-31T15:08:51.335Z
 
 
+## `|| mauker_found_it`
+
+User-taught Command: `Hey @AdamMc331, [Mauker found your keystore](https://i.stack.imgur.com/BnU6t.png)`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Mon Dec 30 2019 15:21:36 GMT-0500 (Eastern Standard Time)
+
+
 ## `|| mbn`
 
 User-taught command: `[Array.prototype.$encode($1)()](https://www.youtube.com/watch?v=kfVsfOSbJY0)`
@@ -8678,6 +8688,17 @@ User-taught command: `http://i.imgur.com/vWfpbsE.jpg`
 **Creator ID:** 3499931
 
 **Date Created:** 2017-04-18T20:46:02.243Z
+
+
+## `|| vibes`
+
+User-taught Command: `"if it's stupid but it works it isn't stupid"`
+
+**Creator:** grrigore
+
+**Creator ID:** 7972851
+
+**Date Created:** Tue Jan 07 2020 16:43:09 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| viola`

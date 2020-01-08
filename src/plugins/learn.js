@@ -95,7 +95,8 @@ module.exports = function (bot) {
         args: [""],
         description: "Unlearns a learned command command",
         shortcuts: [
-            "unlearn"
+            "unlearn",
+            "forget"
         ],
         examples: ["|| unlearn tbh"],
         ignore: false,
