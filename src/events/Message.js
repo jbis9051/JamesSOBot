@@ -40,6 +40,8 @@ class Message extends ChatEvent {
         }
         this.commandCall = msgSplit.shift();
         this.args = msgSplit;
+        this.quotedArgsList = Message._quotedArgsSplit(msgSplit.join(" "));
+
         this.command = this.client.bot.getCommand(this.commandCall);
 
         this.roomContext = {
@@ -65,7 +67,7 @@ class Message extends ChatEvent {
      * @return {Promise<*>}
      */
     softReply(content) {
-        return this.roomContext.send(`@${this.getVariableUsername().replace(/\s/g, '')} ${content}`)
+        return this.roomContext.send(`${this.getPingString()} ${content}`)
     }
 
     /**
@@ -133,6 +135,20 @@ class Message extends ChatEvent {
         return lines.map(function (line) {
             return tab + line;
         }).join('\n');
+    }
+
+    static _quotedArgsSplit(string) {
+        return Array.from(
+            string
+                .matchAll(/(["'])((?:(?!\1).)*)(\1)|([^\s]+)/g) // match all args https://stackoverflow.com/a/8057827/7886229
+        )
+            .map(matches => {
+                if (matches[2]) { // we have a quoter
+                    return matches[2].substring(0, matches[2].length) // am i the only one that has to look this up everytime i use it?
+                } else {
+                    return matches[4] // otherwise just return the match
+                }
+            });
     }
 }
 

@@ -46,6 +46,15 @@ class ChatEvent {
     getVariableUsername() {
         return this.data.user_name
     }
+
+    /**
+     * Returns a possibly variable friendly username. This may change so DO NOT rely on it for authorization/authentication.
+     *
+     * @return {String} - The friendly username
+     */
+    getPingString() {
+        return '@' + this.getVariableUsername().replace(/\s/g, '');
+    }
 }
 
 ChatEvent.NEW_MESSAGE = 1;

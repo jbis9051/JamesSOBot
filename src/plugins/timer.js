@@ -2,88 +2,69 @@ let timers = [];
 module.exports = function (bot) {
     bot.addCommand({
         name: "timer",
-        args: ["who to remind (@User or me)","what to remind","time"],
-        description: "Creates a time",
+        args: [],
+        description: "Creates a timer",
         shortcuts: [
             "timer",
             "remind",
+            "remindme"
         ],
-        examples: ["|| remind @JBis hi jbis 10s", "|| remind @JBis hi jbis 5m", "|| remind @JBis hi jbis 5h"],
+        examples: ["|| remind 'hello JBis' in 10 minutes", "|| remind 'hello JBis' 10 hours"],
         ignore: false,
         permissions: ["all"],
         func: (msg) => {
-            if(msg.args.length < 3){
-                if(msg.args.length < 1){
-                    msg.roomContext.send("Need more args");
-                    return;
-                }
-                if(msg.args[0] === "list"){
-                    //TODO list current timers/reminders
-                } else {
-                    msg.roomContext.send("Need more args");
-                }
+            const content = msg.quotedArgsList.shift();
+            const mili = convertTimeStringToMiliseconds(msg.quotedArgsList.join(" "));
+            if (!mili) {
+                msg.roomContext.send("I don't know that unit of time.");
                 return;
             }
-            let user = msg.args.shift();
-            if(user === "me"){
-                user = "@" + msg.getVariableUsername();
-            }
-            let time = convertTimeToMiliseconds(msg.args.pop());
-            if(!time){
-                msg.roomContext.send("Invalid time.");
-                return;
-            }
-            const content = `${user}, ${msg.args.join(" ").htmlToMarkdown()}`;
             timers.push({
                 user: msg.getVariableUsername(),
-               content: content,
-               date: Date.now() + time,
+                id: msg.getStaticUserUID(),
+                room: msg.getContext(),
+                content: content,
+                expires: Date.now() + mili,
+                timer: setTimeout(_ => msg.softReply(content), mili)
             });
-            const index = timers.length;
-            setTimeout(()=>{
-                msg.roomContext.send(content);
-               timers.splice(index,1);
-            },time);
-            msg.replyDirect("Ok. I'll remind.")
+
+            msg.roomContext.send("Reminder Added.")
         }
     });
 };
-function convertTimeToMiliseconds(time) {
+
+function convertTimeStringToMiliseconds(time) {
     let numeric = Number(time.match(/[0-9]+/)[0]);
-    let unit = time.match(/[A-z]+/)[0];
-    if(!numeric || !unit){
+    let unit = time.split(" ").pop();
+    if (!numeric || !unit) {
         return false;
     }
-    const units = {
-        hours: ["hours","h"],
-        minutes: ["minutes","min","m"],
-        seconds: ["seconds","sec","s"],
-    };
-    let final_unit = false;
-    for (let key of Object.keys(units)) {
-        for(unit_alias of units[key]){
-            if(unit === unit_alias){
-                final_unit = key;
-                break;
-            }
-        }
+    const units = [
+        {
+            name: "hours",
+            alias: ["h"],
+            multiplier: 3.6e+6,
+        },
+        {
+            name: "minutes",
+            alias: ["min", "m"],
+            multiplier: 60000,
+        },
+        {
+            name: "seconds",
+            alias: ["sec", "s"],
+            multiplier: 1000,
+        },
+
+    ];
+    const timeObj = units.find(obj => obj.name === unit || obj.alias.includes(unit));
+    if (!timeObj) {
+        return false;
     }
-    switch (final_unit) {
-        case "hours": {
-            return numeric * 3.6e+6;
-        }
-        case "minutes": {
-            return numeric * 60000;
-        }
-        case "seconds": {
-            return numeric * 1000;
-        }
-        default: {
-            return false;
-        }
-    }
+    return numeric * timeObj.multiplier;
 
 }
+
 /**
  * Sets a timer to remind a user a message at a specific time relative to the current time
  *
@@ -107,4 +88,5 @@ function convertTimeToMiliseconds(time) {
  * | Minutes | <ul><li>`minutes`</li><li>`min`</li><li>`m`</li></ul> |
  * | Hours | <ul><li>`hours`</li><li>`h`</li></ul> |
  */
-function remind(user,message,time) {}
+function remind(user, message, time) {
+}

@@ -57,18 +57,7 @@ module.exports = function (bot) {
             permissions: ["all"],
             func: (msg) => {
                 let output = learn_object.output;
-                Array.from(
-                    msg.args
-                        .join(" ") // get em back to the original args
-                        .matchAll(/(["'])((?:(?!\1).)*)(\1)|([^\s]+)/) // match all args https://stackoverflow.com/a/8057827/7886229
-                )
-                    .map(matches => {
-                        if (matches[2]) { // we have a quoter
-                            return matches[2].substring(0, matches[2].length) // am i the only one that has to look this up everytime i use it?
-                        } else {
-                            return matches[4] // otherwise just return the match
-                        }
-                    })
+                msg.quotedArgsList
                     .forEach((arg, index) => {
                         output = output
                             .replace(new RegExp('\\{' + (index + 1) + '\\}', 'g'), arg)
