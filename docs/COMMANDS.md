@@ -276,6 +276,22 @@ Chooses an option from a space delimited string of options. Strips 'or's .
 - `pick`
 - `choice`
 
+## debug
+
+Disables/Enables the bot in the test room (193540)
+
+**Permissions**
+
+- admin
+           
+**Example**
+
+- `|| sudo debug enable`
+
+**Shortcuts**
+
+- `debug`
+
 ## echo
 
 Bot echo's what you say
@@ -485,7 +501,7 @@ Gets info about a user
 
 ## timer
 
-Creates a time
+Creates a timer
 
 **Permissions**
 
@@ -493,14 +509,14 @@ Creates a time
            
 **Example**
 
-- `|| remind @JBis hi jbis 10s`
-- `|| remind @JBis hi jbis 5m`
-- `|| remind @JBis hi jbis 5h`
+- `|| remind 'hello JBis' in 10 minutes`
+- `|| remind 'hello JBis' 10 hours`
 
 **Shortcuts**
 
 - `timer`
 - `remind`
+- `remindme`
 
 ## unban
 
@@ -2552,17 +2568,6 @@ User-taught command: `A mythical beast!`
 **Date Created:** 2015-06-17T09:41:36.290Z
 
 
-## `|| debug`
-
-User-taught command: `http://chat.stackoverflow.com/transcript/message/19356916#19356916`
-
-**Creator:** Awal Garg
-
-**Creator ID:** 3459110
-
-**Date Created:** 2015-02-08T23:39:42.585Z
-
-
 ## `|| deep`
 
 User-taught command: `http://www.quickmeme.com/img/a6/a61ca35f2181152325cf451fe6aa6c731a0a02c9f5662ec48d4d711eac77dcf0.jpg`
@@ -3584,6 +3589,17 @@ User-taught command: `┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻`
 **Creator ID:** undefined
 
 **Date Created:** 2014-09-10T19:00:10.634Z
+
+
+## `|| fun_fact`
+
+User-taught Command: `codeMagic used to own a python (the snake)`
+
+**Creator:** Dave S
+
+**Creator ID:** 2680506
+
+**Date Created:** Wed Jan 08 2020 18:34:03 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| funfriday`
@@ -4937,17 +4953,6 @@ User-taught command: `http://chat.stackoverflow.com/transcript/17?m=20055954#200
 **Creator ID:** 617762
 
 **Date Created:** 2014-11-22T12:10:03.468Z
-
-
-## `|| joke`
-
-User-taught command: `http://i2.kym-cdn.com/photos/images/newsfeed/000/483/894/463.jpg`
-
-**Creator:** rlemon
-
-**Creator ID:** 829835
-
-**Date Created:** 2015-01-20T01:27:24.302Z
 
 
 ## `|| jordan`
@@ -7302,6 +7307,17 @@ User-taught command: `http://media.giphy.com/media/sfnwnXtqQ8pO/giphy.gif`
 **Creator ID:** 3846058
 
 **Date Created:** 2015-03-04T14:38:32.011Z
+
+
+## `|| roasted`
+
+User-taught Command: `https://4.bp.blogspot.com/-kGtob07wA7k/XIhN5oNhhdI/AAAAAAABL0w/YXnFd3YpnGI13mzWHYwRRgsO2wtN77M3gCEwYBhgL/s1600/IMG_5419.jpeg`
+
+**Creator:** JBis
+
+**Creator ID:** 7886229
+
+**Date Created:** Wed Jan 08 2020 20:11:57 GMT-0500 (Eastern Standard Time)
 
 
 ## `|| rockclimb`
