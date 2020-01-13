@@ -30,7 +30,7 @@ class ChatEvent {
     }
 
     /**
-     * Returns a unique identifier for the user that sent this message. Usually a numerical string.
+     * Returns a unique identifier for the user that sent this message. Usually a number.
      *
      * @return {number} - The unique identifier
      */

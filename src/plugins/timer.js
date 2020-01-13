@@ -16,7 +16,7 @@ module.exports = function (bot) {
             const content = msg.quotedArgsList.shift();
             const mili = convertTimeStringToMiliseconds(msg.quotedArgsList.join(" "));
             if (!mili) {
-                msg.roomContext.send("I don't know that unit of time.");
+                msg.roomContext.send("I don't know that time.");
                 return;
             }
             timers.push({
@@ -34,9 +34,10 @@ module.exports = function (bot) {
 };
 
 function convertTimeStringToMiliseconds(time) {
-    let numeric = Number(time.match(/[0-9]+/)[0]);
-    let unit = time.split(" ").pop();
-    if (!numeric || !unit) {
+    const parts = time.split(" ");
+    let unit = parts.pop();
+    let numeric = Number(parts.pop());
+    if (!numeric || !unit || numeric < 0) {
         return false;
     }
     const units = [

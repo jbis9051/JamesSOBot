@@ -462,6 +462,26 @@ Searches for query on MDN
 
 - `mdn`
 
+## poll
+
+Create a poll that users can vote on with the `|| vote` command. First arg is the thing to poll. The rest are the choices. If no choices are provided it will default to 'Yes' and 'No'. Choices with multiple words must be wrapped in quotes. The poll will close if the time since the most recent vote exceeds the timeout.  A poll can also be closed by its creator or admin with `|| poll close`.  The creator will be notified with the results when the poll closes.
+
+**Permissions**
+
+- all
+           
+**Example**
+
+- `|| poll "How do you guys like the new feature?" "A lot!" "I hate it"`
+- `|| poll 'spaces or tabs' 'spaces' 'tabs'`
+- `|| Are you hungry?`
+
+**Shortcuts**
+
+- `poll`
+- `newpoll`
+- `createpoll`
+
 ## random
 
 Generates Random number in range of [min,max] (both inclusive)
@@ -553,6 +573,24 @@ Unlearns a learned command command
 
 - `unlearn`
 - `forget`
+
+## vote
+
+Vote for the current poll in the room you are in. Arg can be a number (the zeroed index) or the content of the choice. **Index takes precedent over content.**
+
+**Permissions**
+
+- all
+           
+**Example**
+
+- `|| vote [0]`
+- `|| vote Yes`
+- `|| vote 'A lot!'`
+
+**Shortcuts**
+
+- `vote`
 
 ## wiki
 
