@@ -169,7 +169,7 @@ class StackExchangeClient extends Client {
             this.setUpWS();
         });
         ws.on('error', (err) => {
-            this.bot.error("Error: " + code);
+            this.bot.error("Error: " + err);
             this.emit('ws-error', err);
         });
         this.ws = ws;

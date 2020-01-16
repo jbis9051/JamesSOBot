@@ -3,12 +3,15 @@ const config = require('../../../config/config');
 const {Bot} = require('../../bot.js');
 const {Client} = require('./DiscordClient.js');
 
-const bot = new Bot(config.plugins, "metadiscussion");
+const plugins = config.plugins.map(plugin => require('../../plugins/' + plugin));
 
-const aClient = new Client("bot", bot);
+
+const bot = new Bot(plugins, "r15");
+
+const aClient = new Client("general", bot);
 
 aClient.on('ready', async () => {
-    // await aClient.send('I am alive!', aClient.mainRoom);
+     await aClient.send('I am alive!', aClient.mainRoom);
 });
 
 aClient.init();

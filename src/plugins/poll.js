@@ -60,6 +60,15 @@ module.exports = function (bot) {
             msg.roomContext.send(poll.vote(msg.quotedArgsList[0], msg.getStaticUserUID()));
         }
     });
+
+    bot.addShutdownScript(() => {
+        return Promise.all(
+            Object.values(polls).map(async ([room, poll]) => {
+                await bot.client.send("**Bot Shutdown Imminent. Polls Auto-Closing**", room);
+                await bot.client.send("**Poll Closed**: " + poll.query, room);
+                await bot.close.send("**Results**: " + poll.resultsSummary(), room);
+            }))
+    });
 };
 
 function closePoll(msg) {
@@ -142,7 +151,7 @@ class Poll {
         this.votes++;
         this.lastVote = Date.now();
         this.resetTimeout();
-        return "Vote recorded.";
+        return "Vote recorded." + '.‍'.repeat(Math.random() * 10);
     }
 
     resultsSummary() {

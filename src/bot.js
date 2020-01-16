@@ -30,7 +30,7 @@ class Bot extends Events.EventEmitter {
     }
 
     async processMessage(msg) {
-        console.log(msg.getContent());
+        console.log(msg.getContext() + " - " + msg.getVariableUsername() + " - " + msg.getContent());
         if (!this.validatorScriptRunner(msg)) {
             return;
         }
