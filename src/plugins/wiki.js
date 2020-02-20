@@ -21,6 +21,10 @@ module.exports = function (bot) {
         ignore: false,
         permissions: ["all"],
         func: (msg) => {
+            if (msg.getContext() === 15) {
+                msg.roomContext.send("Mehdi told me not to tell you.");
+                return;
+            }
             if (msg.args.length < 1) {
                 msg.roomContext.send("**Missing args**");
                 return;

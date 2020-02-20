@@ -24,7 +24,7 @@ class Message extends ChatEvent {
         this.prefix = msgSplit.shift();
         this.messageId = data.message_id;
 
-        const match = this.prefix.match(/^(\|\|>?)([^ >]+)/);  // correct commands without space
+        const match = this.prefix.match(/^(\|\|>?|!!>?)([^ >]+)/);  // correct commands without space
 
         if (match) {
             this.prefix = match[1];
@@ -89,7 +89,7 @@ class Message extends ChatEvent {
      * @return {String} - message content
      */
     getContent() {
-        return this.data.content.htmldecode();
+        return this.data.content.replace(/<.+>/g, '').htmldecode();
     }
 
     getRawContent() {

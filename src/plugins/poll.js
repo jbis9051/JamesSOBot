@@ -61,12 +61,13 @@ module.exports = function (bot) {
         }
     });
 
-    bot.addShutdownScript(() => {
+    bot.addShutdownScript((msg) => {
+        console.log("hit");
         return Promise.all(
             Object.values(polls).map(async ([room, poll]) => {
-                await bot.client.send("**Bot Shutdown Imminent. Polls Auto-Closing**", room);
-                await bot.client.send("**Poll Closed**: " + poll.query, room);
-                await bot.close.send("**Results**: " + poll.resultsSummary(), room);
+                await msg.client.send("**Bot Shutdown Imminent. Polls Auto-Closing**", room);
+                await msg.client.send("**Poll Closed**: " + poll.query, room);
+                await msg.client.send("**Results**: " + poll.resultsSummary(), room);
             }))
     });
 };

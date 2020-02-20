@@ -2,7 +2,7 @@ const config = require('../../config/config');
 
 const needsResponse = {};
 
-const format_message = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
+const format_message = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). You have 25 seconds to edit and format your message properly before it will be removed. Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
 
 module.exports = function (bot) {
     bot.addCommand({
@@ -38,7 +38,7 @@ module.exports = function (bot) {
                 removeTimeout(msg.messageId);
                 return false;
             }
-            if (msg.prefix === "||>") {
+            if (/^(\|\|>|>\|\||!!>)/.test(msg.prefix)) {
                 removeTimeout(msg.messageId);
                 return false;
             }
@@ -51,19 +51,23 @@ module.exports = function (bot) {
                 removeTimeout(msg.messageId);
                 return false;
             }
-            let response = "";
+            let responses = [];
             if (!lines.some(line => /^}|^<\/|^]/.test(line))) {
                 removeTimeout(msg.messageId);
                 return;
             }
-            response += format_message;
+            responses.push(format_message);
             if (lines.length >= 10) {
-                response += " For posting large code blocks, use a paste site like like https://gist.github.com, http://hastebin.com, http://pastie.org or a demo site like https://jsbin.com/";
+                responses.push("For posting large code blocks, use a paste site like like https://gist.github.com, http://hastebin.com, http://pastie.org or a demo site like https://jsbin.com/");
             }
             needsResponse[msg.messageId] = setTimeout(() => {
                 msg.moveTo(23262);
-            }, 10000);
-            msg.softReply(response);
+            }, 25000);
+            msg.softReply(responses[0]).then(_ => {
+                responses.slice(1).forEach(response => {
+                    msg.roomContext.send(response);
+                })
+            });
 
         }
     });

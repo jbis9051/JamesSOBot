@@ -5,7 +5,7 @@ module.exports = function (bot) {
     bot.addValidatorScript("Ban List", (msg) => {
         if (isBan(msg.getStaticUserUID())) {
             if (!isTold(msg.getStaticUserUID())) {
-                msg.replyDirect("You have been ban.");
+                msg.replyDirect("You have been banned.");
                 ban_user_data[msg.getStaticUserUID()].told = true;
                 bot.saveData('ban_data', ban_user_data);
             }

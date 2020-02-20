@@ -165,10 +165,11 @@ class Bot extends Events.EventEmitter {
      *
      * @param {Message} msg
      */
-    shutdown(msg) {
+    async shutdown(msg) {
         try {
-            this.shutdown_scripts.forEach(async e => await e(msg));
+            await Promise.all(this.shutdown_scripts.map(async e => await e(msg)));
         } catch (e) {
+            console.error(e);
             process.exit();
         }
         process.exit();
