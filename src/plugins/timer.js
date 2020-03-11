@@ -14,9 +14,13 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg) => {
             const content = msg.quotedArgsList.shift();
+            if (content.includes("@JBis") || content.includes("@JBi")) {
+                msg.roomContext.send("Remind yourself, damn it!");
+                return;
+            }
             const mili = convertTimeStringToMiliseconds(msg.quotedArgsList.join(" "));
             if (!mili) {
-                msg.roomContext.send("I don't know that time.");
+                msg.roomContext.send("I don't know that time. Use `|| man timer` to see my syntax. ");
                 return;
             }
             timers.push({

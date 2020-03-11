@@ -16,7 +16,7 @@ module.exports = function (bot) {
                 msg.roomContext.send("**Missing args**");
                 return;
             }
-            const command = bot.getCommandFromName(msg.args[0]);
+            const command = bot.getCommand(msg.args[0]);
             if (!command) {
                 msg.roomContext.send("No manual entry for " + msg.args[0]);
                 return;
