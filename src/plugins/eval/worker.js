@@ -34,7 +34,7 @@ const compiled_sandbox_script = isolate.compileScriptSync('new ' + sandboxed_scr
 
 compiled_sandbox_script.runSync(context);
 
-const code_to_run = `runCode(\`${code.replace(/\\/g, "\\").replace(/`/g, '\\`')}\`)`;
+const code_to_run = `runCode('${Buffer.from(code).toString('base64')}')`;
 
 try {
     isolate.compileScriptSync(code_to_run).runSync(context);

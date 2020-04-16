@@ -25,6 +25,10 @@ module.exports = (code, timeout = 500) => new Promise((resolve, reject) => {
         sendData(...args);
     }));
 
+    jail.setSync('_atob', new ivm.Reference(function (string) {
+        return Buffer.from(string, 'base64').toString()
+    }));
+
     // This will bootstrap the context. Prependeng 'new ' to a function is just a convenient way to
     // convert that function into a self-executing closure that is still syntax highlighted by
     // editors. It drives strict mode and linters crazy though.
@@ -34,7 +38,7 @@ module.exports = (code, timeout = 500) => new Promise((resolve, reject) => {
 
     compiled_sandbox_script.runSync(context);
 
-    const code_to_run = `runCode(\`${code.replace(/\\/g, "\\\\").replace(/`/g, '\\`')}\`)`;
+    const code_to_run = `runCode('${Buffer.from(code).toString('base64')}')`;
     try {
         isolate.compileScriptSync(code_to_run).runSync(context, {timeout: timeout});
     } catch (e) {

@@ -1,10 +1,16 @@
 module.exports = function () {
     // security reasons, we don't want it in the global context
     let done = _done;
+    let atob = _atob;
     delete _done;
+    delete _atob;
 
     global.done = function (...args) {
         done.applyIgnored(undefined, args);
+    };
+
+    global.atob = function (...args) {
+        return atob.apply(undefined, args, {result: {copy: true}});
     };
 
 
@@ -147,24 +153,25 @@ module.exports = function () {
     };
     console.error = console.info = console.debug = console.log;
 
-    function exec(code) {
-        return eval(`undefined;\n${code}`);
+    async function exec(code) {
+        return await eval(`undefined;${code}`);
     }
 
-    function execIIFE(code) {
-        return eval(`undefined;\n(()=> { ${code} })()`);
+    async function execIIFE(code) {
+        return await eval(`(async ()=> { ${code.trim().startsWith("return") ? code : `return ${code}`} })()`);
     }
 
 
-    global.runCode = function (code) {
+    global.runCode = async function (base64EncodedCode) {
+        const code = await global.atob(base64EncodedCode);
         try {
-            global.done(false, JSON.stringify(exec(code)), JSON.stringify(console._items));
+            global.done(false, JSON.stringify(await exec(code)), JSON.stringify(console._items));
         } catch (e) {
             try {
-                if (e.message !== "Illegal return statement") {
+                if (e.message !== "Illegal return statement" && e.message !== "await is only valid in async function") {
                     throw e;
                 }
-                global.done(false, JSON.stringify(execIIFE(code)), JSON.stringify(console._items));
+                global.done(false, JSON.stringify(await execIIFE(code)), JSON.stringify(console._items));
             } catch (e) {
                 global.done(false, JSON.stringify(e.toString()), JSON.stringify(console._items));
             }
