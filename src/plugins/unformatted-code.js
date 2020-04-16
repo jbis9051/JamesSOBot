@@ -3,6 +3,7 @@ const config = require('../../config/config');
 const needsResponse = {};
 
 const format_message = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). You have 25 seconds to edit and format your message properly before it will be removed. Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
+const format_message_command = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). Put your question in 1 message and then your code in a 2nd and format it.";
 
 module.exports = function (bot) {
     bot.addCommand({
@@ -17,11 +18,11 @@ module.exports = function (bot) {
         permissions: ["all"],
         func: (msg) => {
             if (msg.args.length < 1) {
-                msg.roomContext.send(format_message);
+                msg.roomContext.send(format_message_command);
                 return;
             }
             const person = msg.args[0];
-            msg.roomContext.send(`@${person} ${format_message}`);
+            msg.roomContext.send(`@${person} ${format_message_command}`);
         }
     });
     bot.RegisterListener({
