@@ -2,8 +2,8 @@ let ivm = require('isolated-vm');
 
 module.exports = (code, timeout = 500) => new Promise((resolve, reject) => {
     // ship the data to whoever called this worker
-    function sendData(error, result, logged) {
-        resolve({error: error, result: result, logged: JSON.parse(logged)});
+    function sendData(error, result, logged, startTime, endTime) {
+        resolve({error: error, result: result, logged: JSON.parse(logged), time: endTime - startTime});
     }
 
     // Create a new isolate limited to 8MB

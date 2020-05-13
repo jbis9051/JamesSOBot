@@ -38,7 +38,7 @@ module.exports = function (bot) {
             return `Error running script: \`${val.result}\``;
         }
         let logged = truncate(val.logged.join(", "));
-        return `\`${val.result}\` Logged: \`${logged}\``;
+        return `\`${val.result}\` Logged: \`${logged}\` Took: \`${val.time}ms\``;
     }
 
     bot.RegisterListener({

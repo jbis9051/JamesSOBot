@@ -5,6 +5,8 @@ const WebSocket = require('ws');
 const cheerio = require('cheerio');
 const path = require('path');
 const request = require("request-promise");
+const fetch = require('node-fetch');
+
 const {Message} = require("../../events/Message");
 const {ChatEvent} = require("../../events/ChatEvent");
 const Client = require("../../Client.js");
@@ -495,6 +497,22 @@ class StackExchangeClient extends Client {
                     }
                 });
 
+        });
+    }
+
+    async getRoomAccessRequests(roomId) {
+        const response = await fetch(`${this.chatURL}/rooms/info/${roomId}?tab=access`).then(resp => resp.text());
+
+        const $ = cheerio.load(response);
+        const accessRequestSection = $('.access-section-request');
+        if (!accessRequestSection) {
+            return [];
+        }
+        return accessRequestSection.find('.usercard').map(usercard => {
+            return {
+                username: usercard.find('.user-header').attr('title'),
+                id: usercard.attr('id').match(/access-user-(\d+)/)[1]
+            }
         });
     }
 }

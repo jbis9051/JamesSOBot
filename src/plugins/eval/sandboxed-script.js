@@ -158,22 +158,35 @@ module.exports = function () {
     }
 
     async function execIIFE(code) {
-        return await eval(`(async ()=> { ${code.trim().startsWith("return") ? code : `return ${code}`} })()`);
+        return await eval(`(async ()=> { ${code} })()`);
+    }
+
+    async function execAsyncIIFE(code) {
+        return await eval(`(async ()=> { return ${code} })()`);
     }
 
 
     global.runCode = async function (base64EncodedCode) {
         const code = await global.atob(base64EncodedCode);
+        let startTime;
         try {
-            global.done(false, JSON.stringify(await exec(code)), JSON.stringify(console._items));
+            startTime = Date.now();
+            global.done(false, JSON.stringify(await exec(code)), JSON.stringify(console._items), startTime, Date.now());
         } catch (e) {
             try {
                 if (e.message !== "Illegal return statement" && e.message !== "await is only valid in async function") {
                     throw e;
                 }
-                global.done(false, JSON.stringify(await execIIFE(code)), JSON.stringify(console._items));
+                if (e.message === "Illegal return statement") {
+                    startTime = Date.now();
+                    global.done(false, JSON.stringify(await execIIFE(code)), JSON.stringify(console._items), startTime, Date.now());
+
+                } else {
+                    startTime = Date.now();
+                    global.done(false, JSON.stringify(await execAsyncIIFE(code)), JSON.stringify(console._items), startTime, Date.now());
+                }
             } catch (e) {
-                global.done(false, JSON.stringify(e.toString()), JSON.stringify(console._items));
+                global.done(false, JSON.stringify(e.toString()), JSON.stringify(console._items), startTime, Date.now());
             }
         }
     }
