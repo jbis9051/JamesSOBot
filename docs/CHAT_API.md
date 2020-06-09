@@ -524,7 +524,7 @@ const body = await request({
 
 ## Username to id
 
-There is no easy way to go from Username to id because different accounts can have very similar or the same username. The method below isn't always reliable because of this. This alternate way only works of they are pingable. All users who are currently in the room or have been in the room in the last couple (//TODO name amount of days) are pingable.
+There is no easy way to go from Username to id because different accounts can have very similar or the same username. The method below isn't always reliable because of this. This alternate way only works if they are pingable. All users who are currently in the room or have been in the room in the last couple (//TODO name amount of days) are pingable.
 
 Make a `GET` request to `chatURL + '/rooms/pingable/ + roomNum`, with your login cookies. If you do not provide login cookies, you will receive an empty array (`[]`) response.
 
@@ -706,7 +706,7 @@ Response:
 
 ## id to information
 
-**For general user information we do not suggest using the method below. Instead use, [the offical StackExchange API](https://api.stackexchange.com/)**
+**For general user information we do not suggest using the method below. Instead, use [the official StackExchange API](https://api.stackexchange.com/)**
 
 User information is cached by the chat site and takes a couple hours to sync with the main site. So things like reputation may not be entirely accurate (use the official API for that), but things like last seen and last post are accurate.
 
@@ -820,6 +820,36 @@ You can use `^\d+` regex to parse the number:
 ```
 
 If this number is 0, the user has not chatted yet.
+
+## Room Name and Description
+
+To get the room name and description simply make a request to `chatURL + '/rooms/thumbs/[room num]`.
+
+You will get a JSON response like this:
+
+```json
+{
+  "id": 17,
+  "name": "JavaScript",
+  "description": "Topic: JavaScript, ECMAScript. Read this: <a href=\"http://javascriptroom.github.io/rules\" rel=\"nofollow noopener noreferrer\">javascriptroom.github.io/rules</a>. Before asking inform yourself on the XY problem <a href=\"http://goo.gl/taIqf\" rel=\"nofollow noopener noreferrer\">goo.gl/taIqf</a> | <a href=\"https://devdocs.io\" rel=\"nofollow noopener noreferrer\">devdocs.io</a> Documentation™ Helps. Room meta discussions: <a href=\"https://github.com/JavaScriptRoom/culture\" rel=\"nofollow noopener noreferrer\">github.com/JavaScriptRoom/culture</a>. How to format code in chat: <a href=\"https://sopython.com/wiki/An_Illustrated_Guide_To_Formatting_Code_In_Chat\" rel=\"nofollow noopener noreferrer\">sopython.com/wiki/&hellip;</a>",
+  "isFavorite": true,
+  "usage": null,
+  "tags": "<a rel=\"noopener noreferrer\" class=\"tag\" href=\"http://stackoverflow.com/tags/ecmascript/info\">ecmascript</a> <a rel=\"noopener noreferrer\" class=\"tag\" href=\"http://stackoverflow.com/tags/ecmascript-6/info\">ecmascript-6</a> <a rel=\"noopener noreferrer\" class=\"tag\" href=\"http://stackoverflow.com/tags/javascript/info\">javascript</a> <a rel=\"noopener noreferrer\" class=\"tag\" href=\"http://stackoverflow.com/tags/nodejs/info\">nodejs</a> <a rel=\"noopener noreferrer\" class=\"tag\" href=\"http://stackoverflow.com/tags/typescript/info\">typescript</a>"
+}
+```
+
+isFavorite 
+
+**Note:** Description and tags will be in HTML.
+
+```js
+ const body = await request({
+            method: 'GET',
+            uri: `${this.chatURL}/rooms/thumbs/${roomNum}`
+        });
+        return JSON.parse(body);
+```
+
 
 # Chat Rooms
 

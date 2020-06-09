@@ -65,9 +65,16 @@ module.exports = function (bot) {
                     });
                 output = output
                     .replace(/{a}/g, msg.args.join(" "))
-                    .replace(/\[a]/g, encodeURIComponent(msg.args.join(" ")));
+                    .replace(/\[a]/g, encodeURIComponent(msg.args.join(" ")))
+                    .replace(/<user>/g, msg.getPingString())
 
-                msg.roomContext.send(output).then(id => {
+                let promise;
+                if (output.match(/^<msg>/)) {
+                    promise = msg.replyDirect(output.replace(/^<msg>/, ''))
+                } else {
+                    promise = msg.roomContext.send(output)
+                }
+                promise.then(id => {
                     const imageExtensions = ["png", "jpg", "jpeg", "gif"];
                     if (imageExtensions.includes(output.substring(output.lastIndexOf(".") + 1))) {
                         setTimeout(() => {
