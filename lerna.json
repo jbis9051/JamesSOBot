@@ -1,0 +1,8 @@
+{
+  "packages": [
+    "packages/bot",
+    "packages/plugins",
+    "packages/platforms/*"
+  ],
+  "version": "0.0.0"
+}
