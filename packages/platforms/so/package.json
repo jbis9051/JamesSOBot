@@ -7,6 +7,17 @@
   },
   "dependencies": {
     "@chatbot/bot": "^0.0.0",
-    "typescript": "^3.9.7"
+    "@types/cheerio": "^0.22.21",
+    "@types/fs-extra": "^9.0.1",
+    "@types/request-promise": "^4.1.46",
+    "@types/tough-cookie-filestore": "^0.0.0",
+    "@types/ws": "^7.2.6",
+    "cheerio": "^1.0.0-rc.3",
+    "fs-extra": "^9.0.1",
+    "node-fetch": "^2.6.0",
+    "request-promise": "^4.2.6",
+    "tough-cookie-filestore": "^0.0.1",
+    "typescript": "^3.9.7",
+    "ws": "^7.3.1"
   }
 }

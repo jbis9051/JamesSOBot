@@ -1,6 +1,7 @@
 import {Message} from "./models/Message";
+import * as events from 'events';
 
-export abstract class Client {
+export abstract class Client extends events.EventEmitter {
     abstract isMyMessage(msg: Message): boolean
 
     abstract async isRoomOwnerId(staticUID: string, context: Message): Promise<boolean>

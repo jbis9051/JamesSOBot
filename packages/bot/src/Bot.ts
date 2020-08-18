@@ -11,7 +11,7 @@ import {Config} from "./interfaces/Config";
 import {PermissionType} from "./interfaces/Permission";
 
 export class Bot extends events.EventEmitter {
-    private readonly saveFolder: string;
+    readonly saveFolder: string;
     private shutdown_scripts: Array<MessageHandler> = [];
     commands: { [key: string]: Command } = {};
     private messageHandlers: MessageHandler[] = []
@@ -164,7 +164,7 @@ export class Bot extends events.EventEmitter {
             if (selector) {
                 selected = selector($);
             } else {
-                selected = $('.r > a').attr('href')?.replace(/\/url?.*&url=/, '');
+                selected = $('.r > a').attr('href') && $('.r > a').attr('href')!.replace(/\/url?.*&url=/, '');
                 title = $('.r').find('.LC20lb').html();
             }
             if (!selected!.match(selectorMatch)) {

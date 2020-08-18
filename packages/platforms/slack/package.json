@@ -1,0 +1,15 @@
+{
+  "name": "@chatbot/slack",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "tsc -w",
+    "build": "tsc",
+    "run-dev": "ts-node src/app.ts"
+  },
+  "dependencies": {
+    "@chatbot/bot": "^0.0.0",
+    "@slack/rtm-api": "^5.0.5",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  }
+}
