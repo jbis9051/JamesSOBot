@@ -117,7 +117,7 @@ export class Bot extends events.EventEmitter {
         delete this.commands[cmd.name];
     }
 
-    private async permissionCheck(client: Client, command: Command, msg: Message) {
+    async permissionCheck(client: Client, command: Command, msg: Message) {
         return (
             command.permissions.some(permissionsKey => {
                 switch (permissionsKey) {
@@ -132,7 +132,7 @@ export class Bot extends events.EventEmitter {
                     }
                 }
             })
-            || (command.permissions.includes(PermissionType.OWNER) && await client.isRoomOwnerId(msg.info.fromId))
+            || (command.permissions.includes(PermissionType.OWNER) && await client.isRoomOwnerId(msg.info.fromId, msg))
         )
     }
 
@@ -150,7 +150,7 @@ export class Bot extends events.EventEmitter {
     /**
      * Allows you to retrieve data from Google Search
      */
-    async google_search(query: string, site: string | undefined, selector: ($: CheerioStatic) => string | undefined, selectorMatch: RegExp) {
+    async google_search(query: string, site: string | undefined, selector: (($: CheerioStatic) => string) | undefined, selectorMatch: RegExp) {
         /* if anyone wants to pay for API keys, feel free */
         const url = 'https://www.google.com/search?q=' + encodeURIComponent(query) + ((site) ? "%20site:" + site : "");
         const body = await fetch(url, {
@@ -171,14 +171,69 @@ export class Bot extends events.EventEmitter {
                 console.error('Invalid Selector ' + selected);
                 return false;
             }
-            if (title) {
-                return {url: selected, title: title};
-            } else {
-                return (selected);
-            }
+            return {url: selected as string, title: title || selected as string}
         } catch (e) {
             console.error(e);
             return false;
         }
     }
+
+    isJSON(str: string) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
+    htmldecode(str: string) {
+        const translate_re = /&(nbsp|amp|quot|lt|gt);/g;
+        const translate = {
+            "nbsp": " ",
+            "amp": "&",
+            "quot": "\"",
+            "lt": "<",
+            "gt": ">"
+        };
+        return str.replace(translate_re, function (match, entity) {
+            return translate[entity as keyof typeof translate];
+        }).replace(/&#(\d+);/gi, function (match, numStr) {
+            const num = parseInt(numStr, 10);
+            return String.fromCharCode(num);
+        });
+    }
+
+    /* adapted from https://github.com/Zirak/SO-ChatBot/blob/d1fa258912a03931bd069406242fcd18721810dd/source/IO.js#L110 */
+    htmlToMarkdown(str: string) {
+        const htmlRe = /<(\S+)[^>]*>([^<]+)<\/\1>/g;
+        const tags_to_markdown = {
+            i: '*',
+            b: '**',
+            strike: '---',
+            code: '`',
+            a(entire_string: string, tag: string, innerText: string) {
+                const href = /href="([^"]+?)"/.exec(entire_string);
+                if (!href) {
+                    return entire_string;
+                }
+                return '[' + innerText + '](' + href[1] + ')';
+            }
+        };
+
+        // A string value is the delimiter (what replaces the tag)
+        let delim;
+        return str.replace(htmlRe, (entire_string: string, tag: string, innerText: string) => {
+            if (!tags_to_markdown.hasOwnProperty(tag)) {
+                return entire_string;
+            }
+            delim = tags_to_markdown[tag as keyof typeof tags_to_markdown];
+            if (typeof delim === "function") {
+                return delim.apply(tags_to_markdown, [entire_string, tag, innerText]);
+            }
+            return delim + innerText + delim;
+        });
+    }
+
 }
+

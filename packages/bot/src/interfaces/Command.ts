@@ -7,6 +7,7 @@ export interface Command {
     description: string,
     shortcuts: Array<string | RegExp>,
     examples: string[],
+    creator?: string,
     ignore: boolean
     permissions: Permission[],
     cb: MessageHandler,

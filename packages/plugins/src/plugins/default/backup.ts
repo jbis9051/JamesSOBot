@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import {PluginFunction, Message, Permission, PermissionType, Client} from "@chatbot/bot";
+import fetch from 'node-fetch';
 
 const backup: PluginFunction = (bot, config) => {
     bot.addCommand({

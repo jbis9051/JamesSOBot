@@ -18,8 +18,8 @@ export class Message {
     readonly prefix: string | undefined;
     sudo: boolean;
     commandCall: string | undefined;
-    args: string[];
-    quotedArgsList: string[];
+    args: string[] = [];
+    quotedArgsList: string[] = [];
 
     constructor(messageProps: IMessage, client: Client, bot: Bot) {
         this.info = messageProps;
@@ -50,7 +50,7 @@ export class Message {
         this.quotedArgsList = Message._quotedArgsSplit(msgSplit.join(" "));
     }
 
-    static _quotedArgsSplit(string: string) {
+    static _quotedArgsSplit(string: string): string[] {
         return Array.from(
             string
                 .matchAll(/(["'])((?:(?!\1).)*)(\1)|([^\s]+)/g) // match all args https://stackoverflow.com/a/8057827/7886229
