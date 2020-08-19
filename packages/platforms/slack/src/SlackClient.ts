@@ -36,7 +36,6 @@ export class SlackClient extends Client {
             appData: e,
         }, this, this.bot);
         if (e.channel === "C0266FRGV") {
-            this.send("<@UBN4ED8MC> ban me from lounge. Please talk with me somewhere else.", message)
             return;
         }
         this.bot.processMessage(message, this);
