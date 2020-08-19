@@ -9,6 +9,7 @@
   "dependencies": {
     "@chatbot/bot": "^0.0.0",
     "@types/fast-levenshtein": "^0.0.1",
+    "@types/node-fetch": "^2.5.7",
     "cheerio": "^1.0.0-rc.3",
     "fast-levenshtein": "^3.0.0",
     "isolated-vm": "^3.3.5",
