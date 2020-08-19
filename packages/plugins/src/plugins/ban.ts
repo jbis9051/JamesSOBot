@@ -52,7 +52,7 @@ const ban: PluginFunction = (bot: Bot) => {
                 client.hardReply("That user is already ban.", msg);
                 return;
             }
-            if (bot.isAdmin(id) || await client.isRoomOwnerId(id, msg)) {
+            if (bot.inGroup(id, "admin") || await client.isRoomOwnerId(id, msg)) {
                 client.hardReply("That user cannot be ban", msg);
                 return;
             }
