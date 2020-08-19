@@ -1,7 +1,7 @@
 import {Bot, Client, Message} from '@chatbot/bot';
-import {RTMClient, RTMCallResult} from '@slack/rtm-api';
+import {RTMClient} from '@slack/rtm-api';
 import {SlackMessage} from "./interfaces/SlackMessage";
-import {WebClient, ErrorCode, WebAPICallResult} from '@slack/web-api';
+import {WebAPICallResult, WebClient} from '@slack/web-api';
 
 export class SlackClient extends Client {
     private token: string = process.env.SLACK_TOKEN!;
@@ -35,6 +35,10 @@ export class SlackClient extends Client {
             fromName: e.user,
             appData: e,
         }, this, this.bot);
+        if (e.channel === "C0266FRGV") {
+            this.send("<@UBN4ED8MC> ban me from lounge. Please talk with me somewhere else.", message)
+            return;
+        }
         this.bot.processMessage(message, this);
     }
 
