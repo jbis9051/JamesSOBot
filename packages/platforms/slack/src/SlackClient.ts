@@ -1,7 +1,7 @@
 import {Bot, Client, Message} from '@chatbot/bot';
 import {RTMClient, RTMCallResult} from '@slack/rtm-api';
 import {SlackMessage} from "./interfaces/SlackMessage";
-import {WebClient, ErrorCode} from '@slack/web-api';
+import {WebClient, ErrorCode, WebAPICallResult} from '@slack/web-api';
 
 export class SlackClient extends Client {
     private token: string = process.env.SLACK_TOKEN!;
@@ -47,17 +47,22 @@ export class SlackClient extends Client {
         return (response.user as any).is_admin;
     }
 
-    send(content: string, context: string | Message): Promise<RTMCallResult> {
+    send(content: string, context: string | Message, options: any = {}): Promise<WebAPICallResult> {
         const channel = typeof context === "string" ? context : context.info.contextId;
-        return this.rtm.sendMessage(content, channel)
+        return this.web.chat.postMessage({
+            text: content,
+            channel: channel,
+            thread_ts: typeof context === "string" ? undefined : context.info.appData.thread_ts,
+            ...options,
+        });
     }
 
-    hardReply(content: string, context: string | Message): Promise<RTMCallResult> {
+    hardReply(content: string, context: string | Message): Promise<WebAPICallResult> {
         const pingString = typeof context === "string" ? context : this.getPingString(context);
         return this.send(`${pingString} ${content}`, context);
     }
 
-    softReply(content: string, context: string | Message): Promise<RTMCallResult> {
+    softReply(content: string, context: string | Message): Promise<WebAPICallResult> {
         const pingString = typeof context === "string" ? context : this.getPingString(context);
         return this.send(`${pingString} ${content}`, context);
     }
