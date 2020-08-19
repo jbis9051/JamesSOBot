@@ -1,5 +1,6 @@
 export * from './Bot';
 export * from './Client';
+export * from './DataSaver';
 export * from './types/CallbackTypes';
 export * from './interfaces/Command';
 export * from './interfaces/Config';

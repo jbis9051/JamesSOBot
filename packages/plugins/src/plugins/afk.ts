@@ -6,7 +6,7 @@ const rateLimit = 2 * 60 * 1000;
 const gracePeriod = 2 * 60 * 1000;
 let lastTell = 0;
 const afk: PluginFunction = (bot: Bot) => {
-    const afk_data = bot.getData("afk_data") || {};
+    const afk_data = bot.dataStore.getData("afk_data") || {};
 
     bot.RegisterHandler((msg, client) => {
         if (client.isMyMessage(msg)) {
@@ -17,7 +17,7 @@ const afk: PluginFunction = (bot: Bot) => {
             && Date.now() - afk_data[username].afkSince >= gracePeriod
         ) {
             delete afk_data[username];
-            bot.setData('afk_data', afk_data);
+            bot.dataStore.setData('afk_data', afk_data);
         }
         const people_mentioned = msg.info.content.match(/@[^ ]+/g) || [];
         people_mentioned.forEach(person => {
@@ -29,7 +29,7 @@ const afk: PluginFunction = (bot: Bot) => {
                 client.hardReply(person + ' is afk: ' + afk_data[person].msg, msg)
                 afk_data[person].lastPing = Date.now();
                 lastTell = Date.now();
-                bot.setData('afk_data', afk_data);
+                bot.dataStore.setData('afk_data', afk_data);
             }
         });
     });
@@ -55,7 +55,7 @@ const afk: PluginFunction = (bot: Bot) => {
                 id: msg.info.fromId,
                 msg: msg.args.join(" "),
             };
-            bot.setData('afk_data', afk_data);
+            bot.dataStore.setData('afk_data', afk_data);
             client.hardReply("bye " + msg.info.fromName, msg)
         }
     });

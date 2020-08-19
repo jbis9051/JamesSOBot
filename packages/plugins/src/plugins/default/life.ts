@@ -1,8 +1,8 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
 let live = true;
 
-const life: PluginFunction = (bot) => {
+export const life: PluginFunction = (bot) => {
     bot.addCommand({
         name: "disable",
         args: [],
@@ -12,7 +12,7 @@ const life: PluginFunction = (bot) => {
         ],
         examples: ["|| sudo disable"],
         ignore: false,
-        permissions: ["admin", "OWNER"],
+        permissions: ["admin", PermissionType.OWNER],
         cb: (msg, client) => {
             if (!msg.sudo) {
                 client.send("Try `sudo`", msg);
@@ -31,7 +31,7 @@ const life: PluginFunction = (bot) => {
         ],
         examples: ["|| enable"],
         ignore: false,
-        permissions: ["admin", "OWNER"],
+        permissions: ["admin", PermissionType.OWNER],
         cb: (msg, client) => {
             if (live) {
                 client.send("I'm already alive...", msg);
@@ -45,4 +45,3 @@ const life: PluginFunction = (bot) => {
         return live || msg.info.content === "|| enable";
     });
 };
-export default life;

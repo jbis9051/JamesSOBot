@@ -1,7 +1,7 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 import fetch from 'node-fetch';
 
-const funfact: PluginFunction = (bot) => {
+export const funfact: PluginFunction = (bot) => {
     bot.addCommand({
         name: "funfact",
         args: [],
@@ -12,7 +12,7 @@ const funfact: PluginFunction = (bot) => {
         ],
         examples: ["|| funfact"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             fetch('https://uselessfacts.jsph.pl/random.json?language=en').then(resp => resp.json()).then((body) => {
                 client.send(body.text, msg);
@@ -20,4 +20,3 @@ const funfact: PluginFunction = (bot) => {
         }
     });
 };
-export default funfact;

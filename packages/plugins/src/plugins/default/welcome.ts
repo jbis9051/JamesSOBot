@@ -1,9 +1,9 @@
-import {Bot, PluginFunction, Client} from "@chatbot/bot";
+import {Bot, PluginFunction, Client, PermissionType} from "@chatbot/bot";
 
 let people_seen: string[];
 
 export const welcome: PluginFunction = (bot: Bot, config) => {
-    people_seen = bot.getData('people_seen') || [];
+    people_seen = bot.dataStore.getData('people_seen') || [];
     const welcome_messages = config.plugin.welcome_msg;
     bot.addCommand({
         name: "welcome",
@@ -16,7 +16,7 @@ export const welcome: PluginFunction = (bot: Bot, config) => {
         ],
         examples: ["|| welcome @JBis", "|| welcome JBis", "|| welcome"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (msg.args.length < 1) {
                 client.send(welcome_messages[msg.info.contextId], msg);
@@ -24,7 +24,7 @@ export const welcome: PluginFunction = (bot: Bot, config) => {
             }
             const person = msg.args[0];
             if (welcome_messages[msg.info.contextId]) {
-                client.softReply(welcome_messages[msg.info.contextId], msg);
+                client.softReply(welcome_messages[msg.info.contextId], person);
             } else {
                 client.send("No welcome message listed.", msg)
             }
@@ -32,22 +32,22 @@ export const welcome: PluginFunction = (bot: Bot, config) => {
         }
     });
     bot.RegisterShutdownScript((msg) => {
-        bot.setData("people_seen", people_seen);
+        bot.dataStore.setData("people_seen", people_seen);
     });
     bot.RegisterHandler(async (msg, client: Client & any) => {
             if (client.isMyMessage(msg)) {
                 return;
             }
-            if (people_seen.includes(msg.info.fromId)) {
-                return;
-            } else {
-                people_seen.push(msg.info.fromId);
+        if (people_seen.includes(msg.info.fromId)) {
+            return;
+        } else {
+            people_seen.push(msg.info.fromId);
+        }
+        if (await client.getNumMessagesFromId(msg.info.fromId, msg.info.contextId) < 2) {
+            if (welcome_messages[msg.info.contextId]) {
+                client.softReply(welcome_messages[msg.info.contextId]);
             }
-            if (await client.getNumMessagesFromId(msg.info.fromId) < 2) {
-                if (welcome_messages[msg.info.contextId]) {
-                    client.softReply(welcome_messages[msg.info.contextId]);
-                }
-            }
+        }
         }
     );
 };

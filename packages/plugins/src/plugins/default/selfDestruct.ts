@@ -1,6 +1,6 @@
 import {PluginFunction} from "@chatbot/bot";
 
-const selfDestruct: PluginFunction = (bot) => {
+export const selfDestruct: PluginFunction = (bot) => {
     bot.addCommand({
         name: "suicide",
         args: [],
@@ -28,6 +28,4 @@ const selfDestruct: PluginFunction = (bot) => {
             });
         }
     });
-};
-
-export default selfDestruct;
+}

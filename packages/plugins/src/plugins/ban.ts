@@ -10,14 +10,14 @@ interface BanData {
 let ban_user_data: { [key: string]: BanData };
 
 const ban: PluginFunction = (bot: Bot) => {
-    ban_user_data = bot.getData("ban_data") || {};
+    ban_user_data = bot.dataStore.getData("ban_data") || {};
 
     bot.RegisterValidator("Ban List", (msg, client) => {
         if (isBan(msg.info.fromId)) {
             if (!isTold(msg.info.fromId)) {
                 client.hardReply("You have been banned.", msg)
                 ban_user_data[msg.info.fromId].told = true;
-                bot.setData('ban_data', ban_user_data);
+                bot.dataStore.setData('ban_data', ban_user_data);
             }
             return false;
         }
@@ -62,7 +62,7 @@ const ban: PluginFunction = (bot: Bot) => {
                 banned_by_username: msg.info.fromName,
                 date_ban: (new Date()).toString(),
             };
-            bot.setData('ban_data', ban_user_data);
+            bot.dataStore.setData('ban_data', ban_user_data);
             client.hardReply(msg.args[0] + " has been banned", msg);
         }
     });
@@ -87,7 +87,7 @@ const ban: PluginFunction = (bot: Bot) => {
                 return;
             }
             delete ban_user_data[id];
-            bot.setData('ban_data', ban_user_data);
+            bot.dataStore.setData('ban_data', ban_user_data);
             client.hardReply(msg.args[0] + " has been unban", msg);
         }
     });

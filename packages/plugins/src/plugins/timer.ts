@@ -39,7 +39,7 @@ const timer: PluginFunction = (bot) => {
     });
 };
 
-function convertTimeStringToMiliseconds(time) {
+function convertTimeStringToMiliseconds(time: string) {
     const parts = time.split(" ");
     let unit = parts.pop();
     let numeric = Number(parts.pop());
@@ -64,7 +64,7 @@ function convertTimeStringToMiliseconds(time) {
         },
 
     ];
-    const timeObj = units.find(obj => obj.name === unit || obj.alias.includes(unit));
+    const timeObj = units.find(obj => obj.name === unit || obj.alias.includes(unit!));
     if (!timeObj) {
         return false;
     }

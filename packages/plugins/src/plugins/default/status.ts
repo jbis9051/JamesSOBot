@@ -1,6 +1,6 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const status: PluginFunction = (bot) => {
+export const status: PluginFunction = (bot) => {
     bot.addCommand({
             name: "status",
             args: [],
@@ -12,11 +12,10 @@ const status: PluginFunction = (bot) => {
             ],
             examples: ["|| status"],
             ignore: false,
-            permissions: ["all"],
+            permissions: [PermissionType.ALL],
             cb: (msg, client) => {
                 client.send(`I am currently alive!`, msg);
             }
         },
     )
 };
-export default status;

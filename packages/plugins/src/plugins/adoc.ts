@@ -1,6 +1,6 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const adoc: PluginFunction = (bot) => {
+export const adoc: PluginFunction = (bot) => {
     bot.addCommand({
         name: "Android Docs",
         args: [
@@ -15,7 +15,7 @@ const adoc: PluginFunction = (bot) => {
         ],
         examples: ["|| adoc bluetooth"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (msg.args.length < 1) {
                 client.send("**Missing args**", msg)
@@ -31,4 +31,3 @@ const adoc: PluginFunction = (bot) => {
         },
     })
 };
-export default adoc;

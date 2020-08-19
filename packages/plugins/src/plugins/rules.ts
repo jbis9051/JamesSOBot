@@ -1,6 +1,6 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const rules: PluginFunction = (bot) => {
+export const rules: PluginFunction = (bot) => {
     bot.addCommand({
         name: "laws",
         args: [],
@@ -11,7 +11,7 @@ const rules: PluginFunction = (bot) => {
         ],
         examples: ["|| laws"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             client.send(
                 '1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.\n' +
@@ -21,4 +21,3 @@ const rules: PluginFunction = (bot) => {
         }
     });
 };
-export default rules;

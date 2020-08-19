@@ -2,8 +2,8 @@ module.exports = function () {
     // security reasons, we don't want it in the global context
     let done = _done;
     let atob = _atob;
-    delete _done;
-    delete _atob;
+    _done = undefined;
+    _atob = undefined;
 
     global.done = function (...args) {
         done.applyIgnored(undefined, args);

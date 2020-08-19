@@ -1,6 +1,6 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const kill: PluginFunction = (bot) => {
+export const kill: PluginFunction = (bot) => {
     bot.addCommand({
         name: "kill",
         args: [
@@ -12,7 +12,7 @@ const kill: PluginFunction = (bot) => {
         ],
         examples: ["|| kill self"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: async (msg, client) => {
             if (msg.args.length < 1) {
                 client.send("**Missing args**", msg);
@@ -30,4 +30,3 @@ const kill: PluginFunction = (bot) => {
         }
     });
 };
-export default kill;

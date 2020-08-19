@@ -1,6 +1,6 @@
 import {PluginFunction} from "@chatbot/bot";
 
-const STOP: PluginFunction = (bot) => {
+export const STOP: PluginFunction = (bot) => {
     const hammers = {
         STOP: 'HAMMERTIME!',
         STAHP: 'HAMMAHTIME!',
@@ -22,7 +22,6 @@ const STOP: PluginFunction = (bot) => {
         }
     });
 };
-export default STOP;
 
 // takes a string and escapes any special regexp characters
 function escape(str: string) {

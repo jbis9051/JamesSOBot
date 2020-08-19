@@ -1,7 +1,7 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 import fetch from 'node-fetch';
 
-const calc: PluginFunction = (bot) => {
+export const calc: PluginFunction = (bot) => {
     bot.addCommand({
         name: "calc",
         args: [],
@@ -14,7 +14,7 @@ const calc: PluginFunction = (bot) => {
         ],
         examples: ["|| calc 5^2", "|| calc 9*2"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: async (msg, client) => {
             if (msg.args[0] === "docs") {
                 client.send("The calc command uses math.js. Checkout the docs [here](https://mathjs.org/docs/index.html)", msg);
@@ -31,4 +31,3 @@ const calc: PluginFunction = (bot) => {
         }
     });
 };
-export default calc;

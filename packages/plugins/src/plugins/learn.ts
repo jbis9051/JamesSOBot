@@ -1,4 +1,4 @@
-import {Bot, Message, PluginFunction} from "@chatbot/bot";
+import {Bot, Message, PermissionType, PluginFunction} from "@chatbot/bot";
 
 interface LearnItem {
     name: string,
@@ -9,8 +9,8 @@ interface LearnItem {
     date_created: string
 }
 
-const learn: PluginFunction = (bot: Bot) => {
-    const learn_list: { [key: string]: LearnItem } = bot.getData("learn_list") || {};
+export const learn: PluginFunction = (bot: Bot) => {
+    const learn_list: { [key: string]: LearnItem } = bot.dataStore.getData("learn_list") || {};
     Object.values(learn_list).forEach(addLearnCommand);
     bot.addCommand({
         name: "learn",
@@ -21,7 +21,7 @@ const learn: PluginFunction = (bot: Bot) => {
         ],
         examples: ["|| learn shortcut output", "|| learn tbh to be honest", "|| learn hbd Happy Birthday {1}!", "|| learn vampire_redirect https://lmgtfy.com/?q=[1]"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: async (msg, client) => {
             if (
                 bot.commands[msg.args[0]] /* if its already registered a command */
@@ -49,7 +49,7 @@ const learn: PluginFunction = (bot: Bot) => {
                 date_created: (new Date()).toString(),
             };
             addLearnCommand(learn_list[name]);
-            bot.setData('learn_list', learn_list);
+            bot.dataStore.setData('learn_list', learn_list);
             client.send(name + " has been added", msg);
         }
     });
@@ -65,7 +65,7 @@ const learn: PluginFunction = (bot: Bot) => {
             ],
             examples: [],
             ignore: true,
-            permissions: ["all"],
+            permissions: [PermissionType.ALL],
             cb: (msg, client) => {
                 let output = learn_object.output;
                 msg.quotedArgsList
@@ -107,21 +107,20 @@ const learn: PluginFunction = (bot: Bot) => {
         ],
         examples: ["|| unlearn tbh"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: async (msg, client) => {
             if (!learn_list.hasOwnProperty(msg.args[0])) {
                 client.send("That command doesn't exist", msg);
                 return;
             }
-            if (!(bot.isAdmin(msg.args[0]) || await client.isRoomOwnerId(msg.info.fromName, msg) || learn_list[msg.args[0]].creatorID === msg.getStaticUserUID())) { /* if the user is not an admin or a room owner or they created the command */
+            if (!(bot.inGroup(msg.info.fromId, "admin") || await client.isRoomOwnerId(msg.info.fromName, msg) || learn_list[msg.args[0]].creatorID === msg.info.fromId)) { /* if the user is not an admin or a room owner or they created the command */
                 client.send("You do not have permission to remove this command.", msg);
                 return;
             }
             delete learn_list[msg.args[0]];
             bot.deleteCommand(bot.commands[msg.args[0]]);
-            bot.setData('learn_list', learn_list);
+            bot.dataStore.setData('learn_list', learn_list);
             client.send(msg.args[0] + " has been unlearned", msg);
         }
     });
 };
-export default learn;

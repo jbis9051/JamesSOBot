@@ -3,20 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "start": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "run": "ts-node-dev src/app.ts"
   },
   "dependencies": {
     "@chatbot/bot": "^0.0.0",
     "@types/cheerio": "^0.22.21",
     "@types/fs-extra": "^9.0.1",
-    "@types/request-promise": "^4.1.46",
-    "@types/tough-cookie-filestore": "^0.0.0",
     "@types/ws": "^7.2.6",
     "cheerio": "^1.0.0-rc.3",
     "fs-extra": "^9.0.1",
-    "node-fetch": "^2.6.0",
-    "request-promise": "^4.2.6",
-    "tough-cookie-filestore": "^0.0.1",
+    "node-fetch-cookies": "^1.4.2",
+    "ts-node-dev": "^1.0.0-pre.58",
     "typescript": "^3.9.7",
     "ws": "^7.3.1"
   }

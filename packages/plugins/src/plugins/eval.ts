@@ -1,8 +1,8 @@
 import eval from "./eval/index";
 
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const evalPlugin: PluginFunction = (bot) => {
+export const evalPlugin: PluginFunction = (bot) => {
     bot.addCommand({
         name: "eval",
         args: [
@@ -12,7 +12,7 @@ const evalPlugin: PluginFunction = (bot) => {
         shortcuts: ["eval"],
         examples: ["|| eval console.log('Hello World!');", "||> console.log('Hello World!');", "!!> console.log('Hello World!');"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             _run(msg.args.join(" ")).then(response => client.hardReply(response, msg));
         },

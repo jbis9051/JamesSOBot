@@ -1,22 +1,19 @@
 import {Bot, Client, Message} from '@chatbot/bot';
-import {RTMClient} from '@slack/rtm-api';
-
-interface SlackMessage {
-    type: "message",
-    channel: string,
-    text: string,
-    ts: string
-}
+import {RTMClient, RTMCallResult} from '@slack/rtm-api';
+import {SlackMessage} from "./interfaces/SlackMessage";
+import {WebClient, ErrorCode} from '@slack/web-api';
 
 export class SlackClient extends Client {
     private token: string = process.env.SLACK_TOKEN!;
     private name: string = "JamesBot";
     private rtm: RTMClient = new RTMClient(this.token);
     private bot: Bot;
+    private web: WebClient;
 
     constructor(bot: Bot) {
         super();
         this.bot = bot;
+        this.web = new WebClient(this.token);
         this.rtm.on('message', this.handleMessage.bind(this));
     }
 
@@ -26,36 +23,43 @@ export class SlackClient extends Client {
     }
 
     async handleMessage(e: SlackMessage) {
+        if (e.subtype) {
+            return;
+        }
         const message = new Message({
-            id: Date.now;
-            rawContent: string;
-            content: string;
-            messageId: string;
-            contextId: string;
-            fromId: string;
-            fromName: string;
-            appData? : T;
-        }, this, this.bot)
+            id: e.ts,
+            rawContent: e.text,
+            content: this.bot.htmldecode(e.text),
+            contextId: e.channel,
+            fromId: e.user,
+            fromName: e.user,
+            appData: e,
+        }, this, this.bot);
+        this.bot.processMessage(message, this);
     }
 
     isMyMessage(msg: Message): boolean {
-        throw new Error("Method not implemented.");
+        return msg.info.fromId === this.rtm.activeUserId;
     }
 
-    isRoomOwnerId(staticUID: string, context: Message): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async isRoomOwnerId(staticUID: string, context: Message): Promise<boolean> {
+        const response = await this.web.users.info({user: staticUID});
+        return (response.user as any).is_admin;
     }
 
-    send(content: string, context: Message): Promise<void> {
-        throw new Error("Method not implemented.");
+    send(content: string, context: string | Message): Promise<RTMCallResult> {
+        const channel = typeof context === "string" ? context : context.info.contextId;
+        return this.rtm.sendMessage(content, channel)
     }
 
-    hardReply(content: string, context: Message): Promise<void> {
-        throw new Error("Method not implemented.");
+    hardReply(content: string, context: string | Message): Promise<RTMCallResult> {
+        const pingString = typeof context === "string" ? context : this.getPingString(context);
+        return this.send(`${pingString} ${content}`, context);
     }
 
-    softReply(content: string, context: Message): Promise<void> {
-        throw new Error("Method not implemented.");
+    softReply(content: string, context: string | Message): Promise<RTMCallResult> {
+        const pingString = typeof context === "string" ? context : this.getPingString(context);
+        return this.send(`${pingString} ${content}`, context);
     }
 
     delete(msg: Message): Promise<void> {
@@ -75,15 +79,10 @@ export class SlackClient extends Client {
     }
 
     getPingString(msg: Message): string {
-        throw new Error("Method not implemented.");
+        return `<@${msg.info.fromId}>`;
     }
 
-    link(text: string, url: string): string {
-        throw new Error("Method not implemented.");
+    link(text: string, url: string) {
+        return `<${url}|${text}>`
     }
-
-    codify(text: string): string {
-        throw new Error("Method not implemented.");
-    }
-
 }

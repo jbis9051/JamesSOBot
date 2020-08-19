@@ -1,7 +1,7 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 import fetch from 'node-fetch';
 
-const joke: PluginFunction = (bot) => {
+export const joke: PluginFunction = (bot) => {
     bot.addCommand({
         name: "joke",
         args: [],
@@ -11,7 +11,7 @@ const joke: PluginFunction = (bot) => {
         ],
         examples: ["|| joke"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (Math.random() <= 0.1 && msg.args[0] !== "bypass") {
                 client.send(`${msg.info.fromName}'s code 😜`, msg);
@@ -31,4 +31,3 @@ const joke: PluginFunction = (bot) => {
         }
     });
 };
-export default joke;

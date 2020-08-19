@@ -1,8 +1,6 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const {Message} = require('../../../../old/src/events/Message.js');
-
-const mdn: PluginFunction = (bot) => {
+export const mdn: PluginFunction = (bot) => {
     bot.addCommand({
         name: "mdn",
         args: [
@@ -14,7 +12,7 @@ const mdn: PluginFunction = (bot) => {
         ],
         examples: ["|| mdn array sort"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (msg.args.length < 1) {
                 client.send("**Missing args**", msg);

@@ -1,6 +1,6 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const applesupport: PluginFunction = (bot) => {
+export const applesupport: PluginFunction = (bot) => {
     bot.addCommand({
         name: "Apple Search",
         args: [
@@ -13,7 +13,7 @@ const applesupport: PluginFunction = (bot) => {
         ],
         examples: ["|| aps forgot Apple ID password"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (msg.args.length < 1) {
                 client.send("**Missing args**", msg)

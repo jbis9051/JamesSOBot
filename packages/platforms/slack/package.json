@@ -8,7 +8,10 @@
   },
   "dependencies": {
     "@chatbot/bot": "^0.0.0",
+    "@chatbot/plugins": "^0.0.0",
     "@slack/rtm-api": "^5.0.5",
+    "@slack/web-api": "^5.11.0",
+    "cheerio": "^1.0.0-rc.3",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   }

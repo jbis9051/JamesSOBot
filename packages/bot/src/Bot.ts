@@ -1,7 +1,7 @@
 import * as events from 'events';
 import * as path from 'path';
 import * as cheerio from 'cheerio';
-import * as fse from 'fs-extra';
+import fetch from 'node-fetch';
 import {Command} from "./interfaces/Command";
 import {PluginFunction} from "./interfaces/PluginFunction";
 import {MessageHandler} from "./types/CallbackTypes";
@@ -9,6 +9,7 @@ import {Message} from "./models/Message";
 import {Client} from './Client';
 import {Config} from "./interfaces/Config";
 import {PermissionType} from "./interfaces/Permission";
+import {DataSaver} from "./DataSaver";
 
 export class Bot extends events.EventEmitter {
     readonly saveFolder: string;
@@ -21,22 +22,22 @@ export class Bot extends events.EventEmitter {
         name: "James",
     };
     private config: Config;
-    private readonly data: { [key: string]: any };
+    public readonly dataStore: DataSaver<any>;
     private readonly saveFile: string;
 
     constructor(saveFolderName: string, config: Config) {
         super();
-        this.saveFolder = path.join(__dirname, '..', '..', 'data', saveFolderName);
+        if (!process.env.DATA_FOLDER) {
+            throw "Data folder required";
+        }
+        this.saveFolder = path.join(process.env.DATA_FOLDER, 'data', saveFolderName);
         this.saveFile = path.join(this.saveFolder, 'data.json');
         this.config = config;
-        if (!fse.existsSync(this.saveFile)) {
-            fse.writeFileSync(this.saveFile, "{}")
-        }
-        this.data = JSON.parse(fse.readFileSync(this.saveFile).toString());
+        this.dataStore = new DataSaver(this.saveFile, {});
     }
 
-    addPlugin(plugin: PluginFunction) {
-        plugin(this, this.config);
+    addPlugin(...plugins: PluginFunction[]) {
+        plugins.forEach(plugin => plugin(this, this.config));
     }
 
     RegisterHandler(handler: MessageHandler) {
@@ -57,25 +58,15 @@ export class Bot extends events.EventEmitter {
         this.shutdown_scripts.push(handler);
     }
 
-    getData(key: string) {
-        return this.data[key];
-    }
-
-    setData(key: string, data: string | any) {
-        this.data[key] = data;
-        this.saveData();
-    }
-
-    saveData() {
-        fse.writeFileSync(this.saveFile, JSON.stringify(this.data));
-    }
-
     async processMessage(msg: Message, client: Client) {
         if (!this.validatorScripts.every(validatorScript => validatorScript.handler(msg, client))) {
             return;
         }
         this.messageHandlers.forEach(cb => cb(msg, client));
         if (client.isMyMessage(msg)) {
+            return;
+        }
+        if (!this.isCommandMessage(msg)) {
             return;
         }
         const command = this.getCommand(msg);
@@ -94,15 +85,19 @@ export class Bot extends events.EventEmitter {
         }
     }
 
+    isCommandMessage(msg: Message) {
+        return msg.prefix && msg.commandCall && ["||", "!!"].includes(msg.prefix);
+    }
+
     getCommand(msg: Message): Command | undefined {
         if (!msg.commandCall) {
             return;
         }
         const commandShortcutLowerCase = msg.commandCall.toLowerCase();
         return Object.values(this.commands).find((command) => command.shortcuts.some(shortcut => {
-                if (typeof shortcut === "object" && shortcut instanceof RegExp) {
-                    return shortcut.test(msg.commandCall!);
-                }
+            if (typeof shortcut === "object" && shortcut instanceof RegExp) {
+                return shortcut.test(msg.commandCall!);
+            }
                 return shortcut === commandShortcutLowerCase;
             })
         );
@@ -128,12 +123,16 @@ export class Bot extends events.EventEmitter {
                         return false;
                     }
                     default: {
-                        return this.config.users_groups[permissionsKey].includes(msg.info.fromId);
+                        return this.inGroup(msg.info.fromId, permissionsKey);
                     }
                 }
             })
             || (command.permissions.includes(PermissionType.OWNER) && await client.isRoomOwnerId(msg.info.fromId, msg))
         )
+    }
+
+    inGroup(id: string, group: string) {
+        return this.config.users_groups[group].includes(id);
     }
 
     async shutdown(msg: Message, client: Client) {
@@ -167,7 +166,7 @@ export class Bot extends events.EventEmitter {
                 selected = $('.r > a').attr('href') && $('.r > a').attr('href')!.replace(/\/url?.*&url=/, '');
                 title = $('.r').find('.LC20lb').html();
             }
-            if (!selected!.match(selectorMatch)) {
+            if (!(selected && selected.match(selectorMatch))) {
                 console.error('Invalid Selector ' + selected);
                 return false;
             }

@@ -1,13 +1,10 @@
 import {PluginFunction} from "@chatbot/bot";
-
-const config = require('../../../../old/config/config.json');
-
 const needsResponse: { [key: string]: NodeJS.Timeout } = {};
 
 const format_message = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). You have 25 seconds to edit and format your message properly before it will be removed. Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
 const format_message_command = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). Put your question in 1 message and then your code in a 2nd and format it.";
 
-const unformattedCode: PluginFunction = (bot) => {
+const unformattedCode: PluginFunction = (bot, config) => {
     bot.addCommand({
         name: "formatting",
         args: ["person"],
@@ -28,14 +25,14 @@ const unformattedCode: PluginFunction = (bot) => {
         }
     });
     bot.RegisterHandler((msg, client) => {
-            if (!config.code_check.includes(msg.info.contextId)) {
-                removeTimeout(msg.info.id);
-                return;
-            }
-            if (msg.info.rawContent.startsWith("<pre class='full'>")) {
-                removeTimeout(msg.info.id);
-                return;
-            }
+        if (!config.plugin.code_check.includes(msg.info.contextId)) {
+            removeTimeout(msg.info.id);
+            return;
+        }
+        if (msg.info.rawContent.startsWith("<pre class='full'>")) {
+            removeTimeout(msg.info.id);
+            return;
+        }
             if (!(msg.info.rawContent.startsWith("<div class='full'>") || msg.info.rawContent.startsWith("<div class='partial'>"))) {
                 removeTimeout(msg.info.id);
                 return;

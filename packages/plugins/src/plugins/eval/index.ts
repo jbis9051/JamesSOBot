@@ -1,4 +1,6 @@
 import * as ivm from "isolated-vm";
+// @ts-ignore
+import * as bla from './sandboxed-script';
 
 export default function (code: string, timeout = 500): Promise<{ error: string | false, result: string, logged: string[], time: number }> {
     return new Promise((resolve, reject) => {

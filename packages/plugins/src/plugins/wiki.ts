@@ -5,7 +5,7 @@ function random(arr: any[]) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-const wiki: PluginFunction = (bot) => {
+export const wiki: PluginFunction = (bot) => {
     bot.addCommand({
         name: "wiki",
         args: ["query"],

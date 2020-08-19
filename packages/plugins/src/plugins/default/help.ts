@@ -1,6 +1,6 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const help: PluginFunction = (bot) => {
+export const help: PluginFunction = (bot) => {
     bot.addCommand({
         name: "help",
         args: [],
@@ -10,10 +10,9 @@ const help: PluginFunction = (bot) => {
         ],
         examples: ["|| help"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
-            client.send("Command documentation and syntax can be found [here](https://github.com/jbis9051/SO-ChatBot/blob/master/docs/COMMANDS.md).", msg)
+            client.send(`Command documentation and syntax can be found ${client.link("here", "https://github.com/jbis9051/SO-ChatBot/blob/master/docs/COMMANDS.md")}.`, msg)
         }
     })
 };
-export default help;

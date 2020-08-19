@@ -1,6 +1,6 @@
-import {Bot, PluginFunction} from "@chatbot/bot";
+import {Bot, PermissionType, PluginFunction} from "@chatbot/bot";
 
-const betterecho: PluginFunction = (bot: Bot) => {
+export const betterecho: PluginFunction = (bot: Bot) => {
     bot.addCommand({
         name: "echo",
         args: [],
@@ -12,10 +12,9 @@ const betterecho: PluginFunction = (bot: Bot) => {
         ],
         examples: ["|| echo hi"],
         ignore: true,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             client.send(bot.htmldecode(msg.args.join(" ")), msg);
         }
     });
 };
-export default betterecho;

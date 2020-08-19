@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import {PluginFunction, Message, Permission, PermissionType, Client} from "@chatbot/bot";
 import fetch from 'node-fetch';
 
-const backup: PluginFunction = (bot, config) => {
+export const backup: PluginFunction = (bot, config) => {
     bot.addCommand({
         name: "backup",
         description: "Backup data to Gist and posts a link",
@@ -23,13 +23,13 @@ const backup: PluginFunction = (bot, config) => {
                     public: false,
                     files: {
                         'learn_list.json': {
-                            content: JSON.stringify(bot.getData("learn_list")),
+                            content: JSON.stringify(bot.dataStore.getData("learn_list")),
                         },
                         'people_seen.json': {
-                            content: JSON.stringify(bot.getData("people_seen")),
+                            content: JSON.stringify(bot.dataStore.getData("people_seen")),
                         },
                         'afk_data.json': {
-                            content: JSON.stringify(bot.getData("afk_data")),
+                            content: JSON.stringify(bot.dataStore.getData("afk_data")),
                         }
                     }
                 }),

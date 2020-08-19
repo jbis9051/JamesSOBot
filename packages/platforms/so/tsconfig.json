@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "sourceMap": true,
     "outDir": "build",
     "downlevelIteration": true,
@@ -10,7 +10,10 @@
     "noImplicitAny": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "typeRoots": [
+      "./src/types"
+    ]
   },
   "include": [
     "src"

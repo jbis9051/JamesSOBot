@@ -1,6 +1,6 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
-const random: PluginFunction = (bot) => {
+export const random: PluginFunction = (bot) => {
     bot.addCommand({
         name: "random",
         args: ["min", "max"],
@@ -10,7 +10,7 @@ const random: PluginFunction = (bot) => {
         ],
         examples: ["|| random 2 30", "|| random -2 30", "|| random 30 18"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (msg.args.length < 2) {
                 client.send("**Missing args**", msg);

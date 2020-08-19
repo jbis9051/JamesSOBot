@@ -1,15 +1,14 @@
 import {Client} from "../Client";
 import {Bot} from "../Bot";
 
-export interface IMessage<T = undefined> {
+export interface IMessage<T = any> {
     id: string,
     rawContent: string;
     content: string;
-    messageId: string,
     contextId: string
     fromId: string,
     fromName: string,
-    appData?: T
+    appData: T
 }
 
 export class Message {
