@@ -1,4 +1,4 @@
-import {Bot, PluginFunction} from "@chatbot/bot";
+import {Bot, PermissionType, PluginFunction} from "@chatbot/bot";
 
 interface BanData {
     told: boolean
@@ -7,10 +7,9 @@ interface BanData {
     date_ban: string,
 }
 
-let ban_user_data: { [key: string]: BanData };
 
-const ban: PluginFunction = (bot: Bot) => {
-    ban_user_data = bot.dataStore.getData("ban_data") || {};
+export const ban: PluginFunction = (bot: Bot) => {
+    const ban_user_data: { [key: string]: BanData } = bot.dataStore.getData("ban_data") || {};
 
     bot.RegisterValidator("Ban List", (msg, client) => {
         if (isBan(msg.info.fromId)) {
@@ -41,7 +40,7 @@ const ban: PluginFunction = (bot: Bot) => {
         ],
         examples: ["|| ban @JBis", "|| ban JBis", "|| ban 7886229"],
         ignore: false,
-        permissions: ["OWNER", "admin"],
+        permissions: [PermissionType.OWNER, "admin"],
         cb: async (msg, client) => {
             const id = /^\d+$/.test(msg.args[0]) ? msg.args[0] : await client.usernameToId(msg.args[0], msg);
             if (!id) {
@@ -75,7 +74,7 @@ const ban: PluginFunction = (bot: Bot) => {
         ],
         examples: ["|| unban @JBis", "|| unban JBis", "|| unban 7886229"],
         ignore: false,
-        permissions: ["OWNER", "admin"],
+        permissions: [PermissionType.OWNER, "admin"],
         cb: async (msg, client) => {
             const id = /^\d+$/.test(msg.args[0]) ? msg.args[0] : await client.usernameToId(msg.args[0], msg);
             if (!id) {
@@ -92,4 +91,3 @@ const ban: PluginFunction = (bot: Bot) => {
         }
     });
 };
-export default ban;

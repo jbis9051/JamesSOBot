@@ -21,7 +21,9 @@ import {
     selfDestruct,
     life,
     kill,
-    rules
+    rules,
+    ban,
+    timeout
 } from '@chatbot/plugins';
 
 const bot = new Bot("slack", {
@@ -36,7 +38,7 @@ const bot = new Bot("slack", {
     client: {}
 });
 
-bot.addPlugin(mdn, evalPlugin, joke, w3schools, STOP, random, wiki, betterecho, status, info, learn, adoc, funfact, calc, applesupport, selfDestruct, life, kill, rules, help, errors);
+bot.addPlugin(mdn, evalPlugin, joke, w3schools, STOP, random, wiki, betterecho, status, info, learn, adoc, funfact, calc, applesupport, selfDestruct, life, kill, timeout, rules, ban, help, errors);
 
 const slackClient = new SlackClient(bot);
 slackClient.init().then(() => console.log("ready"));

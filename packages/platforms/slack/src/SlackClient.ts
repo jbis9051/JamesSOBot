@@ -82,8 +82,11 @@ export class SlackClient extends Client {
         throw new Error("Method not implemented.");
     }
 
-    usernameToId(username: string, context: Message): Promise<string | undefined> {
-        throw new Error("Method not implemented.");
+    async usernameToId(username: string, context: Message): Promise<string | undefined> {
+        const match = username.match(/<@([A-Z0-9]+)>/);
+        if (match) {
+            return match[1];
+        }
     }
 
     getPingString(msg: Message): string {
