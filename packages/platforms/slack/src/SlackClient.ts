@@ -35,9 +35,9 @@ export class SlackClient extends Client {
             fromName: e.user,
             appData: e,
         }, this, this.bot);
-        if (e.channel === "C0266FRGV") {
+       /* if (e.channel === "C0266FRGV") {
             return;
-        }
+        }*/
         this.bot.processMessage(message, this);
     }
 
