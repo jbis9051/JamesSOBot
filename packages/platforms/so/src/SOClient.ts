@@ -7,8 +7,7 @@ import cookiefetch from 'fetch-cookie/node-fetch';
 import {ChatEvent} from "./enum/ChatEvent";
 import formEncoder from "./helpers/formEncoder";
 import * as events from 'events';
-
-const fetch = cookiefetch(nodefetch);
+import {CookieJar} from 'tough-cookie';
 
 export class SOClient extends Client {
     private siteURL: string;
@@ -24,6 +23,8 @@ export class SOClient extends Client {
     private wsurl?: string;
     private ws?: WebSocket;
     private events = new events.EventEmitter();
+    private jar: CookieJar;
+    private fetch: (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
     constructor(siteURL: string, chatURL: string, roomNums: number[], bot: Bot) {
         super();
@@ -36,6 +37,12 @@ export class SOClient extends Client {
         this.bot = bot;
         this.mainRoomNum = this.roomNums[0];
         this.dataStore = new DataSaver(path.join(process.env.DATA_FOLDER, 'so', 'so.json'), {});
+        try {
+            this.jar = CookieJar.deserializeSync(this.dataStore.getData("cookieJar"));
+        } catch (e) {
+            this.jar = new CookieJar();
+        }
+        this.fetch = cookiefetch(nodefetch, this.jar);
         this.events.on(ChatEvent.NEW_MESSAGE.toString(), e => this.bot.processMessage(this.createMessage(e), this));
         this.events.on(ChatEvent.EDIT.toString(), e => this.bot.processMessage(this.createMessage(e), this));
     }
@@ -53,7 +60,7 @@ export class SOClient extends Client {
     }
 
     async mainSiteLogin() {
-        const resp = await fetch(this.siteURL + '/users/login', {
+        const resp = await this.fetch(this.siteURL + '/users/login', {
             method: 'GET',
         });
         if ((new URL(resp.url)).pathname === "/") {
@@ -63,7 +70,7 @@ export class SOClient extends Client {
         const body = await resp.text();
         const $ = cheerio.load(body);
         const fkey = $('input[name="fkey"]').val();
-        await fetch(this.siteURL + '/users/login', {
+        await this.fetch(this.siteURL + '/users/login', {
             method: 'POST',
             body: formEncoder({
                 fkey: fkey,
@@ -75,6 +82,7 @@ export class SOClient extends Client {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Safari/605.1.15'
             }
         });
+        this.dataStore.setData("cookieJar", this.jar.serializeSync());
     }
 
     async setUpWS() {
@@ -115,14 +123,14 @@ export class SOClient extends Client {
 
     async setChatVars() {
         //this._id = data.my_id;
-        const resp = await fetch(this.siteURL + '/users/current', {
+        const resp = await this.fetch(this.siteURL + '/users/current', {
             method: 'GET',
         });
         const url = new URL(resp.url);
         this._id = parseInt(url.pathname.match(/(?<=\/users\/)[0-9]+(?=\/)/)![0]);
         let sites = this.dataStore.getData('sites');
         if (!sites) {
-            const resp = await fetch('https://api.stackexchange.com/2.2/sites?pagesize=999999999', {
+            const resp = await this.fetch('https://api.stackexchange.com/2.2/sites?pagesize=999999999', {
                 method: 'GET',
                 // gzip: true,
             });
@@ -141,13 +149,13 @@ export class SOClient extends Client {
     }
 
     async getFKEY(roomNum: number) {
-        const body = await fetch(`${this.chatURL}/rooms/${roomNum}`).then(resp => resp.text());
+        const body = await this.fetch(`${this.chatURL}/rooms/${roomNum}`).then(resp => resp.text());
         const $ = cheerio.load(body);
         return $('#fkey').val();
     }
 
     async getWSURL(roomNum: number) {
-        const resp = await fetch(this.chatURL + '/ws-auth', {
+        const resp = await this.fetch(this.chatURL + '/ws-auth', {
             method: 'POST',
             body: formEncoder({
                 roomid: roomNum,
@@ -175,7 +183,7 @@ export class SOClient extends Client {
     }
 
     private createMessage(e: any): Message {
-        return new Message({
+        const message = new Message({
             id: e.id,
             rawContent: e.content,
             content: this.bot.htmldecode(e.content.replace(/<.+>/g, '')),
@@ -184,6 +192,8 @@ export class SOClient extends Client {
             fromName: e.user_name,
             appData: e,
         }, this, this.bot);
+        console.log(message.info.contextId + " - " + message.info.fromName + " - " + message.info.content);
+        return message;
     }
 
 
@@ -199,7 +209,7 @@ export class SOClient extends Client {
         const roomNum = typeof context === "string" ? context : context.info.contextId;
         return new Promise(async resolve => {
             console.log("Sending: " + content);
-            fetch(`${this.chatURL}/chats/${roomNum}/messages/new`, {
+            this.fetch(`${this.chatURL}/chats/${roomNum}/messages/new`, {
                 method: 'POST',
                 body: formEncoder({
                     text: content,
@@ -242,7 +252,7 @@ export class SOClient extends Client {
     edit(content: string, context: Message): Promise<void> {
         return new Promise(async resolve => {
             console.log("Sending: " + content);
-            fetch(`${this.chatURL}/messages/${context.info.appData.message_id}`, {
+            this.fetch(`${this.chatURL}/messages/${context.info.appData.message_id}`, {
                 method: 'POST',
                 headers: {
                     referer: `${this.chatURL}/rooms/${context.info.contextId}`,
@@ -271,7 +281,7 @@ export class SOClient extends Client {
 
     moveTo(message: Message, to: any): Promise<void> {
         return new Promise(async resolve => {
-            fetch(`${this.chatURL}/admin/movePosts/${message.info.contextId}`, {
+            this.fetch(`${this.chatURL}/admin/movePosts/${message.info.contextId}`, {
                 method: 'POST',
                 body: formEncoder({
                     ids: message.info.id,
@@ -299,7 +309,7 @@ export class SOClient extends Client {
     }
 
     async usernameToId(username: string, context: Message): Promise<string | undefined> {
-        const body = await fetch(`${this.chatURL}/rooms/pingable/${context.info.contextId}`).then(resp => resp.json());
+        const body = await this.fetch(`${this.chatURL}/rooms/pingable/${context.info.contextId}`).then(resp => resp.json());
         const array = body.filter((a: string[]) => a[1].toUpperCase() === username.replace("@", "").toUpperCase());
         if (array.length === 0) {
             return;
@@ -315,7 +325,7 @@ export class SOClient extends Client {
     /* Client Specific Methods */
 
     async stats(id: string, api_site_param = this.api_site_param!) {
-        const resp = await fetch(`https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`);
+        const resp = await this.fetch(`https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`);
         const body = await resp.json();
         if (resp.status !== 200 || !body.items) {
             return false;
@@ -325,12 +335,12 @@ export class SOClient extends Client {
     }
 
     async chatIDToSiteID(id: number) {
-        const body = await fetch(`${this.chatURL}/users/thumbs/${id}`).then(resp => resp.json());
+        const body = await this.fetch(`${this.chatURL}/users/thumbs/${id}`).then(resp => resp.json());
         return body.profileUrl.match(/\d+/)[0];
     }
 
     async getNumMessagesFromId(id: string, roomNum: string) {
-        const body = await fetch(`${this.chatURL}/users/${id}`).then(resp => resp.text());
+        const body = await this.fetch(`${this.chatURL}/users/${id}`).then(resp => resp.text());
         try {
             const $ = cheerio.load(body);
             return parseInt($(`#room-${roomNum} .room-message-count`).attr('title')!.match(/^\d+/)![0]);
@@ -340,7 +350,7 @@ export class SOClient extends Client {
     }
 
     async getRoomOwners(roomNum: string) {
-        const body = await fetch(`${this.chatURL}/rooms/info/${roomNum}`).then(resp => resp.text());
+        const body = await this.fetch(`${this.chatURL}/rooms/info/${roomNum}`).then(resp => resp.text());
         try {
             const $ = cheerio.load(body);
             return (
