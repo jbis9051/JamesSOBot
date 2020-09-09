@@ -1,7 +1,7 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
 let timers = [];
-const timer: PluginFunction = (bot) => {
+export const timer: PluginFunction = (bot) => {
     bot.addCommand({
         name: "timer",
         args: [],
@@ -13,7 +13,7 @@ const timer: PluginFunction = (bot) => {
         ],
         examples: ["|| remind 'hello JBis' in 10 minutes", "|| remind 'hello JBis' 10 hours"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             const content = msg.quotedArgsList.shift()!;
             if (content.includes("@JBis") || content.includes("@JBi")) {
@@ -70,8 +70,6 @@ function convertTimeStringToMiliseconds(time: string) {
     }
     return numeric * timeObj.multiplier;
 }
-
-export default timer;
 /**
  * Sets a timer to remind a user a message at a specific time relative to the current time
  *

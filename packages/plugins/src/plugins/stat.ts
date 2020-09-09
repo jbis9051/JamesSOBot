@@ -1,6 +1,6 @@
-import {PluginFunction, Client} from "@chatbot/bot";
+import {PluginFunction, Client, PermissionType} from "@chatbot/bot";
 
-const stat: PluginFunction = (bot) => {
+export const stat: PluginFunction = (bot) => {
     bot.addCommand({
         name: "stat",
         args: [],
@@ -11,7 +11,7 @@ const stat: PluginFunction = (bot) => {
         ],
         examples: ["|| stat @JBis", "|| stat JBis", "|| stat 7886229"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: async (msg, client: Client & any) => {
             let id;
             if (msg.args.length === 0) {
@@ -34,7 +34,7 @@ const stat: PluginFunction = (bot) => {
             }
             // {"items":[{"badge_counts":{"bronze":15,"silver":4,"gold":1},"account_id":10715379,"is_employee":false,"last_modified_date":1560326454,"last_access_date":1560357081,"reputation_change_year":44,"reputation_change_quarter":22,"reputation_change_month":10,"reputation_change_week":10,"reputation_change_day":10,"reputation":334,"creation_date":1492547029,"user_type":"registered","user_id":7886229,"accept_rate":83,"website_url":"http://joshbrown.info","link":"https://stackoverflow.com/users/7886229/jbis","profile_image":"https://i.stack.imgur.com/8kBbg.png?s=128&g=1","display_name":"JBis"}],"has_more":false,"quota_max":300,"quota_remaining":287}
             client.send(client.codify("" +
-                `Username: ${userData.display_name.htmldecode()}\n` +
+                `Username: ${bot.htmldecode(userData.display_name)}\n` +
                 `ID: ${userData.account_id}\n` +
                 `Reputation: ${userData.reputation}\n` +
                 `Reputation Change Month: ${userData.reputation_change_month}\n` +
@@ -42,4 +42,3 @@ const stat: PluginFunction = (bot) => {
         }
     });
 };
-export default stat;

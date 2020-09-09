@@ -2,7 +2,7 @@ import {Message, PluginFunction, Client} from "@chatbot/bot";
 
 let debuging = false;
 
-const debug: PluginFunction = (bot) => {
+export const debug: PluginFunction = (bot) => {
     bot.addCommand({
         name: "debug",
         args: [],
@@ -26,6 +26,6 @@ const debug: PluginFunction = (bot) => {
         },
     });
     bot.RegisterValidator("debug", (msg: Message) => {
-        return msg.info.contextId !== "193540" || !debuging || msg.info.content === "|| sudo debug disable";
+        return !debuging || msg.info.content === "|| sudo debug disable";
     });
 };

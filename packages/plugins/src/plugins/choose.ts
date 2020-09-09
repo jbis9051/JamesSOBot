@@ -1,13 +1,13 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
 
-const choose: PluginFunction = (bot) => {
+export const choose: PluginFunction = (bot) => {
     bot.addCommand({
         name: "choose",
         description: "Chooses an option from a space delimited string of options. Strips 'or's .",
         examples: ["|| choose heads tails", "|| choose 1 2 3 or 4"],
         shortcuts: ["choose", "pick", "choice"],
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         args: ["...options"],
         ignore: false,
         cb: (message, client) => {
@@ -19,4 +19,3 @@ const choose: PluginFunction = (bot) => {
         }
     })
 };
-export default choose;

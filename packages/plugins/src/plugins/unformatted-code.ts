@@ -1,10 +1,10 @@
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 const needsResponse: { [key: string]: NodeJS.Timeout } = {};
 
 const format_message = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). You have 25 seconds to edit and format your message properly before it will be removed. Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
-const format_message_command = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). Put your question in 1 message and then your code in a 2nd and format it.";
+const format_message_command = "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
 
-const unformattedCode: PluginFunction = (bot, config) => {
+export const unformattedCode: PluginFunction = (bot, config) => {
     bot.addCommand({
         name: "formatting",
         args: ["person"],
@@ -14,7 +14,7 @@ const unformattedCode: PluginFunction = (bot, config) => {
         ],
         examples: ["|| formatting @JBis", "|| formatting"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (msg.args.length < 1) {
                 client.send(format_message_command, msg);

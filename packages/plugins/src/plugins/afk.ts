@@ -1,11 +1,11 @@
-import {Bot, Message, PluginFunction, Client} from "@chatbot/bot";
+import {Bot, Message, PluginFunction, Client, PermissionType} from "@chatbot/bot";
 
 // 2 min between afk message
 const rateLimit = 2 * 60 * 1000;
 // 2 minutes where you can talk without escaping the afk.
 const gracePeriod = 2 * 60 * 1000;
 let lastTell = 0;
-const afk: PluginFunction = (bot: Bot) => {
+export const afk: PluginFunction = (bot: Bot) => {
     const afk_data = bot.dataStore.getData("afk_data") || {};
 
     bot.RegisterHandler((msg, client) => {
@@ -47,7 +47,7 @@ const afk: PluginFunction = (bot: Bot) => {
         ],
         examples: ["|| afk bla", "|| afk foo"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: async (msg: Message, client: Client) => {
             afk_data[msg.info.fromName.replace(/ /g, '')] = {
                 afkSince: Date.now(),

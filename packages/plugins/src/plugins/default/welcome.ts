@@ -1,4 +1,4 @@
-import {Bot, PluginFunction, Client, PermissionType} from "@chatbot/bot";
+import {Bot, Client, PermissionType, PluginFunction} from "@chatbot/bot";
 
 let people_seen: string[];
 
@@ -24,7 +24,7 @@ export const welcome: PluginFunction = (bot: Bot, config) => {
             }
             const person = msg.args[0];
             if (welcome_messages[msg.info.contextId]) {
-                client.softReply(welcome_messages[msg.info.contextId], person);
+                client.send(`@${person} ${welcome_messages[msg.info.contextId]}`, msg)
             } else {
                 client.send("No welcome message listed.", msg)
             }
@@ -38,16 +38,16 @@ export const welcome: PluginFunction = (bot: Bot, config) => {
             if (client.isMyMessage(msg)) {
                 return;
             }
-        if (people_seen.includes(msg.info.fromId)) {
-            return;
-        } else {
-            people_seen.push(msg.info.fromId);
-        }
-        if (await client.getNumMessagesFromId(msg.info.fromId, msg.info.contextId) < 2) {
-            if (welcome_messages[msg.info.contextId]) {
-                client.softReply(welcome_messages[msg.info.contextId]);
+            if (people_seen.includes(msg.info.fromId)) {
+                return;
+            } else {
+                people_seen.push(msg.info.fromId);
             }
-        }
+            if (await client.getNumMessagesFromId(msg.info.fromId, msg.info.contextId) < 2) {
+                if (welcome_messages[msg.info.contextId]) {
+                    client.softReply(welcome_messages[msg.info.contextId], msg);
+                }
+            }
         }
     );
 };

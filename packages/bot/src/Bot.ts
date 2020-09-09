@@ -30,7 +30,7 @@ export class Bot extends events.EventEmitter {
         if (!process.env.DATA_FOLDER) {
             throw "Data folder required";
         }
-        this.saveFolder = path.join(process.env.DATA_FOLDER, 'data', saveFolderName);
+        this.saveFolder = path.join(process.env.DATA_FOLDER, saveFolderName);
         this.saveFile = path.join(this.saveFolder, 'data.json');
         this.config = config;
         this.dataStore = new DataSaver(this.saveFile, {});

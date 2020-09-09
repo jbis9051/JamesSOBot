@@ -1,29 +1,37 @@
-import {Bot, Permission, PermissionType} from '@chatbot/bot';
+import {Bot} from '@chatbot/bot';
 import {SOClient} from './SOClient';
 import {
-    mdn,
-    evalPlugin,
-    errors,
-    joke,
-    w3schools,
-    STOP,
-    wiki,
-    random,
+    adoc,
+    afk,
+    applesupport,
+    backup,
+    ban,
     betterecho,
+    calc,
+    choose,
+    debug,
+    errors,
+    evalPlugin,
+    funfact,
     help,
     info,
-    status,
-    learn,
-    funfact,
-    adoc,
-    calc,
-    applesupport,
-    selfDestruct,
-    life,
+    joke,
     kill,
+    learn,
+    life,
+    mdn,
+    random,
     rules,
-    ban,
-    timeout
+    selfDestruct,
+    stat,
+    status,
+    STOP,
+    timeout,
+    timer,
+    unformattedCode,
+    w3schools,
+    welcome,
+    wiki
 } from '@chatbot/plugins';
 
 const bot = new Bot("so", {
@@ -50,7 +58,39 @@ const bot = new Bot("so", {
     client: {}
 });
 
-bot.addPlugin(mdn, evalPlugin, joke, w3schools, STOP, random, wiki, betterecho, status, info, learn, adoc, funfact, calc, applesupport, selfDestruct, life, kill, timeout, rules, ban, help, errors);
+bot.addPlugin(
+    backup,
+    errors,
+    help,
+    info,
+    life,
+    selfDestruct,
+    status,
+    welcome,
+    evalPlugin,
+    adoc,
+    afk,
+    applesupport,
+    ban,
+    betterecho,
+    calc,
+    choose,
+    debug,
+    funfact,
+    joke,
+    kill,
+    learn,
+    mdn,
+    random,
+    rules,
+    stat,
+    STOP,
+    timeout,
+    timer,
+    unformattedCode,
+    w3schools,
+    wiki
+);
 
 
 const client = new SOClient("https://stackoverflow.com", "https://chat.stackoverflow.com", [193540, 1, 169987, 15, 17, 7], bot);
