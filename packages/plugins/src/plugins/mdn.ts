@@ -8,7 +8,8 @@ export const mdn: PluginFunction = (bot) => {
         ],
         description: "Searches for query on MDN",
         shortcuts: [
-            "mdn"
+            "mdn",
+            "rtfm"
         ],
         examples: ["|| mdn array sort"],
         ignore: false,
