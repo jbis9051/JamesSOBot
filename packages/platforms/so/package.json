@@ -11,6 +11,7 @@
     "@chatbot/plugins": "^0.0.0",
     "@types/cheerio": "^0.22.21",
     "@types/fs-extra": "^9.0.1",
+    "@types/node-fetch": "^2.5.7",
     "@types/tough-cookie": "^4.0.0",
     "@types/ws": "^7.2.6",
     "cheerio": "^1.0.0-rc.3",
