@@ -8,12 +8,13 @@
   },
   "dependencies": {
     "@chatbot/bot": "^0.0.0",
+    "@chatbot/plugins": "^0.0.0",
     "@types/cheerio": "^0.22.21",
     "@types/fs-extra": "^9.0.1",
     "@types/ws": "^7.2.6",
     "cheerio": "^1.0.0-rc.3",
+    "fetch-cookie": "^0.10.1",
     "fs-extra": "^9.0.1",
-    "node-fetch-cookies": "^1.4.2",
     "ts-node-dev": "^1.0.0-pre.58",
     "typescript": "^3.9.7",
     "ws": "^7.3.1"

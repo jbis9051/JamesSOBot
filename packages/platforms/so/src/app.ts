@@ -1,5 +1,30 @@
 import {Bot, Permission, PermissionType} from '@chatbot/bot';
 import {SOClient} from './SOClient';
+import {
+    mdn,
+    evalPlugin,
+    errors,
+    joke,
+    w3schools,
+    STOP,
+    wiki,
+    random,
+    betterecho,
+    help,
+    info,
+    status,
+    learn,
+    funfact,
+    adoc,
+    calc,
+    applesupport,
+    selfDestruct,
+    life,
+    kill,
+    rules,
+    ban,
+    timeout
+} from '@chatbot/plugins';
 
 const bot = new Bot("so", {
     users_groups: {
@@ -25,6 +50,9 @@ const bot = new Bot("so", {
     client: {}
 });
 
+bot.addPlugin(mdn, evalPlugin, joke, w3schools, STOP, random, wiki, betterecho, status, info, learn, adoc, funfact, calc, applesupport, selfDestruct, life, kill, timeout, rules, ban, help, errors);
+
+
 const client = new SOClient("https://stackoverflow.com", "https://chat.stackoverflow.com", [193540, 1, 169987, 15, 17, 7], bot);
-client.init();
+client.init().then(() => client.send("I am currently alive", "193540"));
 

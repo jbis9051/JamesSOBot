@@ -1,11 +1,14 @@
 import {Bot, Client, DataSaver, Message} from '@chatbot/bot';
 import * as path from 'path';
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import * as cheerio from 'cheerio';
-import {CookieJar, fetch} from "node-fetch-cookies";
+import nodefetch from 'node-fetch';
+import cookiefetch from 'fetch-cookie/node-fetch';
 import {ChatEvent} from "./enum/ChatEvent";
 import formEncoder from "./helpers/formEncoder";
 import * as events from 'events';
+
+const fetch = cookiefetch(nodefetch);
 
 export class SOClient extends Client {
     private siteURL: string;
@@ -33,20 +36,12 @@ export class SOClient extends Client {
         this.bot = bot;
         this.mainRoomNum = this.roomNums[0];
         this.dataStore = new DataSaver(path.join(process.env.DATA_FOLDER, 'so', 'so.json'), {});
-        this.cookieJar = new CookieJar(path.join(process.env.DATA_FOLDER!, 'so', 'cookie.json'));
         this.events.on(ChatEvent.NEW_MESSAGE.toString(), e => this.bot.processMessage(this.createMessage(e), this));
         this.events.on(ChatEvent.EDIT.toString(), e => this.bot.processMessage(this.createMessage(e), this));
     }
-
-    fetch(url: string, options?: RequestInit): Promise<Response> {
-        return fetch(this.cookieJar, url, options);
-    }
-
     async init() {
-        await this.cookieJar.load();
         await this.connect();
-        await this.cookieJar.save();
-        setInterval(() => this.roomNums.forEach(this.joinRoom.bind(this)));
+        setInterval(() => this.roomNums.forEach(this.joinRoom.bind(this)), 21600000);
     }
 
 
@@ -58,7 +53,7 @@ export class SOClient extends Client {
     }
 
     async mainSiteLogin() {
-        const resp = await this.fetch(this.siteURL + '/users/login', {
+        const resp = await fetch(this.siteURL + '/users/login', {
             method: 'GET',
         });
         if ((new URL(resp.url)).pathname === "/") {
@@ -68,7 +63,7 @@ export class SOClient extends Client {
         const body = await resp.text();
         const $ = cheerio.load(body);
         const fkey = $('input[name="fkey"]').val();
-        await this.fetch(this.siteURL + '/users/login', {
+        await fetch(this.siteURL + '/users/login', {
             method: 'POST',
             body: formEncoder({
                 fkey: fkey,
@@ -76,6 +71,7 @@ export class SOClient extends Client {
                 password: process.env.SOPASSWORD!
             }),
             headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Safari/605.1.15'
             }
         });
@@ -103,15 +99,15 @@ export class SOClient extends Client {
                 if (!this.roomNums.includes(roomInt)) {
                     return false;
                 }
-                for (const event of data["r" + roomInt].e) {
-                    this.events.emit(event.event_type, event);
-                }
+                data["r" + roomInt].e.forEach((event: any) => {
+                    this.events.emit(event.event_type.toString(), event);
+                });
             });
         });
-        ws.on('close', (code) => {
+        ws.on('close', () => {
             this.setUpWS();
         });
-        ws.on('error', (err) => {
+        ws.on('error', (err: string) => {
             console.error(err);
         });
         this.ws = ws;
@@ -119,14 +115,14 @@ export class SOClient extends Client {
 
     async setChatVars() {
         //this._id = data.my_id;
-        const resp = await this.fetch(this.siteURL + '/users/current', {
+        const resp = await fetch(this.siteURL + '/users/current', {
             method: 'GET',
         });
         const url = new URL(resp.url);
         this._id = parseInt(url.pathname.match(/(?<=\/users\/)[0-9]+(?=\/)/)![0]);
         let sites = this.dataStore.getData('sites');
         if (!sites) {
-            const resp = await this.fetch('https://api.stackexchange.com/2.2/sites?pagesize=999999999', {
+            const resp = await fetch('https://api.stackexchange.com/2.2/sites?pagesize=999999999', {
                 method: 'GET',
                 // gzip: true,
             });
@@ -145,19 +141,23 @@ export class SOClient extends Client {
     }
 
     async getFKEY(roomNum: number) {
-        const body = await this.fetch(`${this.chatURL}/rooms/${roomNum}`).then(resp => resp.text());
+        const body = await fetch(`${this.chatURL}/rooms/${roomNum}`).then(resp => resp.text());
         const $ = cheerio.load(body);
         return $('#fkey').val();
     }
 
     async getWSURL(roomNum: number) {
-        const json = await this.fetch(this.chatURL + '/ws-auth', {
+        const resp = await fetch(this.chatURL + '/ws-auth', {
             method: 'POST',
             body: formEncoder({
                 roomid: roomNum,
                 fkey: this.fkey!,
             }),
-        }).then(resp => resp.text());
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        });
+        const json = await resp.text();
         return JSON.parse(json).url;
     }
 
@@ -188,7 +188,7 @@ export class SOClient extends Client {
 
 
     isMyMessage(msg: Message): boolean {
-        throw new Error("Method not implemented.");
+        return msg.info.fromId === this._id.toString();
     }
 
     async isRoomOwnerId(staticUID: string, context: Message): Promise<boolean> {
@@ -199,22 +199,25 @@ export class SOClient extends Client {
         const roomNum = typeof context === "string" ? context : context.info.contextId;
         return new Promise(async resolve => {
             console.log("Sending: " + content);
-            this.fetch(`${this.chatURL}/chats/${roomNum}/messages/new`, {
+            fetch(`${this.chatURL}/chats/${roomNum}/messages/new`, {
                 method: 'POST',
                 body: formEncoder({
                     text: content,
                     fkey: this.fkey!
                 }),
-            }).then(async resp => {
-                const body = await resp.json();
-                if (resp.status === 200) {
-                    resolve(body.id);
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
                 }
-                const delay = body.error.match(/(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/);
+            }).then(async resp => {
+                const body = await resp.text();
+                if (resp.status === 200) {
+                    resolve(JSON.parse(body).id);
+                }
+                const delay = body.match(/You can perform this action again in (\d+) seconds\./);
                 if (delay) {
                     setTimeout(async () => {
                         resolve(await this.send(content, roomNum));
-                    }, (parseInt(delay) * 1000) + 0.25);
+                    }, (parseInt(delay[1]) * 1000) + 0.25);
                 } else {
                     resolve();
                 }
@@ -239,10 +242,11 @@ export class SOClient extends Client {
     edit(content: string, context: Message): Promise<void> {
         return new Promise(async resolve => {
             console.log("Sending: " + content);
-            this.fetch(`${this.chatURL}/messages/${context.info.appData.message_id}`, {
+            fetch(`${this.chatURL}/messages/${context.info.appData.message_id}`, {
                 method: 'POST',
                 headers: {
-                    referer: `${this.chatURL}/rooms/${context.info.contextId}`
+                    referer: `${this.chatURL}/rooms/${context.info.contextId}`,
+                    "Content-Type": "application/x-www-form-urlencoded",
                 },
                 body: formEncoder({
                     text: content,
@@ -267,13 +271,16 @@ export class SOClient extends Client {
 
     moveTo(message: Message, to: any): Promise<void> {
         return new Promise(async resolve => {
-            this.fetch(`${this.chatURL}/admin/movePosts/${message.info.contextId}`, {
+            fetch(`${this.chatURL}/admin/movePosts/${message.info.contextId}`, {
                 method: 'POST',
                 body: formEncoder({
                     ids: message.info.id,
                     to: to,
                     fkey: this.fkey!
                 }),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                }
             }).then(async resp => {
                 if (resp.status === 200) {
                     return;
@@ -292,7 +299,7 @@ export class SOClient extends Client {
     }
 
     async usernameToId(username: string, context: Message): Promise<string | undefined> {
-        const body = await this.fetch(`${this.chatURL}/rooms/pingable/${context.info.contextId}`).then(resp => resp.json());
+        const body = await fetch(`${this.chatURL}/rooms/pingable/${context.info.contextId}`).then(resp => resp.json());
         const array = body.filter((a: string[]) => a[1].toUpperCase() === username.replace("@", "").toUpperCase());
         if (array.length === 0) {
             return;
@@ -308,7 +315,7 @@ export class SOClient extends Client {
     /* Client Specific Methods */
 
     async stats(id: string, api_site_param = this.api_site_param!) {
-        const resp = await this.fetch(`https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`);
+        const resp = await fetch(`https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`);
         const body = await resp.json();
         if (resp.status !== 200 || !body.items) {
             return false;
@@ -318,12 +325,12 @@ export class SOClient extends Client {
     }
 
     async chatIDToSiteID(id: number) {
-        const body = await this.fetch(`${this.chatURL}/users/thumbs/${id}`).then(resp => resp.json());
+        const body = await fetch(`${this.chatURL}/users/thumbs/${id}`).then(resp => resp.json());
         return body.profileUrl.match(/\d+/)[0];
     }
 
     async getNumMessagesFromId(id: string, roomNum: string) {
-        const body = await this.fetch(`${this.chatURL}/users/${id}`).then(resp => resp.text());
+        const body = await fetch(`${this.chatURL}/users/${id}`).then(resp => resp.text());
         try {
             const $ = cheerio.load(body);
             return parseInt($(`#room-${roomNum} .room-message-count`).attr('title')!.match(/^\d+/)![0]);
@@ -333,7 +340,7 @@ export class SOClient extends Client {
     }
 
     async getRoomOwners(roomNum: string) {
-        const body = await this.fetch(`${this.chatURL}/rooms/info/${roomNum}`).then(resp => resp.text());
+        const body = await fetch(`${this.chatURL}/rooms/info/${roomNum}`).then(resp => resp.text());
         try {
             const $ = cheerio.load(body);
             return (

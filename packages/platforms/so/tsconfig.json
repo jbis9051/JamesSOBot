@@ -9,9 +9,11 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
     "strict": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "typeRoots": [
+      "./node_modules/@types",
       "./src/types"
     ]
   },
