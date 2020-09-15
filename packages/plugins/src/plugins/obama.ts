@@ -1,9 +1,9 @@
 import fetch from 'node-fetch';
-import {PluginFunction} from "@chatbot/bot";
+import {PermissionType, PluginFunction} from "@chatbot/bot";
 
 const max_attempts = 20;
 
-const obama: PluginFunction = (bot) => {
+export const obama: PluginFunction = (bot) => {
     bot.addCommand({
         name: "obama",
         args: [],
@@ -15,12 +15,12 @@ const obama: PluginFunction = (bot) => {
         ],
         examples: ["|| obama Hey, I'm Obama!"],
         ignore: false,
-        permissions: ["all"],
+        permissions: [PermissionType.ALL],
         cb: async (msg, client) => {
             if (msg.args.length === 0) {
                 return client.send("Obama is silent.", msg);
             }
-            const text = msg.args.join("+");
+            const text = msg.args.map(arg => encodeURIComponent(arg)).join("+");
             const response = await fetch("http://talkobamato.me/synthesize.py", {
                 method: 'POST',
                 headers: {
@@ -42,7 +42,6 @@ const obama: PluginFunction = (bot) => {
         }
     });
 };
-export default obama;
 
 function waitForReady(key: string, amount: number, callback: (success: boolean) => void) {
     setTimeout(async function () {

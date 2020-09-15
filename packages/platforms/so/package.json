@@ -4,7 +4,7 @@
   "scripts": {
     "start": "tsc -w",
     "build": "tsc",
-    "run": "ts-node-dev src/app.ts"
+    "run": "TS_NODE_FILES=true; ts-node-dev --files src/app.ts"
   },
   "dependencies": {
     "@chatbot/bot": "^0.0.0",

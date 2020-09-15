@@ -20,6 +20,7 @@ import {
     learn,
     life,
     mdn,
+    obama,
     random,
     rules,
     selfDestruct,
@@ -39,11 +40,6 @@ const bot = new Bot("so", {
         "admin": [
             "7886229",
             "491439471972057089"
-        ],
-        "second": [
-            2172566,
-            400654,
-            871050
         ]
     } as Record<any, any[]>,
     plugin: {
@@ -52,8 +48,11 @@ const bot = new Bot("so", {
             "17": "Welcome to the JavaScript chat! Please review the [room rules](https://rlemon.github.com/so-chat-javascript-rules/). If you have a question, just post it, and if anyone's free and interested they'll help. If you want to report an abusive user or a problem in this room, visit our [meta](https://github.com/JavaScriptRoom/culture/)."
         },
         "code_check": [
-            17, 193540
-        ]
+            "17", "193540"
+        ],
+        "github": {
+            token: process.env.GITHUB_TOKEN
+        }
     },
     client: {}
 });
@@ -81,6 +80,7 @@ bot.addPlugin(
     kill,
     learn,
     mdn,
+    obama,
     random,
     rules,
     stat,
