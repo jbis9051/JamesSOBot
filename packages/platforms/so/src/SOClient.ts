@@ -18,7 +18,7 @@ export class SOClient extends Client {
     private cookieJar: any;
     private _id: number = 0;
     private api_site_param?: string;
-    private dataStore: DataSaver<any>;
+    private dataStore: DataSaver;
     private fkey?: string;
     private wsurl?: string;
     private ws?: WebSocket;
