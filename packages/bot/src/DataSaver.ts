@@ -1,10 +1,10 @@
 import * as fse from 'fs-extra';
 
-export class DataSaver<T> {
-    private readonly data: { [key: string]: T };
+export class DataSaver {
+    private readonly data: { [key: string]: any };
     private readonly path: fse.PathLike;
 
-    constructor(path: fse.PathLike, init: { [key: string]: T }) {
+    constructor(path: fse.PathLike, init: { [key: string]: any }) {
         this.path = path;
         if (!fse.existsSync(path)) {
             fse.ensureFileSync(path as string);
@@ -13,11 +13,11 @@ export class DataSaver<T> {
         this.data = JSON.parse(fse.readFileSync(path).toString());
     }
 
-    getData(key: string) {
+    getData<T = any>(key: string): T {
         return this.data[key];
     }
 
-    setData(key: string, data: string | any) {
+    setData<T = any>(key: string, data: T) {
         this.data[key] = data;
         this.saveData();
     }

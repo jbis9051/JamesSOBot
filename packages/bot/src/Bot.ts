@@ -22,8 +22,9 @@ export class Bot extends events.EventEmitter {
         name: "James",
     };
     private config: Config;
-    public readonly dataStore: DataSaver<any>;
+    public readonly dataStore: DataSaver;
     private readonly saveFile: string;
+    public readonly clientFunctions: Function[] = [];
 
     constructor(saveFolderName: string, config: Config) {
         super();
@@ -95,12 +96,16 @@ export class Bot extends events.EventEmitter {
         }
         const commandShortcutLowerCase = msg.commandCall.toLowerCase();
         return Object.values(this.commands).find((command) => command.shortcuts.some(shortcut => {
-            if (typeof shortcut === "object" && shortcut instanceof RegExp) {
-                return shortcut.test(msg.commandCall!);
-            }
+                if (typeof shortcut === "object" && shortcut instanceof RegExp) {
+                    return shortcut.test(msg.commandCall!);
+                }
                 return shortcut === commandShortcutLowerCase;
             })
         );
+    }
+
+    RegisterClientFunction(func: Function) {
+        this.clientFunctions.push(func);
     }
 
 

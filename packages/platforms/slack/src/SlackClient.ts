@@ -1,12 +1,18 @@
 import {Bot, Client, Message} from '@chatbot/bot';
-import {RTMClient} from '@slack/rtm-api';
 import {SlackMessage} from "./interfaces/SlackMessage";
 import {WebAPICallResult, WebClient} from '@slack/web-api';
+import {createEventAdapter} from '@slack/events-api';
+import {SlackEventAdapter} from '@slack/events-api/dist/adapter';
+import * as events from 'events';
+
+const port = parseInt(process.env.PORT!) || 3000;
 
 export class SlackClient extends Client {
     private token: string = process.env.SLACK_TOKEN!;
+    private id: string = "";
+    private slackSigningSecret: string = process.env.SLACK_SIGNING_SECRET!;
     private name: string = "JamesBot";
-    private rtm: RTMClient = new RTMClient(this.token);
+    private events: SlackEventAdapter & events.EventEmitter = createEventAdapter(this.slackSigningSecret) as any;
     private bot: Bot;
     private web: WebClient;
 
@@ -14,12 +20,15 @@ export class SlackClient extends Client {
         super();
         this.bot = bot;
         this.web = new WebClient(this.token);
-        this.rtm.on('message', this.handleMessage.bind(this));
+        this.events.on('message', this.handleMessage.bind(this));
     }
 
 
-    init() {
-        return this.rtm.start();
+    async init() {
+        await this.events.start(port);
+        const resp = await this.web.auth.test();
+        this.id = resp.user_id as string;
+        this.bot.clientFunctions.forEach(func => func(this));
     }
 
     async handleMessage(e: SlackMessage) {
@@ -42,7 +51,7 @@ export class SlackClient extends Client {
     }
 
     isMyMessage(msg: Message): boolean {
-        return msg.info.fromId === this.rtm.activeUserId;
+        return msg.info.fromId === this.id;
     }
 
     async isRoomOwnerId(staticUID: string, context: Message): Promise<boolean> {
