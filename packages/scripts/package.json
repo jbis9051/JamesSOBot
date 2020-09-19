@@ -1,0 +1,16 @@
+{
+  "name": "@chatbot/scripts",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "tsc -w",
+    "run-doc": "ts-node docgen.ts",
+    "build": "tsc"
+  },
+  "main": "build/index.js",
+  "dependencies": {
+    "@chatbot/bot": "^0.0.0",
+    "@chatbot/plugins": "^0.0.0",
+    "ts-node": "^9.0.0",
+    "typescript": "^3.9.7"
+  }
+}
