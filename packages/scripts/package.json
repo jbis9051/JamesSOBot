@@ -4,7 +4,7 @@
   "scripts": {
     "start": "",
     "run-doc": "ts-node docgen.ts",
-    "build": "tsc"
+    "build": "tsc docgen.ts"
   },
   "main": "build/index.js",
   "dependencies": {
