@@ -2,7 +2,7 @@
   "name": "@chatbot/scripts",
   "version": "0.0.0",
   "scripts": {
-    "start": "tsc -w",
+    "start": "",
     "run-doc": "ts-node docgen.ts",
     "build": "tsc"
   },

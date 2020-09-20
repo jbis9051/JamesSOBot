@@ -6,7 +6,6 @@ import {
     errors,
     joke,
     w3schools,
-    STOP,
     wiki,
     random,
     betterecho,
@@ -40,7 +39,7 @@ const bot = new Bot("slack", {
     client: {}
 });
 
-bot.addPlugin(mdn, clapper, evalPlugin, obama, joke, w3schools, STOP, random, wiki, betterecho, status, info, learn, adoc, funfact, calc, applesupport, selfDestruct, life, kill, timeout, rules, ban, help, errors);
+bot.addPlugin(mdn, clapper, evalPlugin, obama, joke, w3schools, random, wiki, betterecho, status, info, learn, adoc, funfact, calc, applesupport, selfDestruct, life, kill, timeout, rules, ban, help, errors);
 
 const slackClient = new SlackClient(bot);
 slackClient.init().then(() => console.log("ready"));

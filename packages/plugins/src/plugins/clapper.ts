@@ -249,8 +249,9 @@ export const clapper: PluginFunction = (bot) => {
     bot.RegisterClientFunction((client: Client & any) => {
         client.events.on('member_joined_channel', (event: any) => {
             if (channelInfo[event.channel] && !channelInfo[event.channel].members.includes(event.user)) {
-                kickMember(client, event.channel, event.user);
-                client.send(`Member must be added using the ${client.codify('|| clap.add <member>')}`, event.channel);
+                kickMember(client, event.channel, event.user).then(() => {
+                    client.send(`Member must be added using the ${client.codify('|| clap.add <member>')}`, event.channel);
+                });
             }
         });
         Object.keys(channelInfo).forEach(id => {
