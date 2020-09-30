@@ -44,9 +44,9 @@ export class SlackClient extends Client {
             fromName: e.user,
             appData: e,
         }, this, this.bot);
-       /* if (e.channel === "C0266FRGV") {
-            return;
-        }*/
+        /* if (e.channel === "C0266FRGV") {
+             return;
+         }*/
         this.bot.processMessage(message, this);
     }
 
@@ -103,6 +103,13 @@ export class SlackClient extends Client {
     }
 
     link(text: string, url: string) {
-        return `<${url}|${text}>`
+        function encode(str: string) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+        }
+
+        return `<${encode(url)}|${encode(text)}>`
     }
 }
