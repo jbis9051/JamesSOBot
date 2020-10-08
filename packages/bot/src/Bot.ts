@@ -168,8 +168,8 @@ export class Bot extends events.EventEmitter {
             if (selector) {
                 selected = selector($);
             } else {
-                selected = $('.r > a').attr('href') && $('.r > a').attr('href')!.replace(/\/url?.*&url=/, '');
-                title = $('.r').find('.LC20lb span').html();
+                selected = $('.rc a').attr('href') && $('.rc a').attr('href')!.replace(/\/url?.*&url=/, '');
+                title = $('.rc').find('.LC20lb span').html();
             }
             if (!(selected && selected.match(selectorMatch))) {
                 console.error('Invalid Selector ' + selected);
