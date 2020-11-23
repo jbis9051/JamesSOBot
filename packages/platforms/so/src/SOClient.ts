@@ -183,7 +183,7 @@ export class SOClient extends Client {
     }
 
     private createMessage(e: any): Message {
-        const message = new Message({
+        return new Message({
             id: e.message_id,
             rawContent: e.content,
             content: this.bot.htmldecode(e.content.replace(/<.+>/g, '')),
@@ -192,8 +192,6 @@ export class SOClient extends Client {
             fromName: e.user_name,
             appData: e,
         }, this, this.bot);
-        console.log(message.info.contextId + " - " + message.info.fromName + " - " + message.info.content);
-        return message;
     }
 
 
