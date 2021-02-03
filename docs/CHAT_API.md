@@ -27,12 +27,13 @@ const resp = await request({
   method: 'GET',
   uri: this.siteURL + '/users/login',
   jar: this.cookieJar,
-  resolveWithFullResponse: true
+  resolveWithFullResponse: true,
 });
-if (resp.request.path === "/") { // if we are redirected to the homepage (https://stackoverflow.com) the path will be "/"
-  console.log("Already Logged in Yey!");
+if (resp.request.path === '/') {
+  // if we are redirected to the homepage (https://stackoverflow.com) the path will be "/"
+  console.log('Already Logged in Yey!');
   return;
-}    
+}
 ```
 
 **Note:** Although you are logged in, you may be provided with new cookies. If you are saving cookies, it is suggested
@@ -40,8 +41,8 @@ that you save cookies after you are redirected.
 
 ### Logging In
 
-Once on the form page, the input with the id, `#email` , is used for email and `#password` for password. The submit
-button has an id of `#submit-button`.
+Once on the form page, the input with the id, `#email` , is used for email and
+`#password` for password. The submit button has an id of `#submit-button`.
 
 ```javascript
 await this.mainPage.focus('#email');
@@ -155,7 +156,6 @@ If the login is successful, you are given the following cookies:
     "session": false
   }
 ]
-
 ```
 
 ## Chat Authentication
@@ -168,8 +168,8 @@ The first is, quite obviously, cookies (cookies shown above).
 
 The second is an elusive thing called the `fkey`.
 
-The `fkey` is unique per user session (it changes on login and logout). The `fkey` is also used for users viewing the
-chat who are not logged in.
+The `fkey` is unique per user session (it changes on login and logout). The
+`fkey` is also used for users viewing the chat who are not logged in.
 
 The `fkey` is basically a CSRF token and it is required to view the chat and to send messages in the chat.
 
@@ -179,7 +179,12 @@ The `fkey` can be found in either of the following ways while on a chat page:
    fkey.
 
 ```html
-<input id="fkey" name="fkey" type="hidden" value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+<input
+  id="fkey"
+  name="fkey"
+  type="hidden"
+  value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+/>
 ```
 
 2. Running the `fkey()` function
@@ -188,15 +193,18 @@ The `fkey()` function just does method 1 with the option for a custom argument.
 
 ```javascript
 function fkey(e) {
-  return e || (e = {}), e.fkey || (e.fkey = $("input[name='fkey']").attr("value")), e
+  return (
+    e || (e = {}), e.fkey || (e.fkey = $("input[name='fkey']").attr('value')), e
+  );
 }
 ```
 
-`fkey()` will return a JavaScript object containing an `fkey` key and the actual `fkey` for its value:
+`fkey()` will return a JavaScript object containing an `fkey` key and the actual
+`fkey` for its value:
 
 ```javascript
 {
-  fkey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  fkey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 }
 ```
 
@@ -222,8 +230,8 @@ following parameters:
 - `roomid=[room number]`
 - `fkey=[fkey obtained in previous steps]`
 
-**Note:** A `content-type` header with a value of `application/x-www-form-urlencoded` MUST be sent or the POST data will
-not work and you will get a 404 error.
+**Note:** A `content-type` header with a value of
+`application/x-www-form-urlencoded` MUST be sent or the POST data will not work and you will get a 404 error.
 
 The response is JSON containing a single url key with the websocket as it's value. The response looks like this:
 
@@ -250,24 +258,27 @@ return JSON.parse(json).url;
 
 ### Connecting to the WebSocket
 
-
 #### Obtaining the `l` param
 
 The WebSocket requires an `l` parameter. We are not exactly sure what this is but it has to do with time, as omitting it
-results in a lot of history. Increasing it results in more recent messages. You can obtain the correct `l` time or just
-set it to a really high number.
+results in a lot of history. Increasing it results in more recent messages. You can obtain the correct `l`
+time or just set it to a really high number.
 
-1. Get the correct time - Credit to [@Zoe](https://chat.stackoverflow.com/users/6296561/zoe)
+1. Get the correct time - Credit to
+   [@Zoe](https://chat.stackoverflow.com/users/6296561/zoe)
 
-Generalized, you can get the time by sending a POST request to `<chat domain>/chats/<room id>/events`, and passing the
-fkey with it. In the URL, `<chat domain>` refers to the site you're on (i.e. `https://chat.stackoverflow.com`, but it
-can be any of the chat domains in the SE network), and `<room id>` is exactly as the name suggests - the ID if the room
-you're trying to join. Both of these parameters are without the brackets (`<>`) around them.
+Generalized, you can get the time by sending a POST request to
+`<chat domain>/chats/<room id>/events`, and passing the fkey with it. In the URL, `<chat domain>` refers to the site
+you're on (i.e.
+`https://chat.stackoverflow.com`, but it can be any of the chat domains in the SE network), and `<room id>` is exactly
+as the name suggests - the ID if the room you're trying to join. Both of these parameters are without the brackets
+(`<>`) around them.
 
 If the call succeeds, you'll get a JSON form in either a string format, or a JSON object variant, depending on your
 framework. From there, get/parse the value `time` key.
 
 Pseudo-code:
+
 ```
 String time = post(CHAT_DOMAIN + "/chats/<room number>/events", cookies, PostData { "fkey": fkey }).getJsonObject("time").toString();
 ```
@@ -342,12 +353,12 @@ For this documentation we will use room 1 for examples so:
 
 The most simple one containing no events looks like this:
 
-```{"r1" : {}}```
+`{"r1" : {}}`
 
 When there is no traffic there maybe an event like this:
 
 ```json
- {
+{
   "r1": {
     "t": 23531002,
     "d": 3
@@ -357,7 +368,14 @@ When there is no traffic there maybe an event like this:
 
 Currently what these values mean are unkown however Zorak speculates
 
-> Again, I have no clue what these mean. I think `d` is short for `delta`, and maybe `t` is a form of internal timestamp or counter or...I don't know. However, remember this `t` value for when we discuss polling - it is used there. It does however seem to be related to how many messages were sent which are not in this room - so if you're listening to room 17, and someone posted a mesage on room 42 then you'd get a `d` of 1, and the `t` value may be updated by 1. Or maybe not. The `t` values don't seem to be consistently increasing, or decreasing, or following any pattern I could recognise.
+> Again, I have no clue what these mean. I think `d` is short for `delta`, and
+> maybe `t` is a form of internal timestamp or counter or...I don't know.
+> However, remember this `t` value for when we discuss polling - it is used
+> there. It does however seem to be related to how many messages were sent which
+> are not in this room - so if you're listening to room 17, and someone posted a
+> mesage on room 42 then you'd get a `d` of 1, and the `t` value may be updated
+> by 1. Or maybe not. The `t` values don't seem to be consistently increasing,
+> or decreasing, or following any pattern I could recognise.
 
 ### Events We Care About
 
@@ -415,33 +433,33 @@ The event type is determined by the `event_type` property in the `e` property.
 
 We don't know all event types but here are some of them. Please add as you find
 
-| `event_type`  | Description   |
-| ------------- | ------------- |
-| 1  | New Message  |
-| 2  | Edit  |
-| 3  | User Join |
-| 4  | User Leave  |
-| 5  | Room name, description, or tag changes |
-| 6  | Message starred or unstarred |
-| 7  | Debug message. The significance and usage of this is unknown. |
-| 8  | Message directed at the user currently logged in. For example, `@JamesBot` |
-| 9  | Message flagged as spam or offensive - possibly only receivable by accounts with 10000 reputation |
-| 10 | Message deleted |
-| 11 | File added. A source says this is limited to one room - the Android SE testing app room |
-| 12 | Moderator flag - like event 9, this is likely only receivable by moderator accounts |
-| 13 | User ignored or unignored |
-| 14 | Global notification - notifications displayed as banners, excluding room invitations. Example: Room event |
-| 15 | User access level changed. Access levels can be seen in `<chat domain>/rooms/info/<room id>/?tab=access` |
-| 16 | User notification. The exact trigger is somewhat unclear, but it behaves the same way as event 14 in a browser |
-| 17 | Room invitation |
-| 18 | Triggered when someone replies to a message posted by the active account | 
-| 19 | Message moved out of the room by a room owner or moderator |
-| 20 | Message moved in to the room by a room owner or moderator | 
-| 21 | Time break. Unclear usage in several sources |
-| 22 | New items added to a feed ticker | 
-| 29 | A user has been suspended |
-| 30 | Two accounts have been merged | 
-| 34 | User name or avatar changed in chat |
+| `event_type` | Description                                                                                                    |
+| ------------ | -------------------------------------------------------------------------------------------------------------- |
+| 1            | New Message                                                                                                    |
+| 2            | Edit                                                                                                           |
+| 3            | User Join                                                                                                      |
+| 4            | User Leave                                                                                                     |
+| 5            | Room name, description, or tag changes                                                                         |
+| 6            | Message starred or unstarred                                                                                   |
+| 7            | Debug message. The significance and usage of this is unknown.                                                  |
+| 8            | Message directed at the user currently logged in. For example, `@JamesBot`                                     |
+| 9            | Message flagged as spam or offensive - possibly only receivable by accounts with 10000 reputation              |
+| 10           | Message deleted                                                                                                |
+| 11           | File added. A source says this is limited to one room - the Android SE testing app room                        |
+| 12           | Moderator flag - like event 9, this is likely only receivable by moderator accounts                            |
+| 13           | User ignored or unignored                                                                                      |
+| 14           | Global notification - notifications displayed as banners, excluding room invitations. Example: Room event      |
+| 15           | User access level changed. Access levels can be seen in `<chat domain>/rooms/info/<room id>/?tab=access`       |
+| 16           | User notification. The exact trigger is somewhat unclear, but it behaves the same way as event 14 in a browser |
+| 17           | Room invitation                                                                                                |
+| 18           | Triggered when someone replies to a message posted by the active account                                       |
+| 19           | Message moved out of the room by a room owner or moderator                                                     |
+| 20           | Message moved in to the room by a room owner or moderator                                                      |
+| 21           | Time break. Unclear usage in several sources                                                                   |
+| 22           | New items added to a feed ticker                                                                               |
+| 29           | A user has been suspended                                                                                      |
+| 30           | Two accounts have been merged                                                                                  |
+| 34           | User name or avatar changed in chat                                                                            |
 
 ## Image Event
 
@@ -495,7 +513,8 @@ Room 23:
 Sending messages, for whatever, reason doesn't use the WebSocket, instead its a simple HTTP request with, you guessed
 it, the `fkey`.
 
-To send, make a POST request to `chatURL + '/chats/[room num]/messages/new'` with the following parameters
+To send, make a POST request to `chatURL + '/chats/[room num]/messages/new'`
+with the following parameters
 
 - `text=[content]`
 - `fkey=[fkey]`
@@ -508,22 +527,22 @@ const body = await request({
   uri: `${this.chatURL}/chats/${roomNum}/messages/new`,
   jar: this.cookieJar,
   form: {
-    text: "Hello",
-    fkey: this.fkey
+    text: 'Hello',
+    fkey: this.fkey,
   },
 });
 ```
 
 The Response will be one of the following:
 
-| Response  | Description   |
-| ------------- | ------------- |
-| `{"id":11832651,"time":1379406464}` | Successful  |
-| `{"id":null,"time":null}` | If you send to many of the same messages consecutively, it won't send and you will get this message. |
-| `You can perform this action again in X second(s)` | There's a throttle on how fast you can send message and you've reached it. Simply wait that amount of seconds and retry. We use the regex + code below for that. |
-| `You need 20 reputation points...` | I don't know the exact wording but its something like that. It means you need....well....20 reputation points on the main site. Just answer a question and get upvoted. If you can't get 20 rep points on the main site than you probably shouldn't have a bot in the chat site.|
-| `The room has been frozen; new messages cannot be added` |  After a certain amount of days of inactivity, a room will turn frozen. It can only be unfrozen by  a moderator of the parent site. A room is frozen if there were at least 15 messages by at least two users, but was otherwise inactive for 14 days. If the minimum users and messages criteria are not met, the room is deleted instead, after only 7 days. [Source](https://meta.stackexchange.com/a/208589/388758)|
-| `The room does not exist, or you do not have permission` | Contrary to what the message says this will only show up if you do not have permission. If the room does not exist you will receive and HTML error page |
+| Response                                                 | Description                                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{"id":11832651,"time":1379406464}`                      | Successful                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `{"id":null,"time":null}`                                | If you send to many of the same messages consecutively, it won't send and you will get this message.                                                                                                                                                                                                                                                                                                                  |
+| `You can perform this action again in X second(s)`       | There's a throttle on how fast you can send message and you've reached it. Simply wait that amount of seconds and retry. We use the regex + code below for that.                                                                                                                                                                                                                                                      |
+| `You need 20 reputation points...`                       | I don't know the exact wording but its something like that. It means you need....well....20 reputation points on the main site. Just answer a question and get upvoted. If you can't get 20 rep points on the main site than you probably shouldn't have a bot in the chat site.                                                                                                                                      |
+| `The room has been frozen; new messages cannot be added` | After a certain amount of days of inactivity, a room will turn frozen. It can only be unfrozen by a moderator of the parent site. A room is frozen if there were at least 15 messages by at least two users, but was otherwise inactive for 14 days. If the minimum users and messages criteria are not met, the room is deleted instead, after only 7 days. [Source](https://meta.stackexchange.com/a/208589/388758) |
+| `The room does not exist, or you do not have permission` | Contrary to what the message says this will only show up if you do not have permission. If the room does not exist you will receive and HTML error page                                                                                                                                                                                                                                                               |
 
 **Detect and Set Timeout for Throttle Sample Code**
 
@@ -542,10 +561,10 @@ const body = await request([...]).catch(error => { //request same as above, but 
 ## Editing Messages
 
 Editing messages needs to be done within two minutes of the message being posted, due to SE restrictions. Editing can be
-achieved by posting to `<chat domain>/messages/<message id>`, and posting with the fkey parameter and a parameter
-called `text` containing the new content. `<chat domain>` is again the chat site you want to handle (
-i.e. `https://chat.stackoverflow.com`, and `<message id>` is the ID of the message you want to edit. Both of these are
-naturally without brackets.
+achieved by posting to
+`<chat domain>/messages/<message id>`, and posting with the fkey parameter and a parameter called `text` containing the
+new content. `<chat domain>` is again the chat site you want to handle ( i.e. `https://chat.stackoverflow.com`, and
+`<message id>` is the ID of the message you want to edit. Both of these are naturally without brackets.
 
 You most also include a `Referer` header with the room number:
 
@@ -572,26 +591,25 @@ request({
   uri: `${this.chatURL}/messages/${id}`,
   jar: this.cookieJar,
   headers: {
-    referer: `${this.chatURL}/rooms/${roomNum}`
+    referer: `${this.chatURL}/rooms/${roomNum}`,
   },
   form: {
-    text: "This is where you add the new content of the message",
-    fkey: this.fkey
+    text: 'This is where you add the new content of the message',
+    fkey: this.fkey,
   },
-})
+});
 ```
 
 The Response will be one of the following:
 
-| Response  | Description   |
-| ------------- | ------------- |
-| `"ok"` | Successful  |
-| `"You can only edit your own messages"` | You tried to edit a message that wasn't yours. Check your message id. |
-| `"It is too late to edit this message"` | Message was too old to be edited. There's a 2 min limit. |
-| `302 Found: /error?aspxerrorpath=/messages/<meesage id>` | Some other error occurred you are redirected via http code 302 to an html error page. |
-| `"You cannot write or edit messages in this room"` | You probably forgot the referer with the correct room. |
-| `You can perform this action again in X second(s)` | There's a throttle on how fast you can edit message and you've reached it. Simply wait that amount of seconds and retry. |
-
+| Response                                                 | Description                                                                                                              |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `"ok"`                                                   | Successful                                                                                                               |
+| `"You can only edit your own messages"`                  | You tried to edit a message that wasn't yours. Check your message id.                                                    |
+| `"It is too late to edit this message"`                  | Message was too old to be edited. There's a 2 min limit.                                                                 |
+| `302 Found: /error?aspxerrorpath=/messages/<meesage id>` | Some other error occurred you are redirected via http code 302 to an html error page.                                    |
+| `"You cannot write or edit messages in this room"`       | You probably forgot the referer with the correct room.                                                                   |
+| `You can perform this action again in X second(s)`       | There's a throttle on how fast you can edit message and you've reached it. Simply wait that amount of seconds and retry. |
 
 ## Deleting messages
 
@@ -604,7 +622,8 @@ The endpoint used here is `<chat host>/messages/<message id>/delete`, again post
 
 In order to move a message, the user must be a room owner.
 
-To move a message make a POST request to `/admin/movePosts/<room message is from>'` with the following parameters
+To move a message make a POST request to
+`/admin/movePosts/<room message is from>'` with the following parameters
 
 - fkey
 - to - Room id where you want to move the message to,
@@ -618,7 +637,7 @@ const body = await request({
   form: {
     fkey: fkey,
     to: 23262, // trash can https://chat.stackoverflow.com/rooms/23262/trash-can
-    ids: msg.id
+    ids: msg.id,
   },
 });
 ```
@@ -629,10 +648,12 @@ const body = await request({
 
 There is no easy way to go from Username to id because different accounts can have very similar or the same username.
 The method below isn't always reliable because of this. This alternate way only works if they are pingable. All users
-who are currently in the room or have been in the room in the last couple (//TODO name amount of days) are pingable.
+who are currently in the room or have been in the room in the last couple
+(//TODO name amount of days) are pingable.
 
 Make a `GET` request to `chatURL + '/rooms/pingable/ + roomNum`, with your login cookies. If you do not provide login
-cookies, you will receive an empty array (`[]`) response.
+cookies, you will receive an empty array
+(`[]`) response.
 
 ```javascript
 const body = await request({
@@ -640,7 +661,7 @@ const body = await request({
   uri: `${config.chatURL}/rooms/pingable/${this.roomNum}`,
   jar: this.cookieJar,
 });
-const array = JSON.parse(body).filter(a => a[1] === username);
+const array = JSON.parse(body).filter((a) => a[1] === username);
 if (array.length === 0) {
   return false;
 }
@@ -651,90 +672,20 @@ An example response looks like this:
 
 ```json
 [
-  [
-    6296561,
-    "Zoe",
-    1558822652,
-    1558800697
-  ],
-  [
-    13379,
-    "Michael",
-    1558906481,
-    1558904598
-  ],
-  [
-    5757162,
-    "Squirrel in training",
-    1558965412,
-    1558680106
-  ],
-  [
-    2450403,
-    "Simmant",
-    1559047768,
-    1533014425
-  ],
-  [
-    8708364,
-    "U9-Forward",
-    1559094174,
-    1559093204
-  ],
-  [
-    263525,
-    "Denys Séguret",
-    1559105899,
-    1436283747
-  ],
-  [
-    1983854,
-    "fedorqui",
-    1559125795,
-    1521635746
-  ],
-  [
-    4581014,
-    "Hans1984",
-    1559132212,
-    1559129497
-  ],
-  [
-    11555333,
-    "FunBot",
-    1559166271,
-    1559164314
-  ],
-  [
-    9717184,
-    "connectyourcharger",
-    1559167898,
-    1559165454
-  ],
-  [
-    1440565,
-    "Code-Apprentice",
-    1559171438,
-    1505930734
-  ],
-  [
-    10618540,
-    "Paritosh Singh",
-    1559225674,
-    1559202201
-  ],
-  [
-    2326753,
-    "C4d",
-    1559228511,
-    1559226579
-  ],
-  [
-    1114,
-    "User",
-    1559235942,
-    1527790955
-  ]
+  [6296561, "Zoe", 1558822652, 1558800697],
+  [13379, "Michael", 1558906481, 1558904598],
+  [5757162, "Squirrel in training", 1558965412, 1558680106],
+  [2450403, "Simmant", 1559047768, 1533014425],
+  [8708364, "U9-Forward", 1559094174, 1559093204],
+  [263525, "Denys Séguret", 1559105899, 1436283747],
+  [1983854, "fedorqui", 1559125795, 1521635746],
+  [4581014, "Hans1984", 1559132212, 1559129497],
+  [11555333, "FunBot", 1559166271, 1559164314],
+  [9717184, "connectyourcharger", 1559167898, 1559165454],
+  [1440565, "Code-Apprentice", 1559171438, 1505930734],
+  [10618540, "Paritosh Singh", 1559225674, 1559202201],
+  [2326753, "C4d", 1559228511, 1559226579],
+  [1114, "User", 1559235942, 1527790955]
 ]
 ```
 
@@ -780,7 +731,7 @@ Response
 ```
 
 Each JavaScript object contains an `id` key with the users id, a `dn` key with the users Username, and a `hash` key
-containing a hash or URL for the users profile image. More information on the profile image in the *id to information*
+containing a hash or URL for the users profile image. More information on the profile image in the _id to information_
 section below.
 
 ### `limit` parameter
@@ -791,7 +742,8 @@ If `limit < 0` you will receive and HTML page with an error.
 
 If `limit === 0` you will receive and empty response.
 
-If `0 < limit <= 100` you will receive a response containing a maximum of `limit` users
+If `0 < limit <= 100` you will receive a response containing a maximum of
+`limit` users
 
 If `limit > 100` you will receive a response containing a maximum of 100 users
 
@@ -839,12 +791,12 @@ Here is a sample request and response
 Request:
 
 ```javascript
- const body = await request({
+const body = await request({
   method: 'POST',
   uri: `${this.chatURL}/user/info`,
   form: {
     ids: id,
-    roomId: roomNum
+    roomId: roomNum,
   },
 });
 return JSON.parse(body);
@@ -853,7 +805,6 @@ return JSON.parse(body);
 Response
 
 ```json
-
 {
   "users": [
     {
@@ -871,10 +822,11 @@ Response
 ```
 
 `is_moderator` is for the parent site of the chat. `is_owner` is for the room specified in roomId. `last_post` is the
-last time the user chatted in any room. `last_seen` is that last time the person interacted with the chat (sent
-message/joined a room/leaved a room, etc.). `email_hash` is a bit odd. Although it is labeled "email_hash" it will
-sometimes contain a URL to the users image with an `!` prepended in front of it. Other times, it will contain a hash.
-This hash seems to either be a [gravatar](https://gravatar.com) hash or not.
+last time the user chatted in any room.
+`last_seen` is that last time the person interacted with the chat (sent message/joined a room/leaved a room, etc.)
+. `email_hash` is a bit odd. Although it is labeled "email_hash" it will sometimes contain a URL to the users image with
+an `!` prepended in front of it. Other times, it will contain a hash. This hash seems to either be
+a [gravatar](https://gravatar.com) hash or not.
 
 // TODO specify all actions that affect the `last_seen` value and the email_hash more depth.
 
@@ -888,45 +840,65 @@ Make a request to
 chatURL` + `/users/[user ID]`
 ```
 
-You will receive and HTML response with a `<div>` element with an id of `#user-roomcards-container`. This div contains
-all the rooms the user is currently in. Each room card will have an id of `room-[room number]`. An example card
-for `#room-1` looks like the following. I have excluded unhelpful HTML:
+You will receive and HTML response with a `<div>` element with an id of
+`#user-roomcards-container`. This div contains all the rooms the user is currently in. Each room card will have an id
+of `room-[room number]`. An example card for `#room-1` looks like the following. I have excluded unhelpful HTML:
 
 ```html
-
 <div id="room-1" class="roomcard">
   <div class="room-header">
     [...]
     <h3>
-      <span class="room-name" title="Sandbox"><a rel="noreferrer noopener" href="/rooms/1/sandbox">Sandbox</a></span>
+      <span class="room-name" title="Sandbox"
+        ><a rel="noreferrer noopener" href="/rooms/1/sandbox">Sandbox</a></span
+      >
     </h3>
     [...]
-    <div class="room-description"
-         title="Where you can play with regular chat features (except flagging) without upsetting anyone">Where you can
-      play with regular chat features (except flagging) wit…
+    <div
+      class="room-description"
+      title="Where you can play with regular chat features (except flagging) without upsetting anyone"
+    >
+      Where you can play with regular chat features (except flagging) wit…
     </div>
     [...]
   </div>
   <div class="room-details">
     [...]
-    <div class="last-activity">1h ago – <a href="/users/11518920/jamesbot" title="JamesBot">JamesBot</a></div>
+    <div class="last-activity">
+      1h ago – <a href="/users/11518920/jamesbot" title="JamesBot">JamesBot</a>
+    </div>
   </div>
-  <div class="room-users" title="9 users present"><!-- 
-                    --><a class="user-gravatar32" href="/users/11518920/jamesbot"><img height="32" width="32"
-                                                                                       alt="JamesBot: 1h ago, 18 posts (0%)"
-                                                                                       title="JamesBot: 1h ago, 18 posts (0%)"
-                                                                                       src="https://i.stack.imgur.com/DHbov.png?s=32&amp;g=1"
-                                                                                       style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);"></a><!--
-                    --><a class="user-gravatar32" href="/users/7886229/jbis"><img height="32" width="32"
-                                                                                  alt="JBis: 2d ago, 159 posts (0%)"
-                                                                                  title="JBis: 2d ago, 159 posts (0%)"
-                                                                                  src="https://i.stack.imgur.com/8kBbg.png?s=32&amp;g=1"
-                                                                                  style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);"></a><!--
-                    --><a class="user-gravatar32" href="/users/5858238/nyconing"><img height="32" width="32"
-                                                                                      alt="nyconing: 3d ago, 68 posts (0%)"
-                                                                                      title="nyconing: 3d ago, 68 posts (0%)"
-                                                                                      src="https://i.stack.imgur.com/E1Dug.jpg?s=32&amp;g=1"
-                                                                                      style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);"></a><!--
+  <div class="room-users" title="9 users present">
+    <!-- 
+                    --><a
+      class="user-gravatar32"
+      href="/users/11518920/jamesbot"
+      ><img
+        height="32"
+        width="32"
+        alt="JamesBot: 1h ago, 18 posts (0%)"
+        title="JamesBot: 1h ago, 18 posts (0%)"
+        src="https://i.stack.imgur.com/DHbov.png?s=32&amp;g=1"
+        style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);" /></a
+    ><!--
+                    --><a class="user-gravatar32" href="/users/7886229/jbis"
+      ><img
+        height="32"
+        width="32"
+        alt="JBis: 2d ago, 159 posts (0%)"
+        title="JBis: 2d ago, 159 posts (0%)"
+        src="https://i.stack.imgur.com/8kBbg.png?s=32&amp;g=1"
+        style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);" /></a
+    ><!--
+                    --><a class="user-gravatar32" href="/users/5858238/nyconing"
+      ><img
+        height="32"
+        width="32"
+        alt="nyconing: 3d ago, 68 posts (0%)"
+        title="nyconing: 3d ago, 68 posts (0%)"
+        src="https://i.stack.imgur.com/E1Dug.jpg?s=32&amp;g=1"
+        style="opacity:0.15;-moz-opacity:0.15;filter:alpha(opacity=15);" /></a
+    ><!--
                     -->[..rest of the users...]
   </div>
 
@@ -936,16 +908,18 @@ for `#room-1` looks like the following. I have excluded unhelpful HTML:
   <div class="room-info-link">
     <a href="/rooms/info/1/sandbox">info</a>
     [...]
+  </div>
+</div>
 ```
 
 As you can see there's a lot of info there. What we care about is:
 
- ```html
+```html
+<div class="room-message-count" title="159 all time messages (by JBis)"></div>
+```
 
-<div class="room-message-count" title="159 all time messages (by JBis)">
- ```
-
-To check total messages, get the `title` attribute for the `.room-message-count` element:
+To check total messages, get the `title` attribute for the `.room-message-count`
+element:
 
 ```text
 159 all time messages (by JBis)
@@ -961,7 +935,8 @@ If this number is 0, the user has not chatted yet.
 
 ## Room Name and Description
 
-To get the room name and description simply make a request to `chatURL + '/rooms/thumbs/[room num]`.
+To get the room name and description simply make a request to
+`chatURL + '/rooms/thumbs/[room num]`.
 
 You will get a JSON response like this:
 
@@ -981,28 +956,28 @@ isFavorite
 **Note:** Description and tags will be in HTML.
 
 ```js
- const body = await request({
+const body = await request({
   method: 'GET',
-  uri: `${this.chatURL}/rooms/thumbs/${roomNum}`
+  uri: `${this.chatURL}/rooms/thumbs/${roomNum}`,
 });
 return JSON.parse(body);
 ```
-
 
 # Chat Rooms
 
 ## Room Types
 
-| Type | Description | Icon |
-|-----|---------------|-----|
-| Public | anyone may enter and talk | N/A|
-| Gallery | anyone may enter, but only approved users can talk | |
-| Private | only approved users may enter this room (this should only be used for moderation purposes) | |
+| Type    | Description                                                                                | Icon |
+| ------- | ------------------------------------------------------------------------------------------ | ---- |
+| Public  | anyone may enter and talk                                                                  | N/A  |
+| Gallery | anyone may enter, but only approved users can talk                                         |      |
+| Private | only approved users may enter this room (this should only be used for moderation purposes) |      |
 
 ## Gallery
 
-Gallery rooms, such as the [Android room](https://chat.stackoverflow.com/rooms/15/android) require users to "request"
-access before they can talk.
+Gallery rooms, such as the
+[Android room](https://chat.stackoverflow.com/rooms/15/android) require users to
+"request" access before they can talk.
 
 A request access `request` will look like:
 
@@ -1012,12 +987,12 @@ const body = await request({
   uri: `${this.chatURL}/rooms/requestaccess`,
   form: {
     roomId: this.roomNum,
-    fkey: this.fkey
+    fkey: this.fkey,
   },
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Origin': this.chatURL,
-  }
+    Origin: this.chatURL,
+  },
 });
 return JSON.parse(body);
 ```

@@ -1,26 +1,26 @@
-import { PluginFunction } from "@chatbot/bot";
+import { PluginFunction } from '@chatbot/bot';
 
 export const STOP: PluginFunction = (bot) => {
-  const hammers = {
-    STOP: "HAMMERTIME!",
-    STAHP: "HAMMAHTIME!",
-    HALT: "HAMMERZEIT!",
-    STOY: "ZABIVAT' VREMYA!",
-    SISTITE: "MALLEUS TEMPUS!"
-  };
-  const re = new RegExp(
-    "([\\s.]+|^)(" +
-    Object.keys(hammers).map(escape).join("|") +
-    ")[\\.!?]?$"
-  );
-  bot.RegisterHandler((msg, client) => {
-    const sentence = msg.info.content.toUpperCase(),
-      res = re.exec(sentence);
+    const hammers = {
+        STOP: 'HAMMERTIME!',
+        STAHP: 'HAMMAHTIME!',
+        HALT: 'HAMMERZEIT!',
+        STOY: "ZABIVAT' VREMYA!",
+        SISTITE: 'MALLEUS TEMPUS!',
+    };
+    const re = new RegExp(
+        '([\\s.]+|^)(' +
+            Object.keys(hammers).map(escape).join('|') +
+            ')[\\.!?]?$'
+    );
+    bot.RegisterHandler((msg, client) => {
+        const sentence = msg.info.content.toUpperCase(),
+            res = re.exec(sentence);
 
-    if (res) {
-      client.send(hammers[res[2] as keyof typeof hammers], msg);
-    }
-  });
+        if (res) {
+            client.send(hammers[res[2] as keyof typeof hammers], msg);
+        }
+    });
 };
 
 // takes a string and escapes any special regexp characters

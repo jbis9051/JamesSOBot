@@ -1,13 +1,13 @@
 {
-  "name": "@chatbot/discord",
-  "version": "0.0.0",
-  "scripts": {
-    "build": "tsc"
-  },
-  "dependencies": {
-    "@chatbot/bot": "^0.0.0"
-  },
-  "devDependencies": {
-    "typescript": "^3.9.7"
-  }
+    "name": "@chatbot/discord",
+    "version": "0.0.0",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@chatbot/bot": "^0.0.0"
+    },
+    "devDependencies": {
+        "typescript": "^3.9.7"
+    }
 }
