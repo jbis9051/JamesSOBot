@@ -1,27 +1,27 @@
 {
-    "name": "@chatbot/so",
-    "version": "0.0.0",
-    "scripts": {
-        "start": "build/src/app.js",
-        "build": "tsc",
-        "dev": "TS_NODE_FILES=true NODE_ENV=development ts-node-dev --files src/app.ts"
-    },
-    "dependencies": {
-        "@chatbot/bot": "^0.0.0",
-        "@chatbot/plugins": "^0.0.0",
-        "cheerio": "^1.0.0-rc.3",
-        "fetch-cookie": "^0.10.1",
-        "fs-extra": "^9.0.1",
-        "tough-cookie": "^4.0.0",
-        "ws": "^7.3.1"
-    },
-    "devDependencies": {
-        "@types/cheerio": "^0.22.21",
-        "@types/fs-extra": "^9.0.1",
-        "@types/node-fetch": "^2.5.7",
-        "@types/tough-cookie": "^4.0.0",
-        "@types/ws": "^7.2.6",
-        "ts-node-dev": "^1.0.0-pre.58",
-        "typescript": "^3.9.7"
-    }
+  "name": "@chatbot/so",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "build/src/app.js",
+    "build": "tsc",
+    "dev": "TS_NODE_FILES=true NODE_ENV=development ts-node-dev --files src/app.ts"
+  },
+  "dependencies": {
+    "@chatbot/bot": "^0.0.0",
+    "@chatbot/plugins": "^0.0.0",
+    "cheerio": "^1.0.0-rc.3",
+    "fetch-cookie": "^0.10.1",
+    "fs-extra": "^9.0.1",
+    "tough-cookie": "^4.0.0",
+    "ws": "^7.3.1"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.21",
+    "@types/fs-extra": "^9.0.1",
+    "@types/node-fetch": "^2.5.7",
+    "@types/tough-cookie": "^4.0.0",
+    "@types/ws": "^7.2.6",
+    "ts-node-dev": "^1.0.0-pre.58",
+    "typescript": "^3.9.7"
+  }
 }

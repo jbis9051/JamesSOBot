@@ -1,20 +1,20 @@
 {
-    "name": "@chatbot/slack",
-    "version": "0.0.0",
-    "scripts": {
-        "start": "build/src/app.js",
-        "build": "tsc",
-        "dev": "TS_NODE_FILES=true; ts-node-dev --files src/app.ts"
-    },
-    "dependencies": {
-        "@chatbot/bot": "^0.0.0",
-        "@chatbot/plugins": "^0.0.0",
-        "@slack/events-api": "^2.3.4",
-        "@slack/web-api": "^5.11.0",
-        "cheerio": "^1.0.0-rc.3"
-    },
-    "devDependencies": {
-        "ts-node-dev": "^1.0.0-pre.58",
-        "typescript": "^3.9.7"
-    }
+  "name": "@chatbot/slack",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "build/src/app.js",
+    "build": "tsc",
+    "dev": "TS_NODE_FILES=true; ts-node-dev --files src/app.ts"
+  },
+  "dependencies": {
+    "@chatbot/bot": "^0.0.0",
+    "@chatbot/plugins": "^0.0.0",
+    "@slack/events-api": "^2.3.4",
+    "@slack/web-api": "^5.11.0",
+    "cheerio": "^1.0.0-rc.3"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.0.0-pre.58",
+    "typescript": "^3.9.7"
+  }
 }
