@@ -9,7 +9,8 @@ import {Message} from "./models/Message";
 import {Client} from './Client';
 import {Config} from "./interfaces/Config";
 import {PermissionType} from "./interfaces/Permission";
-import {DataSaver} from "./DataSaver";
+import { DataSaver } from "./DataSaver";
+import * as process from "process";
 
 export class Bot extends events.EventEmitter {
     readonly saveFolder: string;
@@ -60,7 +61,9 @@ export class Bot extends events.EventEmitter {
     }
 
     async processMessage(msg: Message, client: Client) {
-        console.log(msg);
+        if (process.env.NODE_ENV === "development") {
+            console.log(msg.info.fromName + ": " + msg.info.rawContent);
+        }
         if (!this.validatorScripts.every(validatorScript => validatorScript.handler(msg, client))) {
             return;
         }
