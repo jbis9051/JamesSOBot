@@ -1,37 +1,34 @@
-import {PermissionType, PluginFunction} from "@chatbot/bot";
+import { PermissionType, PluginFunction } from '@chatbot/bot';
 
 let live = true;
 
 export const life: PluginFunction = (bot) => {
     bot.addCommand({
-        name: "disable",
+        name: 'disable',
         args: [],
-        description: "Disables the bot. Won't respond to messages until `|| enable` is ran by admin.",
-        shortcuts: [
-            "disable"
-        ],
-        examples: ["|| sudo disable"],
+        description:
+            "Disables the bot. Won't respond to messages until `|| enable` is ran by admin.",
+        shortcuts: ['disable'],
+        examples: ['|| sudo disable'],
         ignore: false,
-        permissions: ["admin", PermissionType.OWNER],
+        permissions: ['admin', PermissionType.OWNER],
         cb: (msg, client) => {
             if (!msg.sudo) {
-                client.send("Try `sudo`", msg);
+                client.send('Try `sudo`', msg);
                 return;
             }
-            client.send("Shut Down", msg);
+            client.send('Shut Down', msg);
             live = false;
         },
     });
     bot.addCommand({
-        name: "enable",
+        name: 'enable',
         args: [],
-        description: "Enables the bot.",
-        shortcuts: [
-            "enable"
-        ],
-        examples: ["|| enable"],
+        description: 'Enables the bot.',
+        shortcuts: ['enable'],
+        examples: ['|| enable'],
         ignore: false,
-        permissions: ["admin", PermissionType.OWNER],
+        permissions: ['admin', PermissionType.OWNER],
         cb: (msg, client) => {
             if (live) {
                 client.send("I'm already alive...", msg);
@@ -41,7 +38,5 @@ export const life: PluginFunction = (bot) => {
             }
         },
     });
-    bot.RegisterValidator("life", (msg) => {
-        return live || msg.info.content === "|| enable";
-    });
+    bot.RegisterValidator('life', (msg) => live || msg.info.content === '|| enable');
 };

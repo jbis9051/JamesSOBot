@@ -1,22 +1,20 @@
-import {PermissionType, PluginFunction} from "@chatbot/bot";
+import { PermissionType, PluginFunction } from '@chatbot/bot';
 
 let live = true;
 let lastTimeout: NodeJS.Timeout | null = null;
 
 export const timeout: PluginFunction = (bot) => {
     bot.addCommand({
-        name: "timeout",
+        name: 'timeout',
         args: [],
-        description: "Disables the bot for 30 sec.",
-        shortcuts: [
-            "timeout"
-        ],
-        examples: ["|| sudo timeout"],
+        description: 'Disables the bot for 30 sec.',
+        shortcuts: ['timeout'],
+        examples: ['|| sudo timeout'],
         ignore: false,
-        permissions: ["admin", PermissionType.OWNER],
+        permissions: ['admin', PermissionType.OWNER],
         cb: (msg, client) => {
             if (!msg.sudo) {
-                client.send("Try `sudo`", msg);
+                client.send('Try `sudo`', msg);
                 return;
             }
             client.send(`STOP ABUSING ME! I AM SHUTTING DOWN FOR 30 SEC`, msg);
@@ -30,7 +28,5 @@ export const timeout: PluginFunction = (bot) => {
             }, 30000);
         },
     });
-    bot.RegisterValidator("life", (msg) => {
-        return live;
-    });
-}
+    bot.RegisterValidator('life', (msg) => live);
+};

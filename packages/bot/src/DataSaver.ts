@@ -2,6 +2,7 @@ import * as fse from 'fs-extra';
 
 export class DataSaver {
     private readonly data: { [key: string]: any };
+
     private readonly path: fse.PathLike;
 
     constructor(path: fse.PathLike, init: { [key: string]: any }) {
