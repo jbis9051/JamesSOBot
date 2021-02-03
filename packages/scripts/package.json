@@ -2,14 +2,15 @@
   "name": "@chatbot/scripts",
   "version": "0.0.0",
   "scripts": {
-    "start": "",
-    "run-doc": "ts-node docgen.ts",
+    "dev": "ts-node docgen.ts",
     "build": "tsc docgen.ts"
   },
   "main": "build/index.js",
   "dependencies": {
     "@chatbot/bot": "^0.0.0",
-    "@chatbot/plugins": "^0.0.0",
+    "@chatbot/plugins": "^0.0.0"
+  },
+  "devDependencies": {
     "ts-node": "^9.0.0",
     "typescript": "^3.9.7"
   }

@@ -2,12 +2,12 @@
   "name": "@chatbot/discord",
   "version": "0.0.0",
   "scripts": {
-    "start": "tsc -w",
     "build": "tsc"
   },
-  "main": "build/index.js",
   "dependencies": {
-    "@chatbot/bot": "^0.0.0",
+    "@chatbot/bot": "^0.0.0"
+  },
+  "devDependencies": {
     "typescript": "^3.9.7"
   }
 }

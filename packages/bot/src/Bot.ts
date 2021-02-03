@@ -60,6 +60,7 @@ export class Bot extends events.EventEmitter {
     }
 
     async processMessage(msg: Message, client: Client) {
+        console.log(msg);
         if (!this.validatorScripts.every(validatorScript => validatorScript.handler(msg, client))) {
             return;
         }
@@ -154,11 +155,11 @@ export class Bot extends events.EventEmitter {
     /**
      * Allows you to retrieve data from Google Search
      */
-    async google_search(query: string, site: string | undefined, selector: (($: CheerioStatic) => string) | undefined, selectorMatch: RegExp) {
+    async google_search(query: string, site: string | undefined, selector: (($: cheerio.Root) => string) | undefined, selectorMatch: RegExp) {
         /* if anyone wants to pay for API keys, feel free */
-        const url = 'https://www.google.com/search?q=' + encodeURIComponent(query) + ((site) ? "%20site:" + site : "");
+        const url = "https://www.google.com/search?q=" + encodeURIComponent(query) + ((site) ? "%20site:" + site : "");
         const body = await fetch(url, {
-            headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:10.0) Gecko/20100101 Firefox/12.0'}
+            headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:10.0) Gecko/20100101 Firefox/12.0" }
         }).then(resp => resp.text());
 
         try {
