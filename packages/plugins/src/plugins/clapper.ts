@@ -23,22 +23,22 @@ export const clapper: PluginFunction = (bot) => {
     function getMember(msg: Message, client: Client & any) {
         if (!channelInfo[msg.info.contextId]) {
             client.send('This channel is not managed by clap.', msg);
-            return;
+            return undefined;
         }
         if (!msg.args[0]) {
             client.send('Please supply a user.', msg);
-            return;
+            return undefined;
         }
         const memberMatch =
             msg.args[0].match(/<@(.*)>/) && msg.args[0].match(/<@(.*)>/)!;
         if (!memberMatch) {
             client.send('Invalid user.', msg);
-            return;
+            return undefined;
         }
         const member = memberMatch[1];
         if (client.id === member) {
             client.send(`Can't add myself.`, msg);
-            return;
+            return undefined;
         }
         return member;
     }
@@ -50,7 +50,7 @@ export const clapper: PluginFunction = (bot) => {
                 client.send('User has been removed.', channel);
             })
             .catch((res: any) => {
-                client.send(`Kick Error: ${  res.data.error}`, channel);
+                client.send(`Kick Error: ${res.data.error}`, channel);
             });
     }
 
@@ -109,7 +109,6 @@ export const clapper: PluginFunction = (bot) => {
                 return;
             }
             client.send(`This channel is not managed by clap.`, msg);
-            
         },
     });
 
@@ -160,7 +159,7 @@ export const clapper: PluginFunction = (bot) => {
                     client.send('User has been added.', msg);
                 })
                 .catch((res: any) => {
-                    client.send(`Add Error: ${  res.data.error}`, msg);
+                    client.send(`Add Error: ${res.data.error}`, msg);
                 });
         },
     });
@@ -190,7 +189,7 @@ export const clapper: PluginFunction = (bot) => {
             client.send('Removing and kicking...', msg);
             channelInfo[msg.info.contextId].members = channelInfo[
                 msg.info.contextId
-            ].members.filter((mem) => mem != member);
+            ].members.filter((mem) => mem !== member);
             saveData();
             kickMember(client, msg.info.contextId, member);
         },

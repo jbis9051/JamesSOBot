@@ -1,7 +1,7 @@
 module.exports = function () {
     // security reasons, we don't want it in the global context
-    let done = _done;
-    let atob = _atob;
+    const done = _done;
+    const atob = _atob;
     _done = undefined;
     _atob = undefined;
 
@@ -13,7 +13,7 @@ module.exports = function () {
         return atob.apply(undefined, args, { result: { copy: true } });
     };
 
-    /* most extra functions could be possibly unsafe*/
+    /* most extra functions could be possibly unsafe */
     const whitey = {
         Array: 1,
         Boolean: 1,
@@ -69,9 +69,9 @@ module.exports = function () {
     function clearObj(obj, prop) {
         try {
             Object.defineProperty(obj, prop, {
-                get: function () {
+                get() {
                     /* TEE HEE */
-                    throw new ReferenceError(prop + ' is not defined');
+                    throw new ReferenceError(`${prop} is not defined`);
                 },
                 configurable: false,
                 enumerable: false,
@@ -85,8 +85,8 @@ module.exports = function () {
         }
     }
 
-    [Object.getPrototypeOf(global)].forEach(function (obj) {
-        Object.getOwnPropertyNames(obj).forEach(function (prop) {
+    [Object.getPrototypeOf(global)].forEach((obj) => {
+        Object.getOwnPropertyNames(obj).forEach((prop) => {
             if (whitey.hasOwnProperty(prop) || prop === 'hasOwnProperty') {
                 return;
             }
@@ -97,7 +97,7 @@ module.exports = function () {
     // https://github.com/laverdet/isolated-vm/issues/107
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
     Object.defineProperty(Array.prototype, 'fill', {
-        value: function (value) {
+        value(value) {
             if (value > 10000) {
                 throw new Error('Array size to being. Ran out of memory.');
             }
@@ -107,27 +107,27 @@ module.exports = function () {
                 throw new TypeError('this is null or not defined');
             }
 
-            var O = Object(this);
+            const O = Object(this);
 
             // Steps 3-5.
-            var len = O.length >>> 0;
+            const len = O.length >>> 0;
 
             // Steps 6-7.
-            var start = arguments[1];
-            var relativeStart = start >> 0;
+            const start = arguments[1];
+            const relativeStart = start >> 0;
 
             // Step 8.
-            var k =
+            let k =
                 relativeStart < 0
                     ? Math.max(len + relativeStart, 0)
                     : Math.min(relativeStart, len);
 
             // Steps 9-10.
-            var end = arguments[2];
-            var relativeEnd = end === undefined ? len : end >> 0;
+            const end = arguments[2];
+            const relativeEnd = end === undefined ? len : end >> 0;
 
             // Step 11.
-            var final =
+            const final =
                 relativeEnd < 0
                     ? Math.max(len + relativeEnd, 0)
                     : Math.min(relativeEnd, len);
@@ -145,7 +145,7 @@ module.exports = function () {
 
     const console = {
         _items: [],
-        log: function () {
+        log() {
             console._items.push.apply(
                 console._items,
                 Array.from(arguments).map((e) => JSON.stringify(e))

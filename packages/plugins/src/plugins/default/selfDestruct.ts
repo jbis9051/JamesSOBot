@@ -28,7 +28,7 @@ export const selfDestruct: PluginFunction = (bot) => {
                     'My life has come to end. I hope to be revived soon.',
                     msg
                 )
-                .then((_) => {
+                .then(() => {
                     bot.shutdown(msg, client);
                 });
         },

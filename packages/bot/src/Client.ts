@@ -41,7 +41,7 @@ export abstract class Client extends events.EventEmitter {
     abstract getPingString(msg: Message): string;
 
     escape(content: string) {
-        return content.replace(/([`\*_\(\)\[\]])/g, '\\$1');
+        return content.replace(/([`*_()[\]])/g, '\\$1');
     }
 
     link(text: string, url: string): string {
@@ -50,15 +50,13 @@ export abstract class Client extends events.EventEmitter {
 
     codify(content: string): string {
         const tab = '    ';
-            const spacified = content.replace('\t', tab);
-            const lines = spacified.split(/[\r\n]/g);
+        const spacified = content.replace('\t', tab);
+        const lines = spacified.split(/[\r\n]/g);
 
         if (lines.length === 1) {
-            return `\`${  lines[0]  }\``;
+            return `\`${lines[0]}\``;
         }
 
-        return lines
-            .map((line) => tab + line)
-            .join('\n');
+        return lines.map((line) => tab + line).join('\n');
     }
 }

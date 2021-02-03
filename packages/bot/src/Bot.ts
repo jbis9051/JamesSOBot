@@ -11,6 +11,7 @@ import { Client } from './Client';
 import { Config } from './interfaces/Config';
 import { PermissionType } from './interfaces/Permission';
 import { DataSaver } from './DataSaver';
+import { ClientFunction } from './interfaces/ClientFunction';
 
 export class Bot extends events.EventEmitter {
     readonly saveFolder: string;
@@ -37,12 +38,12 @@ export class Bot extends events.EventEmitter {
 
     private readonly saveFile: string;
 
-    public readonly clientFunctions: Function[] = [];
+    public readonly clientFunctions: ClientFunction<any>[] = [];
 
     constructor(saveFolderName: string, config: Config) {
         super();
         if (!process.env.DATA_FOLDER) {
-            throw 'Data folder required';
+            throw new Error('Data folder required');
         }
         this.saveFolder = path.join(process.env.DATA_FOLDER, saveFolderName);
         this.saveFile = path.join(this.saveFolder, 'data.json');
@@ -113,9 +114,9 @@ export class Bot extends events.EventEmitter {
         );
     }
 
-    getCommand(msg: Message): Command | undefined {
+    getCommand(msg: Message) {
         if (!msg.commandCall) {
-            return;
+            return undefined;
         }
         const commandShortcutLowerCase = msg.commandCall.toLowerCase();
         return Object.values(this.commands).find((command) =>
@@ -131,7 +132,7 @@ export class Bot extends events.EventEmitter {
         );
     }
 
-    RegisterClientFunction(func: Function) {
+    RegisterClientFunction<T extends Client>(func: ClientFunction<T>) {
         this.clientFunctions.push(func);
     }
 
@@ -159,7 +160,7 @@ export class Bot extends events.EventEmitter {
                 }
             }) ||
             (command.permissions.includes(PermissionType.OWNER) &&
-                (await client.isRoomOwnerId(msg.info.fromId, msg)))
+                client.isRoomOwnerId(msg.info.fromId, msg))
         );
     }
 

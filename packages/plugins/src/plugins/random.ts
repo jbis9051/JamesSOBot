@@ -20,8 +20,8 @@ export const random: PluginFunction = (bot) => {
                 client.send('**Invalid args. Must be two integers.**', msg);
                 return;
             }
-            const num1 = parseInt(msg.args[0]);
-            const num2 = parseInt(msg.args[1]);
+            const num1 = parseInt(msg.args[0], 10);
+            const num2 = parseInt(msg.args[1], 10);
             client.hardReply(
                 getRandomIntInclusive(
                     Math.min(num1, num2),
@@ -41,13 +41,17 @@ function getRandomArbitrary(min: number, max: number) {
 }
 
 function getRandomInt(min: number, max: number) {
+    // eslint-disable-next-line no-param-reassign
     min = Math.ceil(min);
+    // eslint-disable-next-line no-param-reassign
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
 }
 
 function getRandomIntInclusive(min: number, max: number) {
+    // eslint-disable-next-line no-param-reassign
     min = Math.ceil(min);
+    // eslint-disable-next-line no-param-reassign
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min; // The maximum is inclusive and the minimum is inclusive
 }

@@ -6,7 +6,7 @@ async function _run(code, msg) {
         msg.replyDirect(`Error running script: \`${val.result}\``);
         return;
     }
-    let logged = val.logged.join(', ');
+    const logged = val.logged.join(', ');
     msg.replyDirect(`\`${val.result}\` Logged: \`${val.logged}\``);
 }
 

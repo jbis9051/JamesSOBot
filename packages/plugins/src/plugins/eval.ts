@@ -1,7 +1,6 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
 import eval from './eval/index';
 
-
 export const evalPlugin: PluginFunction = (bot) => {
     bot.addCommand({
         name: 'eval',
@@ -25,15 +24,16 @@ export const evalPlugin: PluginFunction = (bot) => {
     function truncate(str: string | any) {
         if (typeof str === 'string' && str.length > 400) {
             return str.slice(0, 400);
-        } 
-            return str;
-        
+        }
+        return str;
     }
 
     async function _run(code: string) {
         if (/^\s*{/.test(code) && /}\s*$/.test(code)) {
-            code = `(${  code  })`;
+            // eslint-disable-next-line no-param-reassign
+            code = `(${code})`;
         }
+        // eslint-disable-next-line no-eval
         const val = await eval(code);
         val.result = truncate(val.result);
         if (val.error) {

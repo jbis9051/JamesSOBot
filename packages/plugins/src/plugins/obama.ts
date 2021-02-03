@@ -27,28 +27,27 @@ export const obama: PluginFunction = (bot) => {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `input_text=${  text}`,
+                    body: `input_text=${text}`,
                 }
             );
             const key = response.url.match(/speech_key=(.*)/)![1];
             if (await isReady(key)) {
                 return client.send(
-                    `http://talkobamato.me/synth/output/${  key  }/obama.mp4`,
+                    `http://talkobamato.me/synth/output/${key}/obama.mp4`,
                     msg
                 );
             }
             waitForReady(key, 1, (success) => {
                 if (success) {
                     client.send(
-                        `http://talkobamato.me/synth/output/${ 
-                            key 
-                            }/obama.mp4`,
+                        `http://talkobamato.me/synth/output/${key}/obama.mp4`,
                         msg
                     );
                 } else {
                     client.send('Obama Timed Out', msg);
                 }
             });
+            return undefined;
         },
     });
 };
@@ -66,12 +65,13 @@ function waitForReady(
             return callback(false);
         }
         waitForReady(key, amount + 1, callback);
+        return undefined;
     }, 10000);
 }
 
 async function isReady(key: string) {
     const response = await fetch(
-        `http://talkobamato.me/synth/output//${  key  }/video_created.txt`,
+        `http://talkobamato.me/synth/output//${key}/video_created.txt`,
         { method: 'HEAD' }
     );
     return response.status !== 404;

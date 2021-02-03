@@ -46,6 +46,7 @@ export default function (
         jail.setSync(
             '_done',
             new ivm.Reference((...args: any) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 sendData(...args);
             })
@@ -53,16 +54,19 @@ export default function (
 
         jail.setSync(
             '_atob',
-            new ivm.Reference((string: string) => Buffer.from(string, 'base64').toString())
+            new ivm.Reference((string: string) =>
+                Buffer.from(string, 'base64').toString()
+            )
         );
 
         // This will bootstrap the context. Prependeng 'new ' to a function is just a convenient way to
         // convert that function into a self-executing closure that is still syntax highlighted by
         // editors. It drives strict mode and linters crazy though.
 
+        // eslint-disable-next-line global-require,@typescript-eslint/no-var-requires
         const sandboxed_script = require('./sandboxed-script');
         const compiled_sandbox_script = isolate.compileScriptSync(
-            `new ${  sandboxed_script}`
+            `new ${sandboxed_script}`
         );
 
         compiled_sandbox_script.runSync(context);

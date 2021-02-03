@@ -14,7 +14,7 @@ export const stat: PluginFunction = (bot) => {
             if (msg.args.length === 0) {
                 id = msg.info.fromId;
             } else if (msg.args.length === 1 && /^\d+$/.test(msg.args[0])) {
-                id = parseInt(msg.args[0]);
+                id = parseInt(msg.args[0], 10);
             } else {
                 id = await client.usernameToId(msg.args.join(' '), msg);
                 if (!id) {

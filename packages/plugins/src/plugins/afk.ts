@@ -28,13 +28,13 @@ export const afk: PluginFunction = (bot: Bot) => {
         }
         const people_mentioned = msg.info.content.match(/@[^ ]+/g) || [];
         people_mentioned.forEach((person) => {
-            person = person.replace('@', '');
-            if (isAFK(person) && Date.now() - lastTell >= rateLimit) {
+            const personNoAt = person.replace('@', '');
+            if (isAFK(personNoAt) && Date.now() - lastTell >= rateLimit) {
                 client.hardReply(
-                    `${person  } is afk: ${  afk_data[person].msg}`,
+                    `${personNoAt} is afk: ${afk_data[personNoAt].msg}`,
                     msg
                 );
-                afk_data[person].lastPing = Date.now();
+                afk_data[personNoAt].lastPing = Date.now();
                 lastTell = Date.now();
                 bot.dataStore.setData('afk_data', afk_data);
             }
@@ -61,7 +61,7 @@ export const afk: PluginFunction = (bot: Bot) => {
                 msg: msg.args.join(' '),
             };
             bot.dataStore.setData('afk_data', afk_data);
-            client.hardReply(`bye ${  msg.info.fromName}`, msg);
+            client.hardReply(`bye ${msg.info.fromName}`, msg);
         },
     });
 };

@@ -22,7 +22,7 @@ export class SOClient extends Client {
 
     private cookieJar: any;
 
-    private _id = 0;
+    private id = 0;
 
     private api_site_param?: string;
 
@@ -51,7 +51,7 @@ export class SOClient extends Client {
     ) {
         super();
         if (!process.env.DATA_FOLDER) {
-            throw 'Data folder requried';
+            throw new Error('Data folder required');
         }
         this.siteURL = siteURL;
         this.chatURL = chatURL;
@@ -94,7 +94,7 @@ export class SOClient extends Client {
     }
 
     async mainSiteLogin() {
-        const resp = await this.fetch(`${this.siteURL  }/users/login`, {
+        const resp = await this.fetch(`${this.siteURL}/users/login`, {
             method: 'GET',
         });
         if (new URL(resp.url).pathname === '/') {
@@ -104,7 +104,7 @@ export class SOClient extends Client {
         const body = await resp.text();
         const $ = cheerio.load(body);
         const fkey = $('input[name="fkey"]').val();
-        await this.fetch(`${this.siteURL  }/users/login`, {
+        await this.fetch(`${this.siteURL}/users/login`, {
             method: 'POST',
             body: formEncoder({
                 fkey,
@@ -123,8 +123,9 @@ export class SOClient extends Client {
     async setUpWS() {
         this.fkey = await this.getFKEY(this.mainRoomNum);
         this.wsurl = await this.getWSURL(this.mainRoomNum);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const ws = new WebSocket(`${this.wsurl  }?l=99999999999`, null, {
+        const ws = new WebSocket(`${this.wsurl}?l=99999999999`, null, {
             headers: {
                 Origin: this.chatURL,
             },
@@ -133,16 +134,16 @@ export class SOClient extends Client {
             console.log('WS open');
         });
         ws.on('message', (data: any) => {
-            data = JSON.parse(data);
-            Object.keys(data).forEach((room) => {
-                const roomInt = parseInt(room.substring(1));
-                if (!data[`r${  roomInt}`].e) {
-                    return false;
+            const json = JSON.parse(data);
+            Object.keys(json).forEach((room) => {
+                const roomInt = parseInt(room.substring(1), 10);
+                if (!json[`r${roomInt}`].e) {
+                    return;
                 }
                 if (!this.roomNums.includes(roomInt)) {
-                    return false;
+                    return;
                 }
-                data[`r${  roomInt}`].e.forEach((event: any) => {
+                json[`r${roomInt}`].e.forEach((event: any) => {
                     this.events.emit(event.event_type.toString(), event);
                 });
             });
@@ -157,39 +158,38 @@ export class SOClient extends Client {
     }
 
     async setChatVars() {
-        // this._id = data.my_id;
-        const resp = await this.fetch(`${this.siteURL  }/users/current`, {
+        // this.id = data.my_id;
+        const resp = await this.fetch(`${this.siteURL}/users/current`, {
             method: 'GET',
         });
         const url = new URL(resp.url);
-        this._id = parseInt(
-            url.pathname.match(/(?<=\/users\/)[0-9]+(?=\/)/)![0]
+        this.id = parseInt(
+            url.pathname.match(/(?<=\/users\/)[0-9]+(?=\/)/)![0],
+            10
         );
         let sites = this.dataStore.getData('sites');
         if (!sites) {
-            const resp = await this.fetch(
+            const resp2 = await this.fetch(
                 'https://api.stackexchange.com/2.2/sites?pagesize=999999999',
                 {
                     method: 'GET',
                     // gzip: true,
                 }
             );
-            sites = JSON.parse(await resp.text());
+            sites = JSON.parse(await resp2.text());
             this.dataStore.setData('sites', sites);
         }
         const siteURLRegex = this.siteURL.replace(/http(s)?:\/\/(www\.)?/, '');
         this.api_site_param = sites.items.find(
-            (site: { aliases?: string[]; site_url: string }) => (
-                    (site.aliases &&
-                        site.aliases
-                            .map((siteURL) => siteURL.replace(
-                                    /http(s)?:\/\/(www\.)?/,
-                                    ''
-                                ))
-                            .includes(siteURLRegex)) ||
-                    site.site_url.replace(/http(s)?:\/\/(www\.)?/, '') ===
-                        siteURLRegex
-                )
+            (site: { aliases?: string[]; site_url: string }) =>
+                (site.aliases &&
+                    site.aliases
+                        .map((siteURL) =>
+                            siteURL.replace(/http(s)?:\/\/(www\.)?/, '')
+                        )
+                        .includes(siteURLRegex)) ||
+                site.site_url.replace(/http(s)?:\/\/(www\.)?/, '') ===
+                    siteURLRegex
         ).api_site_parameter;
     }
 
@@ -202,7 +202,7 @@ export class SOClient extends Client {
     }
 
     async getWSURL(roomNum: number) {
-        const resp = await this.fetch(`${this.chatURL  }/ws-auth`, {
+        const resp = await this.fetch(`${this.chatURL}/ws-auth`, {
             method: 'POST',
             body: formEncoder({
                 roomid: roomNum,
@@ -218,8 +218,9 @@ export class SOClient extends Client {
 
     async joinRoom(roomNum: number) {
         const wsurl = await this.getWSURL(roomNum);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const ws = new WebSocket(`${wsurl  }?l=99999999999`, null, {
+        const ws = new WebSocket(`${wsurl}?l=99999999999`, null, {
             headers: {
                 Origin: this.chatURL,
             },
@@ -246,7 +247,7 @@ export class SOClient extends Client {
     }
 
     isMyMessage(msg: Message): boolean {
-        return msg.info.fromId === this._id.toString();
+        return msg.info.fromId === this.id.toString();
     }
 
     async isRoomOwnerId(staticUID: string, context: Message): Promise<boolean> {
@@ -258,8 +259,8 @@ export class SOClient extends Client {
     send(content: string, context: string | Message): Promise<void> {
         const roomNum =
             typeof context === 'string' ? context : context.info.contextId;
-        return new Promise(async (resolve) => {
-            console.log(`Sending: ${  content}`);
+        return new Promise((resolve) => {
+            console.log(`Sending: ${content}`);
             this.fetch(`${this.chatURL}/chats/${roomNum}/messages/new`, {
                 method: 'POST',
                 body: formEncoder({
@@ -280,7 +281,7 @@ export class SOClient extends Client {
                 if (delay) {
                     setTimeout(async () => {
                         resolve(await this.send(content, roomNum));
-                    }, parseInt(delay[1]) * 1000 + 0.25);
+                    }, parseInt(delay[1], 10) * 1000 + 0.25);
                 } else {
                     resolve();
                 }
@@ -307,8 +308,8 @@ export class SOClient extends Client {
     }
 
     edit(content: string, context: Message): Promise<void> {
-        return new Promise(async (resolve) => {
-            console.log(`Sending: ${  content}`);
+        return new Promise((resolve) => {
+            console.log(`Sending: ${content}`);
             this.fetch(
                 `${this.chatURL}/messages/${context.info.appData.message_id}`,
                 {
@@ -333,7 +334,7 @@ export class SOClient extends Client {
                 if (delay) {
                     setTimeout(async () => {
                         resolve(await this.edit(content, context));
-                    }, parseInt(delay) * 1000 + 0.25);
+                    }, parseInt(delay, 10) * 1000 + 0.25);
                 } else {
                     resolve();
                 }
@@ -342,7 +343,7 @@ export class SOClient extends Client {
     }
 
     moveTo(message: Message, to: any): Promise<void> {
-        return new Promise(async (resolve) => {
+        return new Promise((resolve) => {
             this.fetch(
                 `${this.chatURL}/admin/movePosts/${message.info.contextId}`,
                 {
@@ -367,7 +368,7 @@ export class SOClient extends Client {
                 if (delay) {
                     setTimeout(async () => {
                         resolve(await this.moveTo(message, to));
-                    }, parseInt(delay) * 1000 + 0.25);
+                    }, parseInt(delay, 10) * 1000 + 0.25);
                 } else {
                     resolve();
                 }
@@ -387,13 +388,13 @@ export class SOClient extends Client {
                 a[1].toUpperCase() === username.replace('@', '').toUpperCase()
         );
         if (array.length === 0) {
-            return;
+            return undefined;
         }
         return array[0][0];
     }
 
     getPingString(msg: Message): string {
-        return `@${  msg.info.fromName.replace(/\s/g, '')}`;
+        return `@${msg.info.fromName.replace(/\s/g, '')}`;
     }
 
     /* Client Specific Methods */
@@ -405,9 +406,8 @@ export class SOClient extends Client {
         const body = await resp.json();
         if (resp.status !== 200 || !body.items) {
             return false;
-        } 
-            return body.items[0];
-        
+        }
+        return body.items[0];
     }
 
     async chatIDToSiteID(id: number) {
@@ -426,7 +426,8 @@ export class SOClient extends Client {
             return parseInt(
                 $(`#room-${roomNum} .room-message-count`)
                     .attr('title')!
-                    .match(/^\d+/)![0]
+                    .match(/^\d+/)![0],
+                10
             );
         } catch (e) {
             return false;
@@ -443,12 +444,15 @@ export class SOClient extends Client {
                 .find('div.usercard')
                 .map((i, e) => ({
                     username: $(e).find('.user-header').attr('title'),
-                    id: parseInt($(e).attr('id')!.replace('owner-user-', '')),
+                    id: parseInt(
+                        $(e).attr('id')!.replace('owner-user-', ''),
+                        10
+                    ),
                 }))
                 .get();
         } catch (e) {
             console.error(e);
-            throw 'Error finding owners';
+            throw new Error('Error finding owners');
         }
     }
 }

@@ -9,13 +9,11 @@ export const STOP: PluginFunction = (bot) => {
         SISTITE: 'MALLEUS TEMPUS!',
     };
     const re = new RegExp(
-        `([\\s.]+|^)(${ 
-            Object.keys(hammers).map(escape).join('|') 
-            })[\\.!?]?$`
+        `([\\s.]+|^)(${Object.keys(hammers).map(escape).join('|')})[\\.!?]?$`
     );
     bot.RegisterHandler((msg, client) => {
         const sentence = msg.info.content.toUpperCase();
-            const res = re.exec(sentence);
+        const res = re.exec(sentence);
 
         if (res) {
             client.send(hammers[res[2] as keyof typeof hammers], msg);
@@ -26,7 +24,7 @@ export const STOP: PluginFunction = (bot) => {
 // takes a string and escapes any special regexp characters
 function escape(str: string) {
     // do I smell irony?
-    return str.replace(/[-^$\\\/\.*+?()[\]{}|]/g, '\\$&');
+    return str.replace(/[-^$\\/.*+?()[\]{}|]/g, '\\$&');
     // using a character class to get away with escaping some things. the - in
     // the beginning doesn't denote a range because it only denotes one when
     // it's in the middle of a class, and the ^ doesn't mean negation because

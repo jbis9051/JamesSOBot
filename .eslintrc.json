@@ -40,6 +40,7 @@
                 "object": true
             }
         ],
+        "no-prototype-builtins": 1,
         "import/prefer-default-export": 1,
         "@typescript-eslint/no-non-null-assertion": 0,
         "@typescript-eslint/explicit-module-boundary-types": 0,

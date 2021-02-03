@@ -5,7 +5,7 @@ import { SlackEventAdapter } from '@slack/events-api/dist/adapter';
 import * as events from 'events';
 import { SlackMessage } from './interfaces/SlackMessage';
 
-const port = parseInt(process.env.PORT!) || 3000;
+const port = parseInt(process.env.PORT!, 10) || 3000;
 
 export class SlackClient extends Client {
     private token: string = process.env.SLACK_TOKEN!;
@@ -119,17 +119,15 @@ export class SlackClient extends Client {
         throw new Error('Method not implemented.');
     }
 
-    async usernameToId(
-        username: string,
-        context: Message
-    ): Promise<string | undefined> {
+    async usernameToId(username: string, context: Message) {
         const match = username.match(/<@([A-Z0-9]+)>/);
         if (match) {
             return match[1];
         }
+        return undefined;
     }
 
-    getPingString(msg: Message): string {
+    getPingString(msg: Message) {
         return `<@${msg.info.fromId}>`;
     }
 

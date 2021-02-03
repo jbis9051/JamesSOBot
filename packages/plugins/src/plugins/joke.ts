@@ -24,10 +24,10 @@ export const joke: PluginFunction = (bot) => {
                         client.send('Error getting Joke', msg);
                         return;
                     }
-                    const joke = json[0];
-                    client.send(joke.setup, msg);
+                    const theJoke = json[0];
+                    client.send(theJoke.setup, msg);
                     setTimeout(() => {
-                        client.send(joke.punchline, msg);
+                        client.send(theJoke.punchline, msg);
                     }, 2500);
                 });
         },

@@ -1,11 +1,4 @@
-import * as fs from 'fs';
-import {
-    PluginFunction,
-    Message,
-    Permission,
-    PermissionType,
-    Client,
-} from '@chatbot/bot';
+import { PluginFunction, Message, Client } from '@chatbot/bot';
 import fetch from 'node-fetch';
 
 export const backup: PluginFunction = (bot, config) => {
@@ -22,10 +15,10 @@ export const backup: PluginFunction = (bot, config) => {
                 method: 'POST',
                 headers: {
                     'User-Agent': 'JamesSO Bot',
-                    Authorization: `token ${  config.plugin.github.token}`,
+                    Authorization: `token ${config.plugin.github.token}`,
                 },
                 body: JSON.stringify({
-                    description: `bot memory ${  new Date()}`,
+                    description: `bot memory ${new Date()}`,
                     public: false,
                     files: {
                         'learn_list.json': {
