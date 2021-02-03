@@ -33,6 +33,14 @@
                 "tsx": "never"
             }
         ],
+        "prefer-destructuring": [
+            "error",
+            {
+                "array": false,
+                "object": true
+            }
+        ],
+        "import/prefer-default-export": 1,
         "@typescript-eslint/no-non-null-assertion": 0,
         "@typescript-eslint/explicit-module-boundary-types": 0,
         "class-methods-use-this": 1,

@@ -39,7 +39,7 @@ export class Message {
             if (match) {
                 this.prefix = match[1];
                 msgSplit.unshift(match[2]);
-                this.info.content = `${this.prefix  } ${  msgSplit.join(' ')}`;
+                this.info.content = `${this.prefix} ${msgSplit.join(' ')}`;
             }
         }
 
@@ -52,19 +52,18 @@ export class Message {
 
         this.commandCall = msgSplit.shift();
         this.args = msgSplit;
-        this.quotedArgsList = Message._quotedArgsSplit(msgSplit.join(' '));
+        this.quotedArgsList = Message.quotedArgsSplit(msgSplit.join(' '));
     }
 
-    static _quotedArgsSplit(string: string): string[] {
+    static quotedArgsSplit(string: string): string[] {
         return Array.from(
             string.matchAll(/(["'])((?:(?!\1).)*)(\1)|([^\s]+)/g) // match all args https://stackoverflow.com/a/8057827/7886229
         ).map((matches) => {
             if (matches[2]) {
                 // we have a quoter
                 return matches[2].substring(0, matches[2].length); // am i the only one that has to look this up everytime i use it?
-            } 
-                return matches[4]; // otherwise just return the match
-            
+            }
+            return matches[4]; // otherwise just return the match
         });
     }
 }

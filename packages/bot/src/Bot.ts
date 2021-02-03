@@ -74,7 +74,8 @@ export class Bot extends events.EventEmitter {
 
     async processMessage(msg: Message, client: Client) {
         if (process.env.NODE_ENV === 'development') {
-            console.log(`${msg.info.fromName  }: ${  msg.info.rawContent}`);
+            // eslint-disable-next-line no-console
+            console.log(`${msg.info.fromName}: ${msg.info.rawContent}`);
         }
         if (
             !this.validatorScripts.every((validatorScript) =>
@@ -186,10 +187,9 @@ export class Bot extends events.EventEmitter {
         selectorMatch: RegExp
     ) {
         /* if anyone wants to pay for API keys, feel free */
-        const url =
-            `https://www.google.com/search?q=${ 
-            encodeURIComponent(query) 
-            }${site ? `%20site:${  site}` : ''}`;
+        const url = `https://www.google.com/search?q=${encodeURIComponent(
+            query
+        )}${site ? `%20site:${site}` : ''}`;
         const body = await fetch(url, {
             headers: {
                 'User-Agent':
@@ -212,7 +212,7 @@ export class Bot extends events.EventEmitter {
                 title = $('.yuRUbf').find('.LC20lb span').html();
             }
             if (!(selected && selected.match(selectorMatch))) {
-                console.error(`Invalid Selector ${  selected}`);
+                console.error(`Invalid Selector ${selected}`);
                 return false;
             }
             return {
@@ -244,7 +244,10 @@ export class Bot extends events.EventEmitter {
             gt: '>',
         };
         return str
-            .replace(translate_re, (match, entity) => translate[entity as keyof typeof translate])
+            .replace(
+                translate_re,
+                (match, entity) => translate[entity as keyof typeof translate]
+            )
             .replace(/&#(\d+);/gi, (match, numStr) => {
                 const num = parseInt(numStr, 10);
                 return String.fromCharCode(num);
@@ -264,7 +267,7 @@ export class Bot extends events.EventEmitter {
                 if (!href) {
                     return entire_string;
                 }
-                return `[${  innerText  }](${  href[1]  })`;
+                return `[${innerText}](${href[1]})`;
             },
         };
 

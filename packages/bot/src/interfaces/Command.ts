@@ -1,4 +1,4 @@
-import { Message, MessageHandler } from '..';
+import { MessageHandler } from '..';
 import { Permission } from './Permission';
 
 export interface Command {
