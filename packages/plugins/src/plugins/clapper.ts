@@ -50,7 +50,7 @@ export const clapper: PluginFunction = (bot) => {
                 client.send('User has been removed.', channel);
             })
             .catch((res: any) => {
-                client.send('Kick Error: ' + res.data.error, channel);
+                client.send(`Kick Error: ${  res.data.error}`, channel);
             });
     }
 
@@ -109,7 +109,7 @@ export const clapper: PluginFunction = (bot) => {
                 return;
             }
             client.send(`This channel is not managed by clap.`, msg);
-            return;
+            
         },
     });
 
@@ -160,7 +160,7 @@ export const clapper: PluginFunction = (bot) => {
                     client.send('User has been added.', msg);
                 })
                 .catch((res: any) => {
-                    client.send('Add Error: ' + res.data.error, msg);
+                    client.send(`Add Error: ${  res.data.error}`, msg);
                 });
         },
     });

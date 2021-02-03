@@ -28,7 +28,5 @@ export const timeout: PluginFunction = (bot) => {
             }, 30000);
         },
     });
-    bot.RegisterValidator('life', (msg) => {
-        return live;
-    });
+    bot.RegisterValidator('life', (msg) => live);
 };

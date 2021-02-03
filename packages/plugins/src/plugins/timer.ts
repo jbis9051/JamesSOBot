@@ -1,6 +1,6 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
 
-let timers = [];
+const timers = [];
 export const timer: PluginFunction = (bot) => {
     bot.addCommand({
         name: 'timer',
@@ -33,7 +33,7 @@ export const timer: PluginFunction = (bot) => {
                 user: msg.info.fromName,
                 id: msg.info.fromId,
                 room: msg.info.contextId,
-                content: content,
+                content,
                 expires: Date.now() + mili,
                 timer: setTimeout((_) => client.softReply(content, msg), mili),
             });
@@ -45,8 +45,8 @@ export const timer: PluginFunction = (bot) => {
 
 function convertTimeStringToMiliseconds(time: string) {
     const parts = time.split(' ');
-    let unit = parts.pop();
-    let numeric = Number(parts.pop());
+    const unit = parts.pop();
+    const numeric = Number(parts.pop());
     if (!numeric || !unit || numeric < 0) {
         return false;
     }

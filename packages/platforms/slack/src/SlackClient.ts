@@ -1,22 +1,28 @@
 import { Bot, Client, Message } from '@chatbot/bot';
-import { SlackMessage } from './interfaces/SlackMessage';
 import { WebAPICallResult, WebClient } from '@slack/web-api';
 import { createEventAdapter } from '@slack/events-api';
 import { SlackEventAdapter } from '@slack/events-api/dist/adapter';
 import * as events from 'events';
+import { SlackMessage } from './interfaces/SlackMessage';
 
 const port = parseInt(process.env.PORT!) || 3000;
 
 export class SlackClient extends Client {
     private token: string = process.env.SLACK_TOKEN!;
-    private id: string = '';
+
+    private id = '';
+
     private slackSigningSecret: string = process.env.SLACK_SIGNING_SECRET!;
-    private name: string = 'JamesBot';
+
+    private name = 'JamesBot';
+
     private events: SlackEventAdapter &
         events.EventEmitter = createEventAdapter(
         this.slackSigningSecret
     ) as any;
+
     private bot: Bot;
+
     private web: WebClient;
 
     constructor(bot: Bot) {
@@ -52,7 +58,7 @@ export class SlackClient extends Client {
         );
         /* if (e.channel === "C0266FRGV") {
      return;
- }*/
+ } */
         this.bot.processMessage(message, this);
     }
 
@@ -74,7 +80,7 @@ export class SlackClient extends Client {
             typeof context === 'string' ? context : context.info.contextId;
         return this.web.chat.postMessage({
             text: content,
-            channel: channel,
+            channel,
             thread_ts:
                 typeof context === 'string'
                     ? undefined

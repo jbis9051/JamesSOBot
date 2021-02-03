@@ -22,10 +22,10 @@ export const backup: PluginFunction = (bot, config) => {
                 method: 'POST',
                 headers: {
                     'User-Agent': 'JamesSO Bot',
-                    Authorization: 'token ' + config.plugin.github.token,
+                    Authorization: `token ${  config.plugin.github.token}`,
                 },
                 body: JSON.stringify({
-                    description: 'bot memory ' + new Date(),
+                    description: `bot memory ${  new Date()}`,
                     public: false,
                     files: {
                         'learn_list.json': {

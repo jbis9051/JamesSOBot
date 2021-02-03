@@ -1,6 +1,6 @@
+import { PermissionType, PluginFunction } from '@chatbot/bot';
 import eval from './eval/index';
 
-import { PermissionType, PluginFunction } from '@chatbot/bot';
 
 export const evalPlugin: PluginFunction = (bot) => {
     bot.addCommand({
@@ -25,21 +25,21 @@ export const evalPlugin: PluginFunction = (bot) => {
     function truncate(str: string | any) {
         if (typeof str === 'string' && str.length > 400) {
             return str.slice(0, 400);
-        } else {
+        } 
             return str;
-        }
+        
     }
 
     async function _run(code: string) {
         if (/^\s*{/.test(code) && /}\s*$/.test(code)) {
-            code = '(' + code + ')';
+            code = `(${  code  })`;
         }
         const val = await eval(code);
         val.result = truncate(val.result);
         if (val.error) {
             return `Error running script: \`${val.result}\``;
         }
-        let logged = truncate(val.logged.join(', '));
+        const logged = truncate(val.logged.join(', '));
         return `\`${val.result}\` Logged: \`${logged}\` Took: \`${val.time}ms\``;
     }
 
@@ -48,7 +48,7 @@ export const evalPlugin: PluginFunction = (bot) => {
             msg.info.rawContent.replace(/<br>/g, '\n').replace(/<.+>/g, '')
         );
         if (
-            bot.permissionCheck(client, bot.commands['eval'], msg) &&
+            bot.permissionCheck(client, bot.commands.eval, msg) &&
             /^(\|\|>|>\|\||!!>) ./.test(text)
         ) {
             const trigger = text.match(/^(\|\|>|>\|\||!!>) ./)![1];

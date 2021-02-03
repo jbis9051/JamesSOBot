@@ -4,26 +4,40 @@ import WebSocket from 'ws';
 import * as cheerio from 'cheerio';
 import nodefetch from 'node-fetch';
 import cookiefetch from 'fetch-cookie/node-fetch';
-import { ChatEvent } from './enum/ChatEvent';
-import formEncoder from './helpers/formEncoder';
 import * as events from 'events';
 import { CookieJar } from 'tough-cookie';
+import { ChatEvent } from './enum/ChatEvent';
+import formEncoder from './helpers/formEncoder';
 
 export class SOClient extends Client {
     private siteURL: string;
+
     private chatURL: string;
+
     roomNums: number[];
+
     private bot: Bot;
+
     private mainRoomNum: number;
+
     private cookieJar: any;
-    private _id: number = 0;
+
+    private _id = 0;
+
     private api_site_param?: string;
+
     private dataStore: DataSaver;
+
     private fkey?: string;
+
     private wsurl?: string;
+
     private ws?: WebSocket;
+
     private events = new events.EventEmitter();
+
     private jar: CookieJar;
+
     private fetch: (
         input: RequestInfo,
         init?: RequestInit
@@ -63,6 +77,7 @@ export class SOClient extends Client {
             this.bot.processMessage(this.createMessage(e), this)
         );
     }
+
     async init() {
         await this.connect();
         setInterval(
@@ -79,7 +94,7 @@ export class SOClient extends Client {
     }
 
     async mainSiteLogin() {
-        const resp = await this.fetch(this.siteURL + '/users/login', {
+        const resp = await this.fetch(`${this.siteURL  }/users/login`, {
             method: 'GET',
         });
         if (new URL(resp.url).pathname === '/') {
@@ -89,10 +104,10 @@ export class SOClient extends Client {
         const body = await resp.text();
         const $ = cheerio.load(body);
         const fkey = $('input[name="fkey"]').val();
-        await this.fetch(this.siteURL + '/users/login', {
+        await this.fetch(`${this.siteURL  }/users/login`, {
             method: 'POST',
             body: formEncoder({
-                fkey: fkey,
+                fkey,
                 email: process.env.SOEMAIL!,
                 password: process.env.SOPASSWORD!,
             }),
@@ -109,7 +124,7 @@ export class SOClient extends Client {
         this.fkey = await this.getFKEY(this.mainRoomNum);
         this.wsurl = await this.getWSURL(this.mainRoomNum);
         // @ts-ignore
-        const ws = new WebSocket(this.wsurl + '?l=99999999999', null, {
+        const ws = new WebSocket(`${this.wsurl  }?l=99999999999`, null, {
             headers: {
                 Origin: this.chatURL,
             },
@@ -121,13 +136,13 @@ export class SOClient extends Client {
             data = JSON.parse(data);
             Object.keys(data).forEach((room) => {
                 const roomInt = parseInt(room.substring(1));
-                if (!data['r' + roomInt].e) {
+                if (!data[`r${  roomInt}`].e) {
                     return false;
                 }
                 if (!this.roomNums.includes(roomInt)) {
                     return false;
                 }
-                data['r' + roomInt].e.forEach((event: any) => {
+                data[`r${  roomInt}`].e.forEach((event: any) => {
                     this.events.emit(event.event_type.toString(), event);
                 });
             });
@@ -142,8 +157,8 @@ export class SOClient extends Client {
     }
 
     async setChatVars() {
-        //this._id = data.my_id;
-        const resp = await this.fetch(this.siteURL + '/users/current', {
+        // this._id = data.my_id;
+        const resp = await this.fetch(`${this.siteURL  }/users/current`, {
             method: 'GET',
         });
         const url = new URL(resp.url);
@@ -164,21 +179,17 @@ export class SOClient extends Client {
         }
         const siteURLRegex = this.siteURL.replace(/http(s)?:\/\/(www\.)?/, '');
         this.api_site_param = sites.items.find(
-            (site: { aliases?: string[]; site_url: string }) => {
-                return (
+            (site: { aliases?: string[]; site_url: string }) => (
                     (site.aliases &&
                         site.aliases
-                            .map((siteURL) => {
-                                return siteURL.replace(
+                            .map((siteURL) => siteURL.replace(
                                     /http(s)?:\/\/(www\.)?/,
                                     ''
-                                );
-                            })
+                                ))
                             .includes(siteURLRegex)) ||
                     site.site_url.replace(/http(s)?:\/\/(www\.)?/, '') ===
                         siteURLRegex
-                );
-            }
+                )
         ).api_site_parameter;
     }
 
@@ -191,7 +202,7 @@ export class SOClient extends Client {
     }
 
     async getWSURL(roomNum: number) {
-        const resp = await this.fetch(this.chatURL + '/ws-auth', {
+        const resp = await this.fetch(`${this.chatURL  }/ws-auth`, {
             method: 'POST',
             body: formEncoder({
                 roomid: roomNum,
@@ -208,7 +219,7 @@ export class SOClient extends Client {
     async joinRoom(roomNum: number) {
         const wsurl = await this.getWSURL(roomNum);
         // @ts-ignore
-        const ws = new WebSocket(wsurl + '?l=99999999999', null, {
+        const ws = new WebSocket(`${wsurl  }?l=99999999999`, null, {
             headers: {
                 Origin: this.chatURL,
             },
@@ -248,7 +259,7 @@ export class SOClient extends Client {
         const roomNum =
             typeof context === 'string' ? context : context.info.contextId;
         return new Promise(async (resolve) => {
-            console.log('Sending: ' + content);
+            console.log(`Sending: ${  content}`);
             this.fetch(`${this.chatURL}/chats/${roomNum}/messages/new`, {
                 method: 'POST',
                 body: formEncoder({
@@ -297,7 +308,7 @@ export class SOClient extends Client {
 
     edit(content: string, context: Message): Promise<void> {
         return new Promise(async (resolve) => {
-            console.log('Sending: ' + content);
+            console.log(`Sending: ${  content}`);
             this.fetch(
                 `${this.chatURL}/messages/${context.info.appData.message_id}`,
                 {
@@ -338,7 +349,7 @@ export class SOClient extends Client {
                     method: 'POST',
                     body: formEncoder({
                         ids: message.info.id,
-                        to: to,
+                        to,
                         fkey: this.fkey!,
                     }),
                     headers: {
@@ -382,7 +393,7 @@ export class SOClient extends Client {
     }
 
     getPingString(msg: Message): string {
-        return '@' + msg.info.fromName.replace(/\s/g, '');
+        return `@${  msg.info.fromName.replace(/\s/g, '')}`;
     }
 
     /* Client Specific Methods */
@@ -394,9 +405,9 @@ export class SOClient extends Client {
         const body = await resp.json();
         if (resp.status !== 200 || !body.items) {
             return false;
-        } else {
+        } 
             return body.items[0];
-        }
+        
     }
 
     async chatIDToSiteID(id: number) {

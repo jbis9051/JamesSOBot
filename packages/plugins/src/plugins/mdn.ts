@@ -46,5 +46,5 @@ export const mdn: PluginFunction = (bot) => {
             return false;
         },
         callback: (msg) => _run(msg.code, msg)
-    });*/
+    }); */
 };

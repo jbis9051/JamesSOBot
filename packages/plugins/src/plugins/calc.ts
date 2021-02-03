@@ -20,8 +20,8 @@ export const calc: PluginFunction = (bot) => {
             }
             /* mathjs has some vulnerability issues with it's evaluation function. So let's just use their API. Exploit them all you want! " */
             const response = await fetch(
-                'http://api.mathjs.org/v4/?expr=' +
-                    encodeURIComponent(msg.args.join(' '))
+                `http://api.mathjs.org/v4/?expr=${ 
+                    encodeURIComponent(msg.args.join(' '))}`
             );
 
             if (!(response.status === 200 || response.status === 400)) {

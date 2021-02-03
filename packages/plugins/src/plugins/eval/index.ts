@@ -21,22 +21,22 @@ export default function (
             endTime: number
         ) {
             resolve({
-                error: error,
-                result: result,
+                error,
+                result,
                 logged: JSON.parse(logged),
                 time: endTime - startTime,
             });
         }
 
         // Create a new isolate limited to 8MB
-        let isolate = new ivm.Isolate({ memoryLimit: 8 });
+        const isolate = new ivm.Isolate({ memoryLimit: 8 });
 
         // Create a new context within this isolate.
 
-        let context = isolate.createContextSync();
+        const context = isolate.createContextSync();
 
         // Get a Reference{} to the global object within the context.
-        let jail = context.global;
+        const jail = context.global;
 
         // This make the global object available in the context as `global`. We use `derefInto()` here
         // because otherwise `global` would actually be a Reference{} object in the new isolate.
@@ -45,7 +45,7 @@ export default function (
         // We will create a done function to be called when either we get a result or we have a runtime error
         jail.setSync(
             '_done',
-            new ivm.Reference(function (...args: any) {
+            new ivm.Reference((...args: any) => {
                 // @ts-ignore
                 sendData(...args);
             })
@@ -53,9 +53,7 @@ export default function (
 
         jail.setSync(
             '_atob',
-            new ivm.Reference(function (string: string) {
-                return Buffer.from(string, 'base64').toString();
-            })
+            new ivm.Reference((string: string) => Buffer.from(string, 'base64').toString())
         );
 
         // This will bootstrap the context. Prependeng 'new ' to a function is just a convenient way to
@@ -64,7 +62,7 @@ export default function (
 
         const sandboxed_script = require('./sandboxed-script');
         const compiled_sandbox_script = isolate.compileScriptSync(
-            'new ' + sandboxed_script
+            `new ${  sandboxed_script}`
         );
 
         compiled_sandbox_script.runSync(context);
@@ -76,7 +74,7 @@ export default function (
         try {
             isolate
                 .compileScriptSync(code_to_run)
-                .runSync(context, { timeout: timeout });
+                .runSync(context, { timeout });
         } catch (e) {
             sendData(
                 false,

@@ -16,7 +16,7 @@ const man: PluginFunction = (bot) => {
             }
             const command = bot.commands[msg.args[0]];
             if (!command) {
-                client.send('No manual entry for ' + msg.args[0], msg);
+                client.send(`No manual entry for ${  msg.args[0]}`, msg);
                 return;
             }
             let stringToSend = `[\`${
@@ -25,7 +25,7 @@ const man: PluginFunction = (bot) => {
                 command.name
             }): "${command.description || ''}" `;
             if (command.creator) {
-                stringToSend += 'Creator: ' + command.creator;
+                stringToSend += `Creator: ${  command.creator}`;
             } else {
                 stringToSend += `Examples: ${(command.examples || [])
                     .map((example) => `\`${example}\``)

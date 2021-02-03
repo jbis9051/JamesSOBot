@@ -10,14 +10,23 @@
         "packages/platforms/*"
     ],
     "scripts": {
+        "lint": "eslint packages --ext '.ts,.tsx' ",
+        "lint:fix": "eslint packages --fix --ext '.ts,.tsx'",
         "prettier": "prettier --check .",
         "prettier:fix": "prettier --write --check .",
+        "fix": "yarn run prettier:fix && yarn run lint:fix && yarn run prettier:fix",
         "dev": "lerna run dev --parallel --scope @chatbot/plugins --scope @chatbot/bot",
         "dev:so": "lerna run dev --stream --scope @chatbot/so",
         "start:so": "lerna run start --stream --scope @chatbot/so",
         "build": "lerna run build --stream"
     },
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.14.2",
+        "@typescript-eslint/parser": "^4.14.2",
+        "eslint": "^7.19.0",
+        "eslint-config-airbnb-base": "^14.2.1",
+        "eslint-config-prettier": "^7.2.0",
+        "eslint-plugin-import": "^2.22.1",
         "lerna": "^3.22.1",
         "prettier": "^2.2.1"
     }

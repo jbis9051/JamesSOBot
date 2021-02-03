@@ -24,8 +24,8 @@ export const wiki: PluginFunction = (bot) => {
                 return;
             }
             fetch(
-                'https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=' +
-                    encodeURIComponent(msg.args.join(' '))
+                `https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=${ 
+                    encodeURIComponent(msg.args.join(' '))}`
             )
                 .then((resp) => resp.json())
                 .then((resp) => {
@@ -37,8 +37,8 @@ export const wiki: PluginFunction = (bot) => {
                         client.send('Error Occurred', msg);
                         return;
                     }
-                    let res = resp[3][0],
-                        found = true;
+                    let res = resp[3][0];
+                        let found = true;
 
                     if (!res) {
                         found = false;

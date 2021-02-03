@@ -65,7 +65,7 @@ export const ban: PluginFunction = (bot: Bot) => {
                 date_ban: new Date().toString(),
             };
             bot.dataStore.setData('ban_data', ban_user_data);
-            client.hardReply(msg.args[0] + ' has been banned', msg);
+            client.hardReply(`${msg.args[0]  } has been banned`, msg);
         },
     });
     bot.addCommand({
@@ -90,7 +90,7 @@ export const ban: PluginFunction = (bot: Bot) => {
             }
             delete ban_user_data[id];
             bot.dataStore.setData('ban_data', ban_user_data);
-            client.hardReply(msg.args[0] + ' has been unban', msg);
+            client.hardReply(`${msg.args[0]  } has been unban`, msg);
         },
     });
 };

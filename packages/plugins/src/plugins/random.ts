@@ -35,7 +35,7 @@ export const random: PluginFunction = (bot) => {
 
 export default random;
 
-/* Nobody likes computer science so why not just trust MDN people did it properly --> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random*/
+/* Nobody likes computer science so why not just trust MDN people did it properly --> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random */
 function getRandomArbitrary(min: number, max: number) {
     return Math.random() * (max - min) + min;
 }
@@ -43,11 +43,11 @@ function getRandomArbitrary(min: number, max: number) {
 function getRandomInt(min: number, max: number) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
 }
 
 function getRandomIntInclusive(min: number, max: number) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min + 1)) + min; // The maximum is inclusive and the minimum is inclusive
 }

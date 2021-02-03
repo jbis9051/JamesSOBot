@@ -18,7 +18,7 @@ export const kill: PluginFunction = (bot) => {
                 if (
                     !(await bot.permissionCheck(
                         client,
-                        bot.commands['suicide'],
+                        bot.commands.suicide,
                         msg
                     ))
                 ) {
@@ -28,7 +28,7 @@ export const kill: PluginFunction = (bot) => {
                     );
                     return;
                 }
-                bot.commands['suicide'].cb(msg, client);
+                bot.commands.suicide.cb(msg, client);
                 return;
             }
             client.send('This conflicts with the First Law.', msg);

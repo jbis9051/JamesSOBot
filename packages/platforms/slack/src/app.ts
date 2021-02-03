@@ -1,4 +1,3 @@
-import { SlackClient } from './SlackClient';
 import { Bot } from '@chatbot/bot';
 import {
     mdn,
@@ -26,6 +25,7 @@ import {
     ban,
     timeout,
 } from '@chatbot/plugins';
+import { SlackClient } from './SlackClient';
 
 const bot = new Bot('slack', {
     users_groups: {

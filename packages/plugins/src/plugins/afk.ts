@@ -31,7 +31,7 @@ export const afk: PluginFunction = (bot: Bot) => {
             person = person.replace('@', '');
             if (isAFK(person) && Date.now() - lastTell >= rateLimit) {
                 client.hardReply(
-                    person + ' is afk: ' + afk_data[person].msg,
+                    `${person  } is afk: ${  afk_data[person].msg}`,
                     msg
                 );
                 afk_data[person].lastPing = Date.now();
@@ -61,7 +61,7 @@ export const afk: PluginFunction = (bot: Bot) => {
                 msg: msg.args.join(' '),
             };
             bot.dataStore.setData('afk_data', afk_data);
-            client.hardReply('bye ' + msg.info.fromName, msg);
+            client.hardReply(`bye ${  msg.info.fromName}`, msg);
         },
     });
 };

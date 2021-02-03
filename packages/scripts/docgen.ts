@@ -104,7 +104,7 @@ The eval is sandboxed. If you find a vulnerability please contact me or a Room O
 
 let plugins = [];
 
-let learned = Object.values(
+const learned = Object.values(
     new Bot('so', {
         users_groups: {} as Record<any, any[]>,
         plugin: {},
@@ -130,12 +130,12 @@ plugins.forEach((command) => {
 ## ${command.name}
 ${command.description}
 **Permissions**
-${command.permissions.map((el) => '- ' + getPermName(el)).join('\n')}
+${command.permissions.map((el) => `- ${  getPermName(el)}`).join('\n')}
            
 **Example**
-${command.examples.map((el) => '- `' + el + '`').join('\n')}
+${command.examples.map((el) => `- \`${  el  }\``).join('\n')}
 **Shortcuts**
-${command.shortcuts.map((el) => '- `' + el + '`').join('\n')}
+${command.shortcuts.map((el) => `- \`${  el  }\``).join('\n')}
 `;
 });
 
@@ -150,11 +150,11 @@ learned.forEach((command: any) => {
 ${command.description}
 **Creator:** ${command.creator}
 **Creator ID:** ${command.creatorID}
-**Date Created:** ${command['date_created']}
+**Date Created:** ${command.date_created}
 `;
 });
 
-fs.writeFileSync(__dirname + '/../../docs/COMMANDS.md', md_doc);
+fs.writeFileSync(`${__dirname  }/../../docs/COMMANDS.md`, md_doc);
 
 function localSort(a, b) {
     return a.name.localeCompare(b.name);

@@ -25,7 +25,7 @@ const poll: PluginFunction = function (bot) {
             }
             if (msg.quotedArgsList[0] === 'status') {
                 return client.send(
-                    '**Status**: ' + polls[msg.info.contextId].resultsSummary(),
+                    `**Status**: ${  polls[msg.info.contextId].resultsSummary()}`,
                     msg
                 );
             }
@@ -49,8 +49,8 @@ const poll: PluginFunction = function (bot) {
             }
             if (polls.hasOwnProperty(msg.info.contextId)) {
                 return client.send(
-                    'A poll is already open for this room. Use `|| vote [choice]` to vote and `|| vote` to see options: ' +
-                        polls[msg.info.contextId].query,
+                    `A poll is already open for this room. Use \`|| vote [choice]\` to vote and \`|| vote\` to see options: ${ 
+                        polls[msg.info.contextId].query}`,
                     msg
                 );
             }
@@ -65,12 +65,12 @@ const poll: PluginFunction = function (bot) {
             );
             client
                 .send(
-                    '**New Poll Created**: ' + polls[msg.info.contextId].query,
+                    `**New Poll Created**: ${  polls[msg.info.contextId].query}`,
                     msg
                 )
                 .then((_) =>
                     client.send(
-                        'Choices: ' + polls[msg.info.contextId].choiceSummary(),
+                        `Choices: ${  polls[msg.info.contextId].choiceSummary()}`,
                         msg
                     )
                 );
@@ -92,38 +92,36 @@ const poll: PluginFunction = function (bot) {
                 if (!poll) {
                     return client.send('No poll is currently running.', msg);
                 }
-                client.send('Query: ' + poll.query, msg);
-                client.send('Choices: ' + poll.choiceSummary(), msg);
+                client.send(`Query: ${  poll.query}`, msg);
+                client.send(`Choices: ${  poll.choiceSummary()}`, msg);
                 return;
             }
             client.send(poll.vote(msg.quotedArgsList[0], msg.info.fromId), msg);
         },
     });
 
-    bot.RegisterShutdownScript((msg, client) => {
-        return Promise.all(
+    bot.RegisterShutdownScript((msg, client) => Promise.all(
             // @ts-ignore
             Object.values(polls).map(async ([room, poll]) => {
                 await client.send(
                     '**Bot Shutdown Imminent. Polls Auto-Closing**',
                     room
                 );
-                await client.send('**Poll Closed**: ' + poll.query, room);
+                await client.send(`**Poll Closed**: ${  poll.query}`, room);
                 await client.send(
-                    '**Results**: ' + poll.resultsSummary(),
+                    `**Results**: ${  poll.resultsSummary()}`,
                     room
                 );
             })
-        );
-    });
+        ));
 };
 
 function closePoll(msg: Message, client: Client) {
     const poll = polls[msg.info.contextId];
     delete polls[msg.info.contextId];
     return client
-        .send('**Poll Closed**: ' + poll.query, msg)
-        .then((_) => client.send('**Results**: ' + poll.resultsSummary(), msg));
+        .send(`**Poll Closed**: ${  poll.query}`, msg)
+        .then((_) => client.send(`**Results**: ${  poll.resultsSummary()}`, msg));
 }
 
 interface Choice {
@@ -133,13 +131,21 @@ interface Choice {
 
 class Poll {
     query: string;
+
     private timeout: number;
+
     private choices: Choice[] = [];
+
     creator: { id: string; name: string };
-    private votes: number = 0;
+
+    private votes = 0;
+
     private creationDate: number = Date.now();
+
     private lastVote: null | number = null;
+
     private timeoutCallback: () => void;
+
     private setTimeout?: NodeJS.Timeout;
 
     constructor(
@@ -199,8 +205,8 @@ class Poll {
 
         if (!this.choices[choiceIndex]) {
             return (
-                'Could not find choice. Choice options are: ' +
-                this.choiceSummary()
+                `Could not find choice. Choice options are: ${ 
+                this.choiceSummary()}`
             );
         }
         this.choices[choiceIndex].votes.push({
@@ -209,13 +215,13 @@ class Poll {
         this.votes++;
         this.lastVote = Date.now();
         this.resetTimeout();
-        return 'Vote recorded.' + '.‍'.repeat(Math.random() * 10);
+        return `Vote recorded.${  '.‍'.repeat(Math.random() * 10)}`;
     }
 
     resultsSummary() {
         return this.choices
             .sort((a, b) => b.votes.length - a.votes.length)
-            .map((choice) => choice.content + ': ' + choice.votes.length)
+            .map((choice) => `${choice.content  }: ${  choice.votes.length}`)
             .join(' | ');
     }
 

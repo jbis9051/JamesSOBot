@@ -38,7 +38,5 @@ export const life: PluginFunction = (bot) => {
             }
         },
     });
-    bot.RegisterValidator('life', (msg) => {
-        return live || msg.info.content === '|| enable';
-    });
+    bot.RegisterValidator('life', (msg) => live || msg.info.content === '|| enable');
 };

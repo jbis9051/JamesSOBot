@@ -38,9 +38,9 @@ export const welcome: PluginFunction = (bot: Bot, config) => {
         }
         if (people_seen.includes(msg.info.fromId)) {
             return;
-        } else {
+        } 
             people_seen.push(msg.info.fromId);
-        }
+        
         if (
             (await client.getNumMessagesFromId(
                 msg.info.fromId,

@@ -2,6 +2,7 @@ import * as events from 'events';
 import * as path from 'path';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
+import * as process from 'process';
 import { Command } from './interfaces/Command';
 import { PluginFunction } from './interfaces/PluginFunction';
 import { MessageHandler } from './types/CallbackTypes';
@@ -10,24 +11,32 @@ import { Client } from './Client';
 import { Config } from './interfaces/Config';
 import { PermissionType } from './interfaces/Permission';
 import { DataSaver } from './DataSaver';
-import * as process from 'process';
 
 export class Bot extends events.EventEmitter {
     readonly saveFolder: string;
+
     private shutdown_scripts: Array<MessageHandler> = [];
+
     commands: { [key: string]: Command } = {};
+
     private messageHandlers: MessageHandler[] = [];
+
     private validatorScripts: Array<{
         name: string;
         handler: MessageHandler<boolean>;
     }> = [];
+
     public info = {
         start: Date.now(),
         name: 'James',
     };
+
     private config: Config;
+
     public readonly dataStore: DataSaver;
+
     private readonly saveFile: string;
+
     public readonly clientFunctions: Function[] = [];
 
     constructor(saveFolderName: string, config: Config) {
@@ -65,7 +74,7 @@ export class Bot extends events.EventEmitter {
 
     async processMessage(msg: Message, client: Client) {
         if (process.env.NODE_ENV === 'development') {
-            console.log(msg.info.fromName + ': ' + msg.info.rawContent);
+            console.log(`${msg.info.fromName  }: ${  msg.info.rawContent}`);
         }
         if (
             !this.validatorScripts.every((validatorScript) =>
@@ -178,9 +187,9 @@ export class Bot extends events.EventEmitter {
     ) {
         /* if anyone wants to pay for API keys, feel free */
         const url =
-            'https://www.google.com/search?q=' +
-            encodeURIComponent(query) +
-            (site ? '%20site:' + site : '');
+            `https://www.google.com/search?q=${ 
+            encodeURIComponent(query) 
+            }${site ? `%20site:${  site}` : ''}`;
         const body = await fetch(url, {
             headers: {
                 'User-Agent':
@@ -203,7 +212,7 @@ export class Bot extends events.EventEmitter {
                 title = $('.yuRUbf').find('.LC20lb span').html();
             }
             if (!(selected && selected.match(selectorMatch))) {
-                console.error('Invalid Selector ' + selected);
+                console.error(`Invalid Selector ${  selected}`);
                 return false;
             }
             return {
@@ -235,10 +244,8 @@ export class Bot extends events.EventEmitter {
             gt: '>',
         };
         return str
-            .replace(translate_re, function (match, entity) {
-                return translate[entity as keyof typeof translate];
-            })
-            .replace(/&#(\d+);/gi, function (match, numStr) {
+            .replace(translate_re, (match, entity) => translate[entity as keyof typeof translate])
+            .replace(/&#(\d+);/gi, (match, numStr) => {
                 const num = parseInt(numStr, 10);
                 return String.fromCharCode(num);
             });
@@ -257,7 +264,7 @@ export class Bot extends events.EventEmitter {
                 if (!href) {
                     return entire_string;
                 }
-                return '[' + innerText + '](' + href[1] + ')';
+                return `[${  innerText  }](${  href[1]  })`;
             },
         };
 

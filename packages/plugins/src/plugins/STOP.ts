@@ -9,13 +9,13 @@ export const STOP: PluginFunction = (bot) => {
         SISTITE: 'MALLEUS TEMPUS!',
     };
     const re = new RegExp(
-        '([\\s.]+|^)(' +
-            Object.keys(hammers).map(escape).join('|') +
-            ')[\\.!?]?$'
+        `([\\s.]+|^)(${ 
+            Object.keys(hammers).map(escape).join('|') 
+            })[\\.!?]?$`
     );
     bot.RegisterHandler((msg, client) => {
-        const sentence = msg.info.content.toUpperCase(),
-            res = re.exec(sentence);
+        const sentence = msg.info.content.toUpperCase();
+            const res = re.exec(sentence);
 
         if (res) {
             client.send(hammers[res[2] as keyof typeof hammers], msg);

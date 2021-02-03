@@ -1,5 +1,4 @@
 import { Bot } from '@chatbot/bot';
-import { SOClient } from './SOClient';
 import {
     adoc,
     afk,
@@ -34,6 +33,7 @@ import {
     welcome,
     wiki,
 } from '@chatbot/plugins';
+import { SOClient } from './SOClient';
 
 const bot = new Bot('so', {
     users_groups: {

@@ -1,5 +1,5 @@
-import { Message } from './models/Message';
 import * as events from 'events';
+import { Message } from './models/Message';
 
 export abstract class Client extends events.EventEmitter {
     abstract isMyMessage(msg: Message): boolean;
@@ -49,18 +49,16 @@ export abstract class Client extends events.EventEmitter {
     }
 
     codify(content: string): string {
-        let tab = '    ',
-            spacified = content.replace('\t', tab),
-            lines = spacified.split(/[\r\n]/g);
+        const tab = '    ';
+            const spacified = content.replace('\t', tab);
+            const lines = spacified.split(/[\r\n]/g);
 
         if (lines.length === 1) {
-            return '`' + lines[0] + '`';
+            return `\`${  lines[0]  }\``;
         }
 
         return lines
-            .map(function (line) {
-                return tab + line;
-            })
+            .map((line) => tab + line)
             .join('\n');
     }
 }

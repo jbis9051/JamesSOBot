@@ -58,7 +58,7 @@ export const unformattedCode: PluginFunction = (bot, config) => {
             removeTimeout(msg.info.id);
             return;
         }
-        let responses: string[] = [];
+        const responses: string[] = [];
         if (!lines.some((line) => /^}|^<\/|^]/.test(line))) {
             removeTimeout(msg.info.id);
             return;

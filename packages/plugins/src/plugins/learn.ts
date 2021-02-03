@@ -54,16 +54,16 @@ export const learn: PluginFunction = (bot: Bot) => {
             // let description = msgString.match(/(?<=\[).+(?=])/);
 
             learn_list[name] = {
-                name: name,
-                output: output,
-                description: description,
+                name,
+                output,
+                description,
                 creatorID: msg.info.fromId,
                 creator: msg.info.fromName,
                 date_created: new Date().toString(),
             };
             addLearnCommand(learn_list[name]);
             bot.dataStore.setData('learn_list', learn_list);
-            client.send(name + ' has been added', msg);
+            client.send(`${name  } has been added`, msg);
         },
     });
 
@@ -78,15 +78,15 @@ export const learn: PluginFunction = (bot: Bot) => {
             ignore: true,
             permissions: [PermissionType.ALL],
             cb: (msg, client) => {
-                let output = learn_object.output;
+                let {output} = learn_object;
                 msg.quotedArgsList.forEach((arg, index) => {
                     output = output
                         .replace(
-                            new RegExp('\\{' + (index + 1) + '\\}', 'g'),
+                            new RegExp(`\\{${  index + 1  }\\}`, 'g'),
                             arg
                         )
                         .replace(
-                            new RegExp('\\[' + (index + 1) + '\\]', 'g'),
+                            new RegExp(`\\[${  index + 1  }\\]`, 'g'),
                             encodeURIComponent(arg)
                         );
                 });
@@ -150,7 +150,7 @@ export const learn: PluginFunction = (bot: Bot) => {
             delete learn_list[msg.args[0]];
             bot.deleteCommand(bot.commands[msg.args[0]]);
             bot.dataStore.setData('learn_list', learn_list);
-            client.send(msg.args[0] + ' has been unlearned', msg);
+            client.send(`${msg.args[0]  } has been unlearned`, msg);
         },
     });
 };
