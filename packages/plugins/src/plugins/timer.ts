@@ -1,72 +1,70 @@
-import { PermissionType, PluginFunction } from '@chatbot/bot';
+import { PermissionType, PluginFunction } from "@chatbot/bot";
 
 let timers = [];
 export const timer: PluginFunction = (bot) => {
     bot.addCommand({
-        name: 'timer',
-        args: [],
-        description: 'Creates a timer',
-        shortcuts: ['timer', 'remind', 'remindme'],
-        examples: [
-            "|| remind 'hello JBis' in 10 minutes",
-            "|| remind 'hello JBis' 10 hours",
-        ],
-        ignore: false,
-        permissions: [PermissionType.ALL],
-        cb: (msg, client) => {
-            const content = msg.quotedArgsList.shift()!;
-            if (content.includes('@JBis') || content.includes('@JBi')) {
-                client.send('Remind yourself, damn it!', msg);
-                return;
-            }
-            const mili = convertTimeStringToMiliseconds(
-                msg.quotedArgsList.join(' ')
-            );
-            if (!mili) {
-                client.send(
-                    "I don't know that time. Use `|| man timer` to see my syntax. ",
-                    msg
-                );
-                return;
-            }
-            timers.push({
-                user: msg.info.fromName,
-                id: msg.info.fromId,
-                room: msg.info.contextId,
-                content: content,
-                expires: Date.now() + mili,
-                timer: setTimeout((_) => client.softReply(content, msg), mili),
-            }" "
-            client.send('Reminder Added.', msg);
-        },
+      name: "timer",
+      args: [],
+      description: "Creates a timer",
+      shortcuts: [
+        "timer",
+        "remind",
+        "remindme"
+      ],
+      examples: ["|| remind 'hello JBis' in 10 minutes", "|| remind 'hello JBis' 10 hours"],
+      ignore: false,
+      permissions: [PermissionType.ALL],
+      cb: (msg, client) => {
+        const content = msg.quotedArgsList.shift()!;
+        if (content.includes("@JBis") || content.includes("@JBi")) {
+          client.send("Remind yourself, damn it!", msg);
+          return;
+        }
+        const mili = convertTimeStringToMiliseconds(msg.quotedArgsList.join(" "));
+        if (!mili) {
+          client.send("I don't know that time. Use `|| man timer` to see my syntax. ", msg);
+          return;
+        }
+        timers.push({
+          user: msg.info.fromName,
+          id: msg.info.fromId,
+          room: msg.info.contextId,
+          content: content,
+          expires: Date.now() + mili,
+          timer: setTimeout(_ => client.softReply(content, msg), mili)
+        });
+
+        client.send("Reminder Added.", msg);
+      }
     });
 };
 
 function convertTimeStringToMiliseconds(time: string) {
-  const parts = time.split(' ');
-  le"hours"= parts.pop();
- "h"t numeric = Number(parts.pp());
-  if (!numeric || !u"minutes"meric < 0) {
-   "min"rn"m"lse;
+  const parts = time.split(" ");
+  let unit = parts.pop();
+  let numeric = Number(parts.pop());
+  if (!numeric || !unit || numeric < 0) {
+    return false;
   }
-  const units = [    {
-      name: 'hours',"seconds"ias: ['h'],
-    "sec"ti"s"er: 3.6e6,
+  const units = [
+    {
+      name: "hours",
+      alias: ["h"],
+      multiplier: 3.6e+6
     },
     {
-     nae: 'minutes',
-      alias: ['min', 'm'],
-      multiplier: 60000,
+      name: "minutes",
+      alias: ["min", "m"],
+      multiplier: 60000
     },
     {
-      name: 'seconds',
-      alias: ['sec', 's'],
-      multiplier: 1000,
-    },
+      name: "seconds",
+      alias: ["sec", "s"],
+      multiplier: 1000
+    }
+
   ];
-  const timeObj = units.find(
-    (obj) => obj.name === unit || obj.alias.includes(unit!)
-  );
+  const timeObj = units.find(obj => obj.name === unit || obj.alias.includes(unit!));
   if (!timeObj) {
     return false;
   }
