@@ -12,7 +12,8 @@
   "scripts": {
     "dev": "lerna run dev --parallel --scope @chatbot/plugins --scope @chatbot/bot",
     "dev:so": "lerna run dev --stream --scope @chatbot/so",
-    "start:so": "lerna run start --stream --scope @chatbot/so"
+    "start:so": "lerna run start --stream --scope @chatbot/so",
+    "build": "lerna run build --stream"
   },
   "devDependencies": {
     "lerna": "^3.22.1"
