@@ -11,15 +11,17 @@ export const choose: PluginFunction = (bot) => {
         args: ['...options'],
         ignore: false,
         cb: (message, client) => {
-            message.args = message.args.filter((arg) => arg !== 'or');
-            if (message.args.length === 0) {
+            const options = message.quotedArgsList.filter(
+                (arg) => arg !== 'or'
+            );
+            if (options.length === 0) {
                 client.send(
                     "I can't read your mind. Please provide an arg or two.",
                     message
                 );
             }
             client.send(
-                message.args[Math.floor(Math.random() * message.args.length)],
+                options[Math.floor(Math.random() * options.length)],
                 message
             );
         },
