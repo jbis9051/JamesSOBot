@@ -2,7 +2,7 @@
     "name": "@chatbot/so",
     "version": "0.0.0",
     "scripts": {
-        "start": "build/src/app.js",
+        "start": "build/app.js",
         "build": "tsc",
         "dev": "TS_NODE_FILES=true NODE_ENV=development ts-node-dev --files src/app.ts"
     },
