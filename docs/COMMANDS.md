@@ -1,16 +1,17 @@
 # Command Documentation
 
 _A better version of the help menu_
-[Learned Commands can be found here](#learned-commands) To interact with the bot simply enter your command with the
-following prefix:`||`.
+[Learned Commands can be found here](#learned-commands) To interact with the bot
+simply enter your command with the following prefix:`||`.
 
 ```
 || commandName arg1 arg2 arg3
 ```
 
-The [eval](#eval) command has a shortcut of `||>`. See the examples in the eval section for how to use this. The eval is
-sandboxed. If you find a vulnerability please contact me or a Room Owner immediately. They will be able to shut down the
-bot until it is fixed.
+The [eval](#eval) command has a shortcut of `||>`. See the examples in the eval
+section for how to use this. The eval is sandboxed. If you find a vulnerability
+please contact me or a Room Owner immediately. They will be able to shut down
+the bot until it is fixed.
 
 ---
 
@@ -343,8 +344,9 @@ Lists the laws **Permissions**
 
 ## learn
 
-Teaches a bot a command. Will output the `output` when `|| shortcut` is called. You can also add args by wrapping the
-arg number (starting with 1) in curly brackets. If you would like to escape spaces (like for a link) wrap the index in
+Teaches a bot a command. Will output the `output` when `|| shortcut` is called.
+You can also add args by wrapping the arg number (starting with 1) in curly
+brackets. If you would like to escape spaces (like for a link) wrap the index in
 regular brackets. You can also use `{a}` to include all the arguments and `[a]`
 to encode them all. **Permissions**
 
@@ -522,6 +524,7 @@ Looks query up on Wikipedia **Permissions**
 
 # Learned Commands
 
-These are commands created by users of the bot, not by me. Many were imported from the previous bot. I am not
-responsible for these commands, however, if you find one that is offensive and/or against Stack Exchange's policy please
-open an issue and it may be removed.
+These are commands created by users of the bot, not by me. Many were imported
+from the previous bot. I am not responsible for these commands, however, if you
+find one that is offensive and/or against Stack Exchange's policy please open an
+issue and it may be removed.

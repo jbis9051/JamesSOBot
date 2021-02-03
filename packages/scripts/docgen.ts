@@ -1,45 +1,45 @@
-import * as fs from "fs";
-import { Bot, PermissionType } from "@chatbot/bot";
+import * as fs from 'fs';
+import { Bot, PermissionType } from '@chatbot/bot';
 import {
-  unformattedCode,
-  welcome,
-  adoc,
-  afk,
-  applesupport,
-  backup,
-  ban,
-  betterecho,
-  calc,
-  choose,
-  debug,
-  errors,
-  evalPlugin,
-  funfact,
-  help,
-  info,
-  joke,
-  kill,
-  learn,
-  life,
-  mdn,
-  obama,
-  random,
-  rules,
-  selfDestruct,
-  stat,
-  status,
-  STOP,
-  timeout,
-  timer,
-  w3schools,
-  wiki,
-  clapper
-} from "@chatbot/plugins";
+    unformattedCode,
+    welcome,
+    adoc,
+    afk,
+    applesupport,
+    backup,
+    ban,
+    betterecho,
+    calc,
+    choose,
+    debug,
+    errors,
+    evalPlugin,
+    funfact,
+    help,
+    info,
+    joke,
+    kill,
+    learn,
+    life,
+    mdn,
+    obama,
+    random,
+    rules,
+    selfDestruct,
+    stat,
+    status,
+    STOP,
+    timeout,
+    timer,
+    w3schools,
+    wiki,
+    clapper,
+} from '@chatbot/plugins';
 
-const bot = new Bot("docs", {
-  users_groups: {} as Record<any, any[]>,
-  plugin: {},
-  client: {}
+const bot = new Bot('docs', {
+    users_groups: {} as Record<any, any[]>,
+    plugin: {},
+    client: {},
 });
 
 bot.addPlugin(
@@ -81,9 +81,9 @@ bot.addPlugin(
 function getPermName(perm: PermissionType | string) {
     switch (perm) {
         case PermissionType.ALL:
-          return "all";
+            return 'all';
         case PermissionType.OWNER:
-          return "owner";
+            return 'owner';
         default:
             return perm;
     }
@@ -105,11 +105,11 @@ The eval is sandboxed. If you find a vulnerability please contact me or a Room O
 let plugins = [];
 
 let learned = Object.values(
-  new Bot("so", {
-    users_groups: {} as Record<any, any[]>,
-    plugin: {},
-    client: {}
-  }).dataStore.getData("learn_list") || {}
+    new Bot('so', {
+        users_groups: {} as Record<any, any[]>,
+        plugin: {},
+        client: {},
+    }).dataStore.getData('learn_list') || {}
 );
 
 plugins = Object.values(bot.commands);
@@ -126,16 +126,16 @@ md_doc += `
 `;
 
 plugins.forEach((command) => {
-  md_doc += `
+    md_doc += `
 ## ${command.name}
 ${command.description}
 **Permissions**
-${command.permissions.map((el) => "- " + getPermName(el)).join("\n")}
+${command.permissions.map((el) => '- ' + getPermName(el)).join('\n')}
            
 **Example**
-${command.examples.map((el) => "- `" + el + "`").join("\n")}
+${command.examples.map((el) => '- `' + el + '`').join('\n')}
 **Shortcuts**
-${command.shortcuts.map((el) => "- `" + el + "`").join("\n")}
+${command.shortcuts.map((el) => '- `' + el + '`').join('\n')}
 `;
 });
 
@@ -145,17 +145,17 @@ These are commands created by users of the bot, not by me. Many were imported fr
 `;
 
 learned.forEach((command: any) => {
-  md_doc += `
+    md_doc += `
 ## \`|| ${command.name}\`
 ${command.description}
 **Creator:** ${command.creator}
 **Creator ID:** ${command.creatorID}
-**Date Created:** ${command["date_created"]}
+**Date Created:** ${command['date_created']}
 `;
 });
 
 fs.writeFileSync(__dirname + '/../../docs/COMMANDS.md', md_doc);
 
 function localSort(a, b) {
-  return a.name.localeCompare(b.name);
+    return a.name.localeCompare(b.name);
 }

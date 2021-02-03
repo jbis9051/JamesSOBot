@@ -1,13 +1,13 @@
-import { Bot, Client, DataSaver, Message } from "@chatbot/bot";
-import * as path from "path";
-import WebSocket from "ws";
-import * as cheerio from "cheerio";
-import nodefetch from "node-fetch";
-import cookiefetch from "fetch-cookie/node-fetch";
-import { ChatEvent } from "./enum/ChatEvent";
-import formEncoder from "./helpers/formEncoder";
-import * as events from "events";
-import { CookieJar } from "tough-cookie";
+import { Bot, Client, DataSaver, Message } from '@chatbot/bot';
+import * as path from 'path';
+import WebSocket from 'ws';
+import * as cheerio from 'cheerio';
+import nodefetch from 'node-fetch';
+import cookiefetch from 'fetch-cookie/node-fetch';
+import { ChatEvent } from './enum/ChatEvent';
+import formEncoder from './helpers/formEncoder';
+import * as events from 'events';
+import { CookieJar } from 'tough-cookie';
 
 export class SOClient extends Client {
     private siteURL: string;
@@ -25,19 +25,19 @@ export class SOClient extends Client {
     private events = new events.EventEmitter();
     private jar: CookieJar;
     private fetch: (
-      input: RequestInfo,
-      init?: RequestInit
+        input: RequestInfo,
+        init?: RequestInit
     ) => Promise<Response>;
 
     constructor(
-      siteURL: string,
-      chatURL: string,
-      roomNums: number[],
-      bot: Bot
+        siteURL: string,
+        chatURL: string,
+        roomNums: number[],
+        bot: Bot
     ) {
         super();
         if (!process.env.DATA_FOLDER) {
-            throw "Data folder requried";
+            throw 'Data folder requried';
         }
         this.siteURL = siteURL;
         this.chatURL = chatURL;
@@ -45,29 +45,29 @@ export class SOClient extends Client {
         this.bot = bot;
         this.mainRoomNum = this.roomNums[0];
         this.dataStore = new DataSaver(
-          path.join(process.env.DATA_FOLDER, "so", "so.json"),
-          {}
+            path.join(process.env.DATA_FOLDER, 'so', 'so.json'),
+            {}
         );
         try {
             this.jar = CookieJar.deserializeSync(
-              this.dataStore.getData("cookieJar")
+                this.dataStore.getData('cookieJar')
             );
         } catch (e) {
             this.jar = new CookieJar();
         }
         this.fetch = cookiefetch(nodefetch, this.jar);
         this.events.on(ChatEvent.NEW_MESSAGE.toString(), (e) =>
-          this.bot.processMessage(this.createMessage(e), this)
+            this.bot.processMessage(this.createMessage(e), this)
         );
         this.events.on(ChatEvent.EDIT.toString(), (e) =>
-          this.bot.processMessage(this.createMessage(e), this)
+            this.bot.processMessage(this.createMessage(e), this)
         );
     }
     async init() {
         await this.connect();
         setInterval(
-          () => this.roomNums.forEach(this.joinRoom.bind(this)),
-          21600000
+            () => this.roomNums.forEach(this.joinRoom.bind(this)),
+            21600000
         );
     }
 
@@ -79,55 +79,55 @@ export class SOClient extends Client {
     }
 
     async mainSiteLogin() {
-        const resp = await this.fetch(this.siteURL + "/users/login", {
-            method: "GET"
+        const resp = await this.fetch(this.siteURL + '/users/login', {
+            method: 'GET',
         });
-        if (new URL(resp.url).pathname === "/") {
-            console.log("Already Logged in Yey!");
+        if (new URL(resp.url).pathname === '/') {
+            console.log('Already Logged in Yey!');
             return;
         }
         const body = await resp.text();
         const $ = cheerio.load(body);
-        const fkey = $("input[name=\"fkey\"]").val();
-        await this.fetch(this.siteURL + "/users/login", {
-            method: "POST",
+        const fkey = $('input[name="fkey"]').val();
+        await this.fetch(this.siteURL + '/users/login', {
+            method: 'POST',
             body: formEncoder({
                 fkey: fkey,
                 email: process.env.SOEMAIL!,
-                password: process.env.SOPASSWORD!
+                password: process.env.SOPASSWORD!,
             }),
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "User-Agent":
-                  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Safari/605.1.15"
-            }
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'User-Agent':
+                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Safari/605.1.15',
+            },
         });
-        this.dataStore.setData("cookieJar", this.jar.serializeSync());
+        this.dataStore.setData('cookieJar', this.jar.serializeSync());
     }
 
     async setUpWS() {
         this.fkey = await this.getFKEY(this.mainRoomNum);
         this.wsurl = await this.getWSURL(this.mainRoomNum);
         // @ts-ignore
-        const ws = new WebSocket(this.wsurl + "?l=99999999999", null, {
+        const ws = new WebSocket(this.wsurl + '?l=99999999999', null, {
             headers: {
-                Origin: this.chatURL
-            }
+                Origin: this.chatURL,
+            },
         });
         ws.on('open', () => {
-            console.log("WS open");
+            console.log('WS open');
         });
         ws.on('message', (data: any) => {
             data = JSON.parse(data);
             Object.keys(data).forEach((room) => {
                 const roomInt = parseInt(room.substring(1));
-                if (!data["r" + roomInt].e) {
+                if (!data['r' + roomInt].e) {
                     return false;
                 }
                 if (!this.roomNums.includes(roomInt)) {
                     return false;
                 }
-                data["r" + roomInt].e.forEach((event: any) => {
+                data['r' + roomInt].e.forEach((event: any) => {
                     this.events.emit(event.event_type.toString(), event);
                 });
             });
@@ -143,63 +143,63 @@ export class SOClient extends Client {
 
     async setChatVars() {
         //this._id = data.my_id;
-        const resp = await this.fetch(this.siteURL + "/users/current", {
-            method: "GET"
+        const resp = await this.fetch(this.siteURL + '/users/current', {
+            method: 'GET',
         });
         const url = new URL(resp.url);
         this._id = parseInt(
-          url.pathname.match(/(?<=\/users\/)[0-9]+(?=\/)/)![0]
+            url.pathname.match(/(?<=\/users\/)[0-9]+(?=\/)/)![0]
         );
-        let sites = this.dataStore.getData("sites");
+        let sites = this.dataStore.getData('sites');
         if (!sites) {
             const resp = await this.fetch(
-              "https://api.stackexchange.com/2.2/sites?pagesize=999999999",
-              {
-                  method: "GET"
-                  // gzip: true,
-              }
+                'https://api.stackexchange.com/2.2/sites?pagesize=999999999',
+                {
+                    method: 'GET',
+                    // gzip: true,
+                }
             );
             sites = JSON.parse(await resp.text());
-            this.dataStore.setData("sites", sites);
+            this.dataStore.setData('sites', sites);
         }
-        const siteURLRegex = this.siteURL.replace(/http(s)?:\/\/(www\.)?/, "");
+        const siteURLRegex = this.siteURL.replace(/http(s)?:\/\/(www\.)?/, '');
         this.api_site_param = sites.items.find(
-          (site: { aliases?: string[]; site_url: string }) => {
-              return (
-                (site.aliases &&
-                  site.aliases
-                    .map((siteURL) => {
-                        return siteURL.replace(
-                          /http(s)?:\/\/(www\.)?/,
-                          ""
-                        );
-                    })
-                    .includes(siteURLRegex)) ||
-                site.site_url.replace(/http(s)?:\/\/(www\.)?/, "") ===
-                siteURLRegex
-              );
-          }
+            (site: { aliases?: string[]; site_url: string }) => {
+                return (
+                    (site.aliases &&
+                        site.aliases
+                            .map((siteURL) => {
+                                return siteURL.replace(
+                                    /http(s)?:\/\/(www\.)?/,
+                                    ''
+                                );
+                            })
+                            .includes(siteURLRegex)) ||
+                    site.site_url.replace(/http(s)?:\/\/(www\.)?/, '') ===
+                        siteURLRegex
+                );
+            }
         ).api_site_parameter;
     }
 
     async getFKEY(roomNum: number) {
         const body = await this.fetch(
-          `${this.chatURL}/rooms/${roomNum}`
+            `${this.chatURL}/rooms/${roomNum}`
         ).then((resp) => resp.text());
         const $ = cheerio.load(body);
-        return $("#fkey").val();
+        return $('#fkey').val();
     }
 
     async getWSURL(roomNum: number) {
         const resp = await this.fetch(this.chatURL + '/ws-auth', {
-            method: "POST",
+            method: 'POST',
             body: formEncoder({
                 roomid: roomNum,
-                fkey: this.fkey!
+                fkey: this.fkey!,
             }),
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
         });
         const json = await resp.text();
         return JSON.parse(json).url;
@@ -208,10 +208,10 @@ export class SOClient extends Client {
     async joinRoom(roomNum: number) {
         const wsurl = await this.getWSURL(roomNum);
         // @ts-ignore
-        const ws = new WebSocket(wsurl + "?l=99999999999", null, {
+        const ws = new WebSocket(wsurl + '?l=99999999999', null, {
             headers: {
-                Origin: this.chatURL
-            }
+                Origin: this.chatURL,
+            },
         });
         ws.on('open', () => {
             ws.close();
@@ -220,17 +220,17 @@ export class SOClient extends Client {
 
     private createMessage(e: any): Message {
         return new Message(
-          {
-              id: e.message_id,
-              rawContent: e.content,
-              content: this.bot.htmldecode(e.content.replace(/<.+>/g, "")),
-              contextId: e.room_id.toString(),
-              fromId: e.user_id.toString(),
-              fromName: e.user_name,
-              appData: e
-          },
-          this,
-          this.bot
+            {
+                id: e.message_id,
+                rawContent: e.content,
+                content: this.bot.htmldecode(e.content.replace(/<.+>/g, '')),
+                contextId: e.room_id.toString(),
+                fromId: e.user_id.toString(),
+                fromName: e.user_name,
+                appData: e,
+            },
+            this,
+            this.bot
         );
     }
 
@@ -240,31 +240,31 @@ export class SOClient extends Client {
 
     async isRoomOwnerId(staticUID: string, context: Message): Promise<boolean> {
         return (await this.getRoomOwners(context.info.contextId)).some(
-          (owner) => owner.id === staticUID
+            (owner) => owner.id === staticUID
         );
     }
 
     send(content: string, context: string | Message): Promise<void> {
         const roomNum =
-          typeof context === "string" ? context : context.info.contextId;
+            typeof context === 'string' ? context : context.info.contextId;
         return new Promise(async (resolve) => {
-            console.log("Sending: " + content);
+            console.log('Sending: ' + content);
             this.fetch(`${this.chatURL}/chats/${roomNum}/messages/new`, {
-                method: "POST",
+                method: 'POST',
                 body: formEncoder({
                     text: content,
-                    fkey: this.fkey!
+                    fkey: this.fkey!,
                 }),
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
             }).then(async (resp) => {
                 const body = await resp.text();
                 if (resp.status === 200) {
                     resolve(JSON.parse(body).id);
                 }
                 const delay = body.match(
-                  /You can perform this action again in (\d+) seconds\./
+                    /You can perform this action again in (\d+) seconds\./
                 );
                 if (delay) {
                     setTimeout(async () => {
@@ -279,45 +279,45 @@ export class SOClient extends Client {
 
     hardReply(content: string, context: string | Message): Promise<void> {
         const messageNum =
-          typeof context === "string"
-            ? context
-            : context.info.appData.message_id;
+            typeof context === 'string'
+                ? context
+                : context.info.appData.message_id;
         return this.send(`:${messageNum} ${content}`, context);
     }
 
     softReply(content: string, context: string | Message): Promise<void> {
         const pingString =
-          typeof context === "string" ? context : this.getPingString(context);
+            typeof context === 'string' ? context : this.getPingString(context);
         return this.send(`${pingString} ${content}`, context);
     }
 
     delete(msg: Message): Promise<void> {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
 
     edit(content: string, context: Message): Promise<void> {
         return new Promise(async (resolve) => {
-            console.log("Sending: " + content);
+            console.log('Sending: ' + content);
             this.fetch(
-              `${this.chatURL}/messages/${context.info.appData.message_id}`,
-              {
-                  method: "POST",
-                  headers: {
-                      referer: `${this.chatURL}/rooms/${context.info.contextId}`,
-                      "Content-Type": "application/x-www-form-urlencoded"
-                  },
-                  body: formEncoder({
-                      text: content,
-                      fkey: this.fkey!
-                  })
-              }
+                `${this.chatURL}/messages/${context.info.appData.message_id}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        referer: `${this.chatURL}/rooms/${context.info.contextId}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formEncoder({
+                        text: content,
+                        fkey: this.fkey!,
+                    }),
+                }
             ).then(async (resp) => {
                 if (resp.status === 200) {
                     return;
                 }
                 const error = await resp.json();
                 const delay = error.error.match(
-                  /(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/
+                    /(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/
                 );
                 if (delay) {
                     setTimeout(async () => {
@@ -333,25 +333,25 @@ export class SOClient extends Client {
     moveTo(message: Message, to: any): Promise<void> {
         return new Promise(async (resolve) => {
             this.fetch(
-              `${this.chatURL}/admin/movePosts/${message.info.contextId}`,
-              {
-                  method: "POST",
-                  body: formEncoder({
-                      ids: message.info.id,
-                      to: to,
-                      fkey: this.fkey!
-                  }),
-                  headers: {
-                      "Content-Type": "application/x-www-form-urlencoded"
-                  }
-              }
+                `${this.chatURL}/admin/movePosts/${message.info.contextId}`,
+                {
+                    method: 'POST',
+                    body: formEncoder({
+                        ids: message.info.id,
+                        to: to,
+                        fkey: this.fkey!,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }
             ).then(async (resp) => {
                 if (resp.status === 200) {
                     return;
                 }
                 const body = await resp.json();
                 const delay = body.error.match(
-                  /(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/
+                    /(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/
                 );
                 if (delay) {
                     setTimeout(async () => {
@@ -365,15 +365,15 @@ export class SOClient extends Client {
     }
 
     async usernameToId(
-      username: string,
-      context: Message
+        username: string,
+        context: Message
     ): Promise<string | undefined> {
         const body = await this.fetch(
-          `${this.chatURL}/rooms/pingable/${context.info.contextId}`
+            `${this.chatURL}/rooms/pingable/${context.info.contextId}`
         ).then((resp) => resp.json());
         const array = body.filter(
-          (a: string[]) =>
-            a[1].toUpperCase() === username.replace("@", "").toUpperCase()
+            (a: string[]) =>
+                a[1].toUpperCase() === username.replace('@', '').toUpperCase()
         );
         if (array.length === 0) {
             return;
@@ -382,14 +382,14 @@ export class SOClient extends Client {
     }
 
     getPingString(msg: Message): string {
-        return "@" + msg.info.fromName.replace(/\s/g, "");
+        return '@' + msg.info.fromName.replace(/\s/g, '');
     }
 
     /* Client Specific Methods */
 
     async stats(id: string, api_site_param = this.api_site_param!) {
         const resp = await this.fetch(
-          `https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`
+            `https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`
         );
         const body = await resp.json();
         if (resp.status !== 200 || !body.items) {
@@ -401,21 +401,21 @@ export class SOClient extends Client {
 
     async chatIDToSiteID(id: number) {
         const body = await this.fetch(
-          `${this.chatURL}/users/thumbs/${id}`
+            `${this.chatURL}/users/thumbs/${id}`
         ).then((resp) => resp.json());
         return body.profileUrl.match(/\d+/)[0];
     }
 
     async getNumMessagesFromId(id: string, roomNum: string) {
         const body = await this.fetch(
-          `${this.chatURL}/users/${id}`
+            `${this.chatURL}/users/${id}`
         ).then((resp) => resp.text());
         try {
             const $ = cheerio.load(body);
             return parseInt(
-              $(`#room-${roomNum} .room-message-count`)
-                .attr("title")!
-                .match(/^\d+/)![0]
+                $(`#room-${roomNum} .room-message-count`)
+                    .attr('title')!
+                    .match(/^\d+/)![0]
             );
         } catch (e) {
             return false;
@@ -424,20 +424,20 @@ export class SOClient extends Client {
 
     async getRoomOwners(roomNum: string) {
         const body = await this.fetch(
-          `${this.chatURL}/rooms/info/${roomNum}`
+            `${this.chatURL}/rooms/info/${roomNum}`
         ).then((resp) => resp.text());
         try {
             const $ = cheerio.load(body);
-            return $("#room-ownercards")
-              .find("div.usercard")
-              .map((i, e) => ({
-                  username: $(e).find(".user-header").attr("title"),
-                  id: parseInt($(e).attr("id")!.replace("owner-user-", ""))
-              }))
-              .get();
+            return $('#room-ownercards')
+                .find('div.usercard')
+                .map((i, e) => ({
+                    username: $(e).find('.user-header').attr('title'),
+                    id: parseInt($(e).attr('id')!.replace('owner-user-', '')),
+                }))
+                .get();
         } catch (e) {
             console.error(e);
-            throw "Error finding owners";
+            throw 'Error finding owners';
         }
     }
 }

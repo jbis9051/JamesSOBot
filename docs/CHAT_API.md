@@ -2,7 +2,8 @@
 
 Partly Based on: https://github.com/Zirak/SO-ChatBot/blob/master/master.js
 
-Also thanks to @Zoe for providing some useful info on the `l` parameter as well as various other things.
+Also thanks to @Zoe for providing some useful info on the `l` parameter as well
+as various other things.
 
 **Note:**
 
@@ -17,10 +18,12 @@ The above can be changed depending the the chat room.
 
 ### Checking If Already Logged In
 
-The chat, being a subdomain (`chat.`) of the main site, has access to the main site's cookies.
+The chat, being a subdomain (`chat.`) of the main site, has access to the main
+site's cookies.
 
-The login form can be accessed directly at `siteURL + "/users/login"`. If the site detects you are already logged in, it
-will redirect you to the home page. This allows you to check if you are already logged in by checking the URL:
+The login form can be accessed directly at `siteURL + "/users/login"`. If the
+site detects you are already logged in, it will redirect you to the home page.
+This allows you to check if you are already logged in by checking the URL:
 
 ```javascript
 const resp = await request({
@@ -36,8 +39,9 @@ if (resp.request.path === '/') {
 }
 ```
 
-**Note:** Although you are logged in, you may be provided with new cookies. If you are saving cookies, it is suggested
-that you save cookies after you are redirected.
+**Note:** Although you are logged in, you may be provided with new cookies. If
+you are saving cookies, it is suggested that you save cookies after you are
+redirected.
 
 ### Logging In
 
@@ -52,8 +56,9 @@ await this.mainPage.keyboard.type(config.password);
 await this.mainPage.click('#submit-button');
 ```
 
-Instead you can make a `POST` request to `/users/login`. If you are using this method you MUST submit the fkey (CSRF
-token). This is located in a hidden input field with the `name` as `fkey`.
+Instead you can make a `POST` request to `/users/login`. If you are using this
+method you MUST submit the fkey (CSRF token). This is located in a hidden input
+field with the `name` as `fkey`.
 
 ```javascript
 const resp = /* request to /users/login */;
@@ -72,7 +77,8 @@ const body = await request({
 });
 ```
 
-Once the submit button is clicked, you are redirected (It doesn't use AJAX to log you in).
+Once the submit button is clicked, you are redirected (It doesn't use AJAX to
+log you in).
 
 If the login is successful, you are given the following cookies:
 
@@ -160,7 +166,8 @@ If the login is successful, you are given the following cookies:
 
 ## Chat Authentication
 
-First, a note on authentication. Apparently, the chat uses two things to decide who you are.
+First, a note on authentication. Apparently, the chat uses two things to decide
+who you are.
 
 The first is, quite obviously, cookies (cookies shown above).
 
@@ -171,12 +178,13 @@ The second is an elusive thing called the `fkey`.
 The `fkey` is unique per user session (it changes on login and logout). The
 `fkey` is also used for users viewing the chat who are not logged in.
 
-The `fkey` is basically a CSRF token and it is required to view the chat and to send messages in the chat.
+The `fkey` is basically a CSRF token and it is required to view the chat and to
+send messages in the chat.
 
 The `fkey` can be found in either of the following ways while on a chat page:
 
-1. Getting the value of an input with the id `#fkey`. The input is the last element in the `<body>` and contains the
-   fkey.
+1. Getting the value of an input with the id `#fkey`. The input is the last
+   element in the `<body>` and contains the fkey.
 
 ```html
 <input
@@ -220,20 +228,23 @@ For receiving events you have 2 options: WebSockets or Long Polling.
 
 ### Authentication
 
-Surprisingly the WebSocket does not require any `fkey` or cookies so its very easy to connect.
+Surprisingly the WebSocket does not require any `fkey` or cookies so its very
+easy to connect.
 
 ### Getting the WebSocket URL
 
-The WebSocket URL is gotten by making a POST request, **with the login cookies**, to the `chatURL + '/ws-auth` with the
-following parameters:
+The WebSocket URL is gotten by making a POST request, **with the login
+cookies**, to the `chatURL + '/ws-auth` with the following parameters:
 
 - `roomid=[room number]`
 - `fkey=[fkey obtained in previous steps]`
 
 **Note:** A `content-type` header with a value of
-`application/x-www-form-urlencoded` MUST be sent or the POST data will not work and you will get a 404 error.
+`application/x-www-form-urlencoded` MUST be sent or the POST data will not work
+and you will get a 404 error.
 
-The response is JSON containing a single url key with the websocket as it's value. The response looks like this:
+The response is JSON containing a single url key with the websocket as it's
+value. The response looks like this:
 
 ```json
 {
@@ -260,22 +271,25 @@ return JSON.parse(json).url;
 
 #### Obtaining the `l` param
 
-The WebSocket requires an `l` parameter. We are not exactly sure what this is but it has to do with time, as omitting it
-results in a lot of history. Increasing it results in more recent messages. You can obtain the correct `l`
+The WebSocket requires an `l` parameter. We are not exactly sure what this is
+but it has to do with time, as omitting it results in a lot of history.
+Increasing it results in more recent messages. You can obtain the correct `l`
 time or just set it to a really high number.
 
 1. Get the correct time - Credit to
    [@Zoe](https://chat.stackoverflow.com/users/6296561/zoe)
 
 Generalized, you can get the time by sending a POST request to
-`<chat domain>/chats/<room id>/events`, and passing the fkey with it. In the URL, `<chat domain>` refers to the site
-you're on (i.e.
-`https://chat.stackoverflow.com`, but it can be any of the chat domains in the SE network), and `<room id>` is exactly
-as the name suggests - the ID if the room you're trying to join. Both of these parameters are without the brackets
+`<chat domain>/chats/<room id>/events`, and passing the fkey with it. In the
+URL, `<chat domain>` refers to the site you're on (i.e.
+`https://chat.stackoverflow.com`, but it can be any of the chat domains in the
+SE network), and `<room id>` is exactly as the name suggests - the ID if the
+room you're trying to join. Both of these parameters are without the brackets
 (`<>`) around them.
 
-If the call succeeds, you'll get a JSON form in either a string format, or a JSON object variant, depending on your
-framework. From there, get/parse the value `time` key.
+If the call succeeds, you'll get a JSON form in either a string format, or a
+JSON object variant, depending on your framework. From there, get/parse the
+value `time` key.
 
 Pseudo-code:
 
@@ -299,18 +313,21 @@ return JSON.parse(json).time;
 
 2. Just set it to `?l=99999999999`
 
-This is what we do for the bot this repository contains, because it works, and it's one less request.
+This is what we do for the bot this repository contains, because it works, and
+it's one less request.
 
 #### Actually Connecting (finally)
 
-Using the URL and the `l` param obtained in the previous sections, connect to the WebSocket.
+Using the URL and the `l` param obtained in the previous sections, connect to
+the WebSocket.
 
-Cookies, nor `fkey` are required. However, **a `Origin` header with the value of the `chatURL` is required**. If
-the `Origin` header isn't provided the WebSocket will fail immediately fail with an `Error code 1006`.
+Cookies, nor `fkey` are required. However, **a `Origin` header with the value of
+the `chatURL` is required**. If the `Origin` header isn't provided the WebSocket
+will fail immediately fail with an `Error code 1006`.
 
-If you are using [`ws`](https://github.com/websockets/ws), their documentation is awful and doesn't mention how to
-actually send headers so after trail and error/a couple Google Searches/looking through source code, we found this
-works:
+If you are using [`ws`](https://github.com/websockets/ws), their documentation
+is awful and doesn't mention how to actually send headers so after trail and
+error/a couple Google Searches/looking through source code, we found this works:
 
 ```
 const ws = new WebSocket(this.wsurl + "?l=99999999999",null,{
@@ -326,8 +343,9 @@ const ws = new WebSocket(this.wsurl + "?l=99999999999",null,{
 
 ## Events
 
-Once connected to the WebSocket or using Long Polling, you will receive events. Events occur when just about anything
-happens, but also when nothing happens. You might still receive events even though the chat room has no traffic.
+Once connected to the WebSocket or using Long Polling, you will receive events.
+Events occur when just about anything happens, but also when nothing happens.
+You might still receive events even though the chat room has no traffic.
 
 ### Basic Events
 
@@ -510,8 +528,8 @@ Room 23:
 
 ## Sending Messages
 
-Sending messages, for whatever, reason doesn't use the WebSocket, instead its a simple HTTP request with, you guessed
-it, the `fkey`.
+Sending messages, for whatever, reason doesn't use the WebSocket, instead its a
+simple HTTP request with, you guessed it, the `fkey`.
 
 To send, make a POST request to `chatURL + '/chats/[room num]/messages/new'`
 with the following parameters
@@ -560,11 +578,13 @@ const body = await request([...]).catch(error => { //request same as above, but 
 
 ## Editing Messages
 
-Editing messages needs to be done within two minutes of the message being posted, due to SE restrictions. Editing can be
-achieved by posting to
-`<chat domain>/messages/<message id>`, and posting with the fkey parameter and a parameter called `text` containing the
-new content. `<chat domain>` is again the chat site you want to handle ( i.e. `https://chat.stackoverflow.com`, and
-`<message id>` is the ID of the message you want to edit. Both of these are naturally without brackets.
+Editing messages needs to be done within two minutes of the message being
+posted, due to SE restrictions. Editing can be achieved by posting to
+`<chat domain>/messages/<message id>`, and posting with the fkey parameter and a
+parameter called `text` containing the new content. `<chat domain>` is again the
+chat site you want to handle ( i.e. `https://chat.stackoverflow.com`, and
+`<message id>` is the ID of the message you want to edit. Both of these are
+naturally without brackets.
 
 You most also include a `Referer` header with the room number:
 
@@ -613,10 +633,12 @@ The Response will be one of the following:
 
 ## Deleting messages
 
-Deleting, like editing, needs to be done within two minutes of the message being posted, and the message needs to be
-yours. There are likely exceptions for moderator accounts.
+Deleting, like editing, needs to be done within two minutes of the message being
+posted, and the message needs to be yours. There are likely exceptions for
+moderator accounts.
 
-The endpoint used here is `<chat host>/messages/<message id>/delete`, again posting the fkey.
+The endpoint used here is `<chat host>/messages/<message id>/delete`, again
+posting the fkey.
 
 ## Moving messages
 
@@ -627,7 +649,8 @@ To move a message make a POST request to
 
 - fkey
 - to - Room id where you want to move the message to,
-- ids - message id(s) to move. If multiple, separated by a comma with no trailing spaces
+- ids - message id(s) to move. If multiple, separated by a comma with no
+  trailing spaces
 
 ```javascript
 const body = await request({
@@ -646,13 +669,14 @@ const body = await request({
 
 ## Username to id
 
-There is no easy way to go from Username to id because different accounts can have very similar or the same username.
-The method below isn't always reliable because of this. This alternate way only works if they are pingable. All users
+There is no easy way to go from Username to id because different accounts can
+have very similar or the same username. The method below isn't always reliable
+because of this. This alternate way only works if they are pingable. All users
 who are currently in the room or have been in the room in the last couple
 (//TODO name amount of days) are pingable.
 
-Make a `GET` request to `chatURL + '/rooms/pingable/ + roomNum`, with your login cookies. If you do not provide login
-cookies, you will receive an empty array
+Make a `GET` request to `chatURL + '/rooms/pingable/ + roomNum`, with your login
+cookies. If you do not provide login cookies, you will receive an empty array
 (`[]`) response.
 
 ```javascript
@@ -699,7 +723,8 @@ Simply make a GET request to
 https://chat.stackoverflow.com/users/search?q=[search query]
 ```
 
-You will receive a response with JavaScript objects, up to 50, of users matching your search query.
+You will receive a response with JavaScript objects, up to 50, of users matching
+your search query.
 
 Example:
 
@@ -730,13 +755,15 @@ Response
 {"id":3057266,"dn":"Taj Bista","hash":"c8dca7011b91fa5cabbdbdbc2858e67d"}
 ```
 
-Each JavaScript object contains an `id` key with the users id, a `dn` key with the users Username, and a `hash` key
-containing a hash or URL for the users profile image. More information on the profile image in the _id to information_
+Each JavaScript object contains an `id` key with the users id, a `dn` key with
+the users Username, and a `hash` key containing a hash or URL for the users
+profile image. More information on the profile image in the _id to information_
 section below.
 
 ### `limit` parameter
 
-There is also an optional `limit=[limit num]` parameter to limit the number of results.
+There is also an optional `limit=[limit num]` parameter to limit the number of
+results.
 
 If `limit < 0` you will receive and HTML page with an error.
 
@@ -747,8 +774,8 @@ If `0 < limit <= 100` you will receive a response containing a maximum of
 
 If `limit > 100` you will receive a response containing a maximum of 100 users
 
-tl;dr The limit parameter is optional with a maximum of 100. If it is above 100, you will still only receive and maximum
-of 100 users.
+tl;dr The limit parameter is optional with a maximum of 100. If it is above 100,
+you will still only receive and maximum of 100 users.
 
 Example:
 
@@ -767,15 +794,16 @@ Response:
 
 ## id to information
 
-**For general user information we do not suggest using the method below. Instead,
-use [the official StackExchange API](https://api.stackexchange.com/)**
+**For general user information we do not suggest using the method below.
+Instead, use [the official StackExchange API](https://api.stackexchange.com/)**
 
-User information is cached by the chat site and takes a couple hours to sync with the main site. So things like
-reputation may not be entirely accurate (use the official API for that), but things like last seen and last post are
+User information is cached by the chat site and takes a couple hours to sync
+with the main site. So things like reputation may not be entirely accurate (use
+the official API for that), but things like last seen and last post are
 accurate.
 
-To get user information make a POST request `chatURL + "/user/info"` with the following parameters. Cookies are NOT
-required.
+To get user information make a POST request `chatURL + "/user/info"` with the
+following parameters. Cookies are NOT required.
 
 ```json
 {
@@ -784,7 +812,8 @@ required.
 }
 ```
 
-The roomID is required as it is needed for some of the information in the response.
+The roomID is required as it is needed for some of the information in the
+response.
 
 Here is a sample request and response
 
@@ -821,18 +850,21 @@ Response
 }
 ```
 
-`is_moderator` is for the parent site of the chat. `is_owner` is for the room specified in roomId. `last_post` is the
-last time the user chatted in any room.
-`last_seen` is that last time the person interacted with the chat (sent message/joined a room/leaved a room, etc.)
-. `email_hash` is a bit odd. Although it is labeled "email_hash" it will sometimes contain a URL to the users image with
-an `!` prepended in front of it. Other times, it will contain a hash. This hash seems to either be
-a [gravatar](https://gravatar.com) hash or not.
+`is_moderator` is for the parent site of the chat. `is_owner` is for the room
+specified in roomId. `last_post` is the last time the user chatted in any room.
+`last_seen` is that last time the person interacted with the chat (sent
+message/joined a room/leaved a room, etc.) . `email_hash` is a bit odd. Although
+it is labeled "email_hash" it will sometimes contain a URL to the users image
+with an `!` prepended in front of it. Other times, it will contain a hash. This
+hash seems to either be a [gravatar](https://gravatar.com) hash or not.
 
-// TODO specify all actions that affect the `last_seen` value and the email_hash more depth.
+// TODO specify all actions that affect the `last_seen` value and the email_hash
+more depth.
 
 ## Room Information / Detect New User / User's Total Messages
 
-Unfortunately there's no API to find this information. Instead we have to do some HTML parsing.
+Unfortunately there's no API to find this information. Instead we have to do
+some HTML parsing.
 
 Make a request to
 
@@ -841,8 +873,9 @@ chatURL` + `/users/[user ID]`
 ```
 
 You will receive and HTML response with a `<div>` element with an id of
-`#user-roomcards-container`. This div contains all the rooms the user is currently in. Each room card will have an id
-of `room-[room number]`. An example card for `#room-1` looks like the following. I have excluded unhelpful HTML:
+`#user-roomcards-container`. This div contains all the rooms the user is
+currently in. Each room card will have an id of `room-[room number]`. An example
+card for `#room-1` looks like the following. I have excluded unhelpful HTML:
 
 ```html
 <div id="room-1" class="roomcard">
