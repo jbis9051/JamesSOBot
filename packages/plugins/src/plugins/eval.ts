@@ -5,16 +5,20 @@ import { PermissionType, PluginFunction } from "@chatbot/bot";
 export const evalPlugin: PluginFunction = (bot) => {
     bot.addCommand({
       name: "eval",
-      args: [
-        "code"
-      ],
+      args: ["code"],
       description: "Evaluates JS",
       shortcuts: ["eval"],
-      examples: ["|| eval console.log('Hello World!');", "||> console.log('Hello World!');", "!!> console.log('Hello World!');"],
+      examples: [
+        "|| eval console.log('Hello World!');",
+        "||> console.log('Hello World!');",
+        "!!> console.log('Hello World!');"
+      ],
       ignore: false,
       permissions: [PermissionType.ALL],
       cb: (msg, client) => {
-        _run(msg.args.join(" ")).then(response => client.hardReply(response, msg));
+        _run(msg.args.join(" ")).then((response) =>
+          client.hardReply(response, msg)
+        );
       }
     });
 
@@ -40,10 +44,17 @@ export const evalPlugin: PluginFunction = (bot) => {
   }
 
   bot.RegisterHandler((msg, client) => {
-    const text = bot.htmldecode(msg.info.rawContent.replace(/<br>/g, "\n").replace(/<.+>/g, ""));
-    if (bot.permissionCheck(client, bot.commands["eval"], msg) && /^(\|\|>|>\|\||!!>) ./.test(text)) {
+    const text = bot.htmldecode(
+      msg.info.rawContent.replace(/<br>/g, "\n").replace(/<.+>/g, "")
+    );
+    if (
+      bot.permissionCheck(client, bot.commands["eval"], msg) &&
+      /^(\|\|>|>\|\||!!>) ./.test(text)
+    ) {
       const trigger = text.match(/^(\|\|>|>\|\||!!>) ./)![1];
-      _run(text.replace(trigger, "")).then(response => client.hardReply(response, msg));
+      _run(text.replace(trigger, "")).then((response) =>
+        client.hardReply(response, msg)
+      );
     }
   });
 };

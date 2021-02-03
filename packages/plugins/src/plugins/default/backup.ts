@@ -1,5 +1,11 @@
 import * as fs from "fs";
-import { PluginFunction, Message, Permission, PermissionType, Client } from "@chatbot/bot";
+import {
+  PluginFunction,
+  Message,
+  Permission,
+  PermissionType,
+  Client
+} from "@chatbot/bot";
 import fetch from "node-fetch";
 
 export const backup: PluginFunction = (bot, config) => {
@@ -23,19 +29,27 @@ export const backup: PluginFunction = (bot, config) => {
           public: false,
           files: {
             "learn_list.json": {
-              content: JSON.stringify(bot.dataStore.getData("learn_list"))
+              content: JSON.stringify(
+                bot.dataStore.getData("learn_list")
+              )
             },
             "people_seen.json": {
-              content: JSON.stringify(bot.dataStore.getData("people_seen"))
+              content: JSON.stringify(
+                bot.dataStore.getData("people_seen")
+              )
             },
             "afk_data.json": {
-              content: JSON.stringify(bot.dataStore.getData("afk_data"))
+              content: JSON.stringify(
+                bot.dataStore.getData("afk_data")
+              )
             }
           }
         })
-      }).then(resp => resp.json()).then(resp => {
-        client.send(`[Backup](${resp.html_url}) Created`, msg);
-      });
+      })
+        .then((resp) => resp.json())
+        .then((resp) => {
+          client.send(`[Backup](${resp.html_url}) Created`, msg);
+        });
     }
   });
 };

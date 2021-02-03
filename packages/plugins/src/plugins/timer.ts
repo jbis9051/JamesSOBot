@@ -6,12 +6,11 @@ export const timer: PluginFunction = (bot) => {
       name: "timer",
       args: [],
       description: "Creates a timer",
-      shortcuts: [
-        "timer",
-        "remind",
-        "remindme"
+      shortcuts: ["timer", "remind", "remindme"],
+      examples: [
+        "|| remind 'hello JBis' in 10 minutes",
+        "|| remind 'hello JBis' 10 hours"
       ],
-      examples: ["|| remind 'hello JBis' in 10 minutes", "|| remind 'hello JBis' 10 hours"],
       ignore: false,
       permissions: [PermissionType.ALL],
       cb: (msg, client) => {
@@ -20,9 +19,14 @@ export const timer: PluginFunction = (bot) => {
           client.send("Remind yourself, damn it!", msg);
           return;
         }
-        const mili = convertTimeStringToMiliseconds(msg.quotedArgsList.join(" "));
+        const mili = convertTimeStringToMiliseconds(
+          msg.quotedArgsList.join(" ")
+        );
         if (!mili) {
-          client.send("I don't know that time. Use `|| man timer` to see my syntax. ", msg);
+          client.send(
+            "I don't know that time. Use `|| man timer` to see my syntax. ",
+            msg
+          );
           return;
         }
         timers.push({
@@ -31,7 +35,7 @@ export const timer: PluginFunction = (bot) => {
           room: msg.info.contextId,
           content: content,
           expires: Date.now() + mili,
-          timer: setTimeout(_ => client.softReply(content, msg), mili)
+          timer: setTimeout((_) => client.softReply(content, msg), mili)
         });
 
         client.send("Reminder Added.", msg);
@@ -50,7 +54,7 @@ function convertTimeStringToMiliseconds(time: string) {
     {
       name: "hours",
       alias: ["h"],
-      multiplier: 3.6e+6
+      multiplier: 3.6e6
     },
     {
       name: "minutes",
@@ -62,9 +66,10 @@ function convertTimeStringToMiliseconds(time: string) {
       alias: ["sec", "s"],
       multiplier: 1000
     }
-
   ];
-  const timeObj = units.find(obj => obj.name === unit || obj.alias.includes(unit!));
+  const timeObj = units.find(
+    (obj) => obj.name === unit || obj.alias.includes(unit!)
+  );
   if (!timeObj) {
     return false;
   }

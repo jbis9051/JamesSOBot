@@ -1,15 +1,15 @@
 import { Bot, PermissionType, PluginFunction } from "@chatbot/bot";
 
 interface BanData {
-  told: boolean
-  banned_by: string,
-  banned_by_username: string,
-  date_ban: string,
+  told: boolean;
+  banned_by: string;
+  banned_by_username: string;
+  date_ban: string;
 }
 
-
 export const ban: PluginFunction = (bot: Bot) => {
-  const ban_user_data: { [key: string]: BanData } = bot.dataStore.getData("ban_data") || {};
+  const ban_user_data: { [key: string]: BanData } =
+    bot.dataStore.getData("ban_data") || {};
 
   bot.RegisterValidator("Ban List", (msg, client) => {
     if (isBan(msg.info.fromId)) {
@@ -35,14 +35,14 @@ export const ban: PluginFunction = (bot: Bot) => {
     name: "ban",
     args: ["user"],
     description: "Bans a user",
-    shortcuts: [
-      "ban"
-    ],
+    shortcuts: ["ban"],
     examples: ["|| ban @JBis", "|| ban JBis", "|| ban 7886229"],
     ignore: false,
     permissions: [PermissionType.OWNER, "admin"],
     cb: async (msg, client) => {
-      const id = /^\d+$/.test(msg.args[0]) ? msg.args[0] : await client.usernameToId(msg.args[0], msg);
+      const id = /^\d+$/.test(msg.args[0])
+        ? msg.args[0]
+        : await client.usernameToId(msg.args[0], msg);
       if (!id) {
         client.hardReply("Error: User not found", msg);
         return;
@@ -51,7 +51,10 @@ export const ban: PluginFunction = (bot: Bot) => {
         client.hardReply("That user is already ban.", msg);
         return;
       }
-      if (bot.inGroup(id, "admin") || await client.isRoomOwnerId(id, msg)) {
+      if (
+        bot.inGroup(id, "admin") ||
+        (await client.isRoomOwnerId(id, msg))
+      ) {
         client.hardReply("That user cannot be ban", msg);
         return;
       }
@@ -59,7 +62,7 @@ export const ban: PluginFunction = (bot: Bot) => {
         told: false,
         banned_by: msg.info.fromId,
         banned_by_username: msg.info.fromName,
-        date_ban: (new Date()).toString()
+        date_ban: new Date().toString()
       };
       bot.dataStore.setData("ban_data", ban_user_data);
       client.hardReply(msg.args[0] + " has been banned", msg);
@@ -69,14 +72,14 @@ export const ban: PluginFunction = (bot: Bot) => {
     name: "unban",
     args: ["user"],
     description: "Unbans a user",
-    shortcuts: [
-      "unban"
-    ],
+    shortcuts: ["unban"],
     examples: ["|| unban @JBis", "|| unban JBis", "|| unban 7886229"],
     ignore: false,
     permissions: [PermissionType.OWNER, "admin"],
     cb: async (msg, client) => {
-      const id = /^\d+$/.test(msg.args[0]) ? msg.args[0] : await client.usernameToId(msg.args[0], msg);
+      const id = /^\d+$/.test(msg.args[0])
+        ? msg.args[0]
+        : await client.usernameToId(msg.args[0], msg);
       if (!id) {
         client.hardReply("Error: User not found", msg);
         return;

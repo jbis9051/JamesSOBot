@@ -3,14 +3,9 @@ import { PermissionType, PluginFunction } from "@chatbot/bot";
 export const applesupport: PluginFunction = (bot) => {
   bot.addCommand({
     name: "Apple Search",
-    args: [
-      "query"
-    ],
+    args: ["query"],
     description: "Searches for query on Apple Support",
-    shortcuts: [
-      "aps",
-      "apple"
-    ],
+    shortcuts: ["aps", "apple"],
     examples: ["|| aps forgot Apple ID password"],
     ignore: false,
     permissions: [PermissionType.ALL],
@@ -19,7 +14,12 @@ export const applesupport: PluginFunction = (bot) => {
         client.send("**Missing args**", msg);
         return;
       }
-      bot.google_search(msg.args.join(" "), "support.apple.com", undefined, /^https:\/\/support\.apple\.com\/.*$/).then((data) => {
+      bot.google_search(
+        msg.args.join(" "),
+        "support.apple.com",
+        undefined,
+        /^https:\/\/support\.apple\.com\/.*$/
+      ).then((data) => {
         if (data) {
           client.send(client.link(data.title, data.url), msg);
         } else {

@@ -12,7 +12,10 @@ export class SlackClient extends Client {
   private id: string = "";
   private slackSigningSecret: string = process.env.SLACK_SIGNING_SECRET!;
   private name: string = "JamesBot";
-  private events: SlackEventAdapter & events.EventEmitter = createEventAdapter(this.slackSigningSecret) as any;
+  private events: SlackEventAdapter &
+    events.EventEmitter = createEventAdapter(
+    this.slackSigningSecret
+  ) as any;
   private bot: Bot;
   private web: WebClient;
 
@@ -23,30 +26,33 @@ export class SlackClient extends Client {
     this.events.on("message", this.handleMessage.bind(this));
   }
 
-
   async init() {
     await this.events.start(port);
     const resp = await this.web.auth.test();
     this.id = resp.user_id as string;
-    this.bot.clientFunctions.forEach(func => func(this));
+    this.bot.clientFunctions.forEach((func) => func(this));
   }
 
   async handleMessage(e: SlackMessage) {
     if (e.subtype) {
       return;
     }
-    const message = new Message({
-      id: e.ts,
-      rawContent: e.text,
-      content: this.bot.htmldecode(e.text),
-      contextId: e.channel,
-      fromId: e.user,
-      fromName: e.user,
-      appData: e
-    }, this, this.bot);
+    const message = new Message(
+      {
+        id: e.ts,
+        rawContent: e.text,
+        content: this.bot.htmldecode(e.text),
+        contextId: e.channel,
+        fromId: e.user,
+        fromName: e.user,
+        appData: e
+      },
+      this,
+      this.bot
+    );
     /* if (e.channel === "C0266FRGV") {
-         return;
-     }*/
+     return;
+ }*/
     this.bot.processMessage(message, this);
   }
 
@@ -59,23 +65,39 @@ export class SlackClient extends Client {
     return (response.user as any).is_admin;
   }
 
-  send(content: string, context: string | Message, options: any = {}): Promise<WebAPICallResult> {
-    const channel = typeof context === "string" ? context : context.info.contextId;
+  send(
+    content: string,
+    context: string | Message,
+    options: any = {}
+  ): Promise<WebAPICallResult> {
+    const channel =
+      typeof context === "string" ? context : context.info.contextId;
     return this.web.chat.postMessage({
       text: content,
       channel: channel,
-      thread_ts: typeof context === "string" ? undefined : context.info.appData.thread_ts,
+      thread_ts:
+        typeof context === "string"
+          ? undefined
+          : context.info.appData.thread_ts,
       ...options
     });
   }
 
-  hardReply(content: string, context: string | Message): Promise<WebAPICallResult> {
-    const pingString = typeof context === "string" ? context : this.getPingString(context);
+  hardReply(
+    content: string,
+    context: string | Message
+  ): Promise<WebAPICallResult> {
+    const pingString =
+      typeof context === "string" ? context : this.getPingString(context);
     return this.send(`${pingString} ${content}`, context);
   }
 
-  softReply(content: string, context: string | Message): Promise<WebAPICallResult> {
-    const pingString = typeof context === "string" ? context : this.getPingString(context);
+  softReply(
+    content: string,
+    context: string | Message
+  ): Promise<WebAPICallResult> {
+    const pingString =
+      typeof context === "string" ? context : this.getPingString(context);
     return this.send(`${pingString} ${content}`, context);
   }
 
@@ -91,7 +113,10 @@ export class SlackClient extends Client {
     throw new Error("Method not implemented.");
   }
 
-  async usernameToId(username: string, context: Message): Promise<string | undefined> {
+  async usernameToId(
+    username: string,
+    context: Message
+  ): Promise<string | undefined> {
     const match = username.match(/<@([A-Z0-9]+)>/);
     if (match) {
       return match[1];
@@ -108,8 +133,8 @@ export class SlackClient extends Client {
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
-        }
+    }
 
     return `<${encode(url)}|${encode(text)}>`;
-    }
+  }
 }

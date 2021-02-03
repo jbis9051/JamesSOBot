@@ -3,13 +3,9 @@ import { PluginFunction } from "@chatbot/bot";
 const man: PluginFunction = (bot) => {
     bot.addCommand({
       name: "man",
-      args: [
-        "command"
-      ],
+      args: ["command"],
       description: "Displays the man page for a bot command",
-      shortcuts: [
-        "man"
-      ],
+      shortcuts: ["man"],
       examples: ["|| man ban"],
       ignore: false,
       permissions: ["all"],
@@ -23,11 +19,17 @@ const man: PluginFunction = (bot) => {
           client.send("No manual entry for " + msg.args[0], msg);
           return;
         }
-        let stringToSend = `[\`${command.name}\`](https://github.com/jbis9051/JamesSOBot/blob/master/docs/COMMANDS.md#${command.name}): "${command.description || ""}" `;
+        let stringToSend = `[\`${
+          command.name
+        }\`](https://github.com/jbis9051/JamesSOBot/blob/master/docs/COMMANDS.md#${
+          command.name
+        }): "${command.description || ""}" `;
         if (command.creator) {
           stringToSend += "Creator: " + command.creator;
         } else {
-          stringToSend += `Examples: ${(command.examples || []).map(example => `\`${example}\``).join(" , ")}`;
+          stringToSend += `Examples: ${(command.examples || [])
+            .map((example) => `\`${example}\``)
+            .join(" , ")}`;
         }
         client.send(stringToSend, msg);
       }

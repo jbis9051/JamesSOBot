@@ -1,9 +1,12 @@
 const { workerData: code, parentPort } = require("worker_threads");
 let ivm = require("isolated-vm");
 
-
 async function sendData(error, result) {
-  parentPort.postMessage({ error: error, result: result, logged: console._items });
+  parentPort.postMessage({
+    error: error,
+    result: result,
+    logged: console._items
+  });
 }
 
 // Create a new isolate limited to 8MB
@@ -21,16 +24,21 @@ let jail = context.global;
 jail.setSync('global', jail.derefInto());
 
 // We will create a done function to be called when either we get a result or we have a runtime error
-jail.setSync("_done", new ivm.Reference(function(...args) {
-  sendData(...args);
-}));
+jail.setSync(
+  "_done",
+  new ivm.Reference(function(...args) {
+    sendData(...args);
+  })
+);
 
 // This will bootstrap the context. Prependeng 'new ' to a function is just a convenient way to
 // convert that function into a self-executing closure that is still syntax highlighted by
 // editors. It drives strict mode and linters crazy though.
 
 const sandboxed_script = require("./sandboxed-script");
-const compiled_sandbox_script = isolate.compileScriptSync("new " + sandboxed_script);
+const compiled_sandbox_script = isolate.compileScriptSync(
+  "new " + sandboxed_script
+);
 
 compiled_sandbox_script.runSync(context);
 

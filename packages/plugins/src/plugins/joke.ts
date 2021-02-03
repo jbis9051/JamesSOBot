@@ -6,9 +6,7 @@ export const joke: PluginFunction = (bot) => {
     name: "joke",
     args: [],
     description: "Sends a joke",
-    shortcuts: [
-      "joke"
-    ],
+    shortcuts: ["joke"],
     examples: ["|| joke"],
     ignore: false,
     permissions: [PermissionType.ALL],
@@ -17,17 +15,21 @@ export const joke: PluginFunction = (bot) => {
         client.send(`${msg.info.fromName}'s code 😜`, msg);
         return;
       }
-      fetch("https://official-joke-api.appspot.com/jokes/programming/random").then(resp => resp.json()).then((json: Array<{ setup: string, punchline: string }>) => {
-        if (!json) {
-          client.send("Error getting Joke", msg);
-          return;
-        }
-        const joke = json[0];
-        client.send(joke.setup, msg);
-        setTimeout(() => {
-          client.send(joke.punchline, msg);
-        }, 2500);
-      });
+      fetch(
+        "https://official-joke-api.appspot.com/jokes/programming/random"
+      )
+        .then((resp) => resp.json())
+        .then((json: Array<{ setup: string; punchline: string }>) => {
+          if (!json) {
+            client.send("Error getting Joke", msg);
+            return;
+          }
+          const joke = json[0];
+          client.send(joke.setup, msg);
+          setTimeout(() => {
+            client.send(joke.punchline, msg);
+          }, 2500);
+        });
     }
   });
 };

@@ -11,7 +11,7 @@ async function _run(code, msg) {
 }
 
 const msg = {
-  replyDirect: e => console.log(e),
+  replyDirect: (e) => console.log(e),
   code: `
    
     `

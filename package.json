@@ -1,21 +1,24 @@
 {
-  "name": "@chatbot/chatbot",
-  "private": true,
-  "description": "A module for creating chat bots with presets for Discord, StackExchange, and Slack.",
-  "version": "2.1.0",
-  "workspaces": [
-    "packages/bot",
-    "packages/plugins",
-    "packages/scripts",
-    "packages/platforms/*"
-  ],
-  "scripts": {
-    "dev": "lerna run dev --parallel --scope @chatbot/plugins --scope @chatbot/bot",
-    "dev:so": "lerna run dev --stream --scope @chatbot/so",
-    "start:so": "lerna run start --stream --scope @chatbot/so",
-    "build": "lerna run build --stream"
-  },
-  "devDependencies": {
-    "lerna": "^3.22.1"
-  }
+    "name": "@chatbot/chatbot",
+    "private": true,
+    "description": "A module for creating chat bots with presets for Discord, StackExchange, and Slack.",
+    "version": "2.1.0",
+    "workspaces": [
+        "packages/bot",
+        "packages/plugins",
+        "packages/scripts",
+        "packages/platforms/*"
+    ],
+    "scripts": {
+        "prettier": "prettier --check .",
+        "prettier:fix": "prettier --write --check .",
+        "dev": "lerna run dev --parallel --scope @chatbot/plugins --scope @chatbot/bot",
+        "dev:so": "lerna run dev --stream --scope @chatbot/so",
+        "start:so": "lerna run start --stream --scope @chatbot/so",
+        "build": "lerna run build --stream"
+    },
+    "devDependencies": {
+        "lerna": "^3.22.1",
+        "prettier": "^2.2.1"
+    }
 }

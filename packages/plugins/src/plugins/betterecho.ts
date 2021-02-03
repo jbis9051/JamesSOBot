@@ -5,11 +5,7 @@ export const betterecho: PluginFunction = (bot: Bot) => {
       name: "echo",
       args: [],
       description: "Bot echo's what you say",
-      shortcuts: [
-        "echo",
-        "betterecho",
-        "say"
-      ],
+      shortcuts: ["echo", "betterecho", "say"],
       examples: ["|| echo hi"],
       ignore: true,
       permissions: [PermissionType.ALL],

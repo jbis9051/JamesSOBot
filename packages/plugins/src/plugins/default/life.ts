@@ -6,10 +6,9 @@ export const life: PluginFunction = (bot) => {
     bot.addCommand({
       name: "disable",
       args: [],
-      description: "Disables the bot. Won't respond to messages until `|| enable` is ran by admin.",
-      shortcuts: [
-        "disable"
-      ],
+      description:
+        "Disables the bot. Won't respond to messages until `|| enable` is ran by admin.",
+      shortcuts: ["disable"],
       examples: ["|| sudo disable"],
       ignore: false,
       permissions: ["admin", PermissionType.OWNER],
@@ -26,9 +25,7 @@ export const life: PluginFunction = (bot) => {
       name: "enable",
       args: [],
       description: "Enables the bot.",
-      shortcuts: [
-        "enable"
-      ],
+      shortcuts: ["enable"],
       examples: ["|| enable"],
       ignore: false,
       permissions: ["admin", PermissionType.OWNER],

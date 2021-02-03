@@ -32,7 +32,8 @@ import {
   timeout,
   timer,
   w3schools,
-  wiki, clapper
+  wiki,
+  clapper
 } from "@chatbot/plugins";
 
 const bot = new Bot("docs", {
@@ -103,11 +104,13 @@ The eval is sandboxed. If you find a vulnerability please contact me or a Room O
 
 let plugins = [];
 
-let learned = Object.values((new Bot("so", {
-  users_groups: {} as Record<any, any[]>,
-  plugin: {},
-  client: {}
-})).dataStore.getData("learn_list") || {});
+let learned = Object.values(
+  new Bot("so", {
+    users_groups: {} as Record<any, any[]>,
+    plugin: {},
+    client: {}
+  }).dataStore.getData("learn_list") || {}
+);
 
 plugins = Object.values(bot.commands);
 
@@ -122,18 +125,17 @@ md_doc += `
 # Plugins
 `;
 
-
-plugins.forEach(command => {
+plugins.forEach((command) => {
   md_doc += `
 ## ${command.name}
 ${command.description}
 **Permissions**
-${command.permissions.map(el => "- " + getPermName(el)).join("\n")}
+${command.permissions.map((el) => "- " + getPermName(el)).join("\n")}
            
 **Example**
-${command.examples.map(el => "- `" + el + "`").join("\n")}
+${command.examples.map((el) => "- `" + el + "`").join("\n")}
 **Shortcuts**
-${command.shortcuts.map(el => "- `" + el + "`").join("\n")}
+${command.shortcuts.map((el) => "- `" + el + "`").join("\n")}
 `;
 });
 
@@ -141,7 +143,6 @@ md_doc += `
 # Learned Commands
 These are commands created by users of the bot, not by me. Many were imported from the previous bot. I am not responsible for these commands, however, if you find one that is offensive and/or against Stack Exchange's policy please open an issue and it may be removed. 
 `;
-
 
 learned.forEach((command: any) => {
   md_doc += `

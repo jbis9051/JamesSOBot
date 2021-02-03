@@ -27,7 +27,13 @@ export const debug: PluginFunction = (bot) => {
     });
   bot.RegisterValidator("debug", (msg: Message) => {
     if (debuging) {
-      console.log(msg.info.contextId + " - " + msg.info.fromName + " - " + msg.info.content);
+      console.log(
+        msg.info.contextId +
+        " - " +
+        msg.info.fromName +
+        " - " +
+        msg.info.content
+      );
     }
     return !debuging || msg.info.content === "|| sudo debug disable";
   });

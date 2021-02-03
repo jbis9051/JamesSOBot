@@ -13,7 +13,6 @@ module.exports = function () {
         return atob.apply(undefined, args, { result: { copy: true } });
     };
 
-
     /* most extra functions could be possibly unsafe*/
     const whitey = {
         Array: 1,
@@ -70,11 +69,11 @@ module.exports = function () {
     function clearObj(obj, prop) {
         try {
             Object.defineProperty(obj, prop, {
-                get: function () {
-                    /* TEE HEE */
-                    throw new ReferenceError(prop + ' is not defined');
-                },
-                configurable: false,
+              get: function() {
+                /* TEE HEE */
+                throw new ReferenceError(prop + " is not defined");
+              },
+              configurable: false,
               enumerable: false
             });
         } catch (e) {
@@ -99,7 +98,6 @@ module.exports = function () {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
     Object.defineProperty(Array.prototype, 'fill', {
         value: function (value) {
-
           if (value > 10000) {
             throw new Error("Array size to being. Ran out of memory.");
           }
@@ -119,19 +117,20 @@ module.exports = function () {
           var relativeStart = start >> 0;
 
           // Step 8.
-          var k = relativeStart < 0 ?
-            Math.max(len + relativeStart, 0) :
-            Math.min(relativeStart, len);
+          var k =
+            relativeStart < 0
+              ? Math.max(len + relativeStart, 0)
+              : Math.min(relativeStart, len);
 
           // Steps 9-10.
           var end = arguments[2];
-          var relativeEnd = end === undefined ?
-            len : end >> 0;
+          var relativeEnd = end === undefined ? len : end >> 0;
 
           // Step 11.
-          var final = relativeEnd < 0 ?
-            Math.max(len + relativeEnd, 0) :
-            Math.min(relativeEnd, len);
+          var final =
+            relativeEnd < 0
+              ? Math.max(len + relativeEnd, 0)
+              : Math.min(relativeEnd, len);
 
           // Step 12.
           while (k < final) {
@@ -141,14 +140,16 @@ module.exports = function () {
 
           // Step 13.
           return O;
-        }
+        },
     });
-
 
     const console = {
       _items: [],
       log: function() {
-        console._items.push.apply(console._items, Array.from(arguments).map(e => JSON.stringify(e)));
+        console._items.push.apply(
+          console._items,
+          Array.from(arguments).map((e) => JSON.stringify(e))
+        );
       }
     };
     console.error = console.info = console.debug = console.log;
@@ -165,29 +166,54 @@ module.exports = function () {
         return await eval(`(async ()=> { return ${code} })()`);
     }
 
-
     global.runCode = async function (base64EncodedCode) {
         const code = await global.atob(base64EncodedCode);
         let startTime;
         try {
           startTime = Date.now();
-          global.done(false, JSON.stringify(await exec(code)), JSON.stringify(console._items), startTime, Date.now());
+          global.done(
+            false,
+            JSON.stringify(await exec(code)),
+            JSON.stringify(console._items),
+            startTime,
+            Date.now()
+          );
         } catch (e) {
             try {
-              if (e.message !== "Illegal return statement" && e.message !== "await is only valid in async function") {
+              if (
+                e.message !== "Illegal return statement" &&
+                e.message !== "await is only valid in async function"
+              ) {
                 throw e;
               }
               if (e.message === "Illegal return statement") {
                 startTime = Date.now();
-                global.done(false, JSON.stringify(await execIIFE(code)), JSON.stringify(console._items), startTime, Date.now());
-
+                global.done(
+                  false,
+                  JSON.stringify(await execIIFE(code)),
+                  JSON.stringify(console._items),
+                  startTime,
+                  Date.now()
+                );
               } else {
                 startTime = Date.now();
-                global.done(false, JSON.stringify(await execAsyncIIFE(code)), JSON.stringify(console._items), startTime, Date.now());
+                global.done(
+                  false,
+                  JSON.stringify(await execAsyncIIFE(code)),
+                  JSON.stringify(console._items),
+                  startTime,
+                  Date.now()
+                );
               }
             } catch (e) {
-              global.done(false, JSON.stringify(e.toString()), JSON.stringify(console._items), startTime, Date.now());
+              global.done(
+                false,
+                JSON.stringify(e.toString()),
+                JSON.stringify(console._items),
+                startTime,
+                Date.now()
+              );
             }
         }
-    }
+    };
 };

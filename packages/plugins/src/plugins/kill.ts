@@ -3,13 +3,9 @@ import { PermissionType, PluginFunction } from "@chatbot/bot";
 export const kill: PluginFunction = (bot) => {
     bot.addCommand({
       name: "kill",
-      args: [
-        "person"
-      ],
+      args: ["person"],
       description: "",
-      shortcuts: [
-        "kill"
-      ],
+      shortcuts: ["kill"],
       examples: ["|| kill self"],
       ignore: false,
       permissions: [PermissionType.ALL],
@@ -19,8 +15,17 @@ export const kill: PluginFunction = (bot) => {
           return;
         }
         if (msg.args[0] === "yourself" || msg.args[0] === "self") {
-          if (!await bot.permissionCheck(client, bot.commands["suicide"], msg)) {
-            client.send("Your are not authorized to administer this command", msg);
+          if (
+            !(await bot.permissionCheck(
+              client,
+              bot.commands["suicide"],
+              msg
+            ))
+          ) {
+            client.send(
+              "Your are not authorized to administer this command",
+              msg
+            );
             return;
           }
           bot.commands["suicide"].cb(msg, client);

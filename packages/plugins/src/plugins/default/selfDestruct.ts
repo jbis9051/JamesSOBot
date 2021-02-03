@@ -23,9 +23,14 @@ export const selfDestruct: PluginFunction = (bot) => {
           client.send("Try `sudo`", msg);
           return;
         }
-        client.send("My life has come to end. I hope to be revived soon.", msg).then(_ => {
-          bot.shutdown(msg, client);
-        });
+        client
+          .send(
+            "My life has come to end. I hope to be revived soon.",
+            msg
+          )
+          .then((_) => {
+            bot.shutdown(msg, client);
+          });
       }
     });
-}
+};

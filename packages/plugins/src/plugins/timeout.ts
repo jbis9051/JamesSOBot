@@ -8,9 +8,7 @@ export const timeout: PluginFunction = (bot) => {
       name: "timeout",
       args: [],
       description: "Disables the bot for 30 sec.",
-      shortcuts: [
-        "timeout"
-      ],
+      shortcuts: ["timeout"],
       examples: ["|| sudo timeout"],
       ignore: false,
       permissions: ["admin", PermissionType.OWNER],
@@ -33,4 +31,4 @@ export const timeout: PluginFunction = (bot) => {
   bot.RegisterValidator("life", (msg) => {
     return live;
   });
-}
+};
