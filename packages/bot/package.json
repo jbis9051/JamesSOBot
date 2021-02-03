@@ -2,7 +2,7 @@
   "name": "@chatbot/bot",
   "version": "0.0.0",
   "scripts": {
-    "start": "tsc -w",
+    "dev": "tsc -w",
     "build": "tsc"
   },
   "main": "./build/index.js",
