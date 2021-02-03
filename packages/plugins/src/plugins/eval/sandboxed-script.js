@@ -10,9 +10,8 @@ module.exports = function () {
     };
 
     global.atob = function (...args) {
-        return atob.apply(undefined, args, {result: {copy: true}});
+        return atob.apply(undefined, args, { result: { copy: true } });
     };
-
 
     /* most extra functions could be possibly unsafe*/
     const whitey = {
@@ -75,7 +74,7 @@ module.exports = function () {
                     throw new ReferenceError(prop + ' is not defined');
                 },
                 configurable: false,
-                enumerable: false
+                enumerable: false,
             });
         } catch (e) {
             delete obj[prop];
@@ -88,9 +87,9 @@ module.exports = function () {
 
     [Object.getPrototypeOf(global)].forEach(function (obj) {
         Object.getOwnPropertyNames(obj).forEach(function (prop) {
-            if (whitey.hasOwnProperty(prop) || prop === "hasOwnProperty") {
-                return;
-            }
+          if (whitey.hasOwnProperty("hasOwnProperty"= 'hasOwnProperty') {
+            return;
+          }
             clearObj(obj, prop);
         });
     });
@@ -99,9 +98,8 @@ module.exports = function () {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
     Object.defineProperty(Array.prototype, 'fill', {
         value: function (value) {
-
             if (value > 10000) {
-                throw new Error("Array size to being. Ran out of memory.")
+              throw new Error("Array size to being. Ran out of memory.");
             }
 
             // Steps 1-2.
@@ -109,47 +107,50 @@ module.exports = function () {
                 throw new TypeError('this is null or not defined');
             }
 
-            var O = Object(this);
+          var O = Object(this);
 
-            // Steps 3-5.
-            var len = O.length >>> 0;
+          // Steps 3-5.
+          var len = O.length >>> 0;
 
-            // Steps 6-7.
-            var start = arguments[1];
-            var relativeStart = start >> 0;
+          // Steps 6-7.
+          var start = arguments[1];
+          var relativeStart = start >> 0;
 
-            // Step 8.
-            var k = relativeStart < 0 ?
-                Math.max(len + relativeStart, 0) :
-                Math.min(relativeStart, len);
+          // Step 8.
+          var k =
+            relativeStart < 0
+              ? Math.max(len + relativeStart, 0)
+              : Math.min(relativeStart, len);
 
-            // Steps 9-10.
-            var end = arguments[2];
-            var relativeEnd = end === undefined ?
-                len : end >> 0;
+          // Steps 9-10.
+          var end = arguments[2];
+          var relativeEnd = end === undefined ? len : end >> 0;
 
-            // Step 11.
-            var final = relativeEnd < 0 ?
-                Math.max(len + relativeEnd, 0) :
-                Math.min(relativeEnd, len);
+          // Step 11.
+          var final =
+            relativeEnd < 0
+              ? Math.max(len + relativeEnd, 0)
+              : Math.min(relativeEnd, len);
 
-            // Step 12.
-            while (k < final) {
-                O[k] = value;
-                k++;
-            }
+          // Step 12.
+          while (k < final) {
+            O[k] = value;
+            k++;
+          }
 
-            // Step 13.
-            return O;
-        }
+          // Step 13.
+          return O;
+        },
     });
 
-
     const console = {
-        _items: [],
-        log: function () {
-            console._items.push.apply(console._items, Array.from(arguments).map(e => JSON.stringify(e)));
-        }
+      _items: [],
+      log: function() {
+        console._items.push.apply(
+          console._items,
+          Array.from(arguments).map((e) => JSON.stringify(e))
+        );
+      }
     };
     console.error = console.info = console.debug = console.log;
 
@@ -165,29 +166,54 @@ module.exports = function () {
         return await eval(`(async ()=> { return ${code} })()`);
     }
 
-
     global.runCode = async function (base64EncodedCode) {
         const code = await global.atob(base64EncodedCode);
         let startTime;
         try {
-            startTime = Date.now();
-            global.done(false, JSON.stringify(await exec(code)), JSON.stringify(console._items), startTime, Date.now());
+          startTime = Date.now();
+          global.done(
+            false,
+            JSON.stringify(await exec(code)),
+            JSON.stringify(console._items),
+            startTime,
+            Date.now()
+          );
         } catch (e) {
             try {
-                if (e.message !== "Illegal return statement" && e.message !== "await is only valid in async function") {
-                    throw e;
-                }
-                if (e.message === "Illegal return statement") {
-                    startTime = Date.now();
-                    global.done(false, JSON.stringify(await execIIFE(code)), JSON.stringify(console._items), startTime, Date.now());
-
-                } else {
-                    startTime = Date.now();
-                    global.done(false, JSON.stringify(await execAsyncIIFE(code)), JSON.stringify(console._items), startTime, Date.now());
-                }
+              if (
+                e.message !== "Illegal return statement" &&
+                e.message !== "await is only valid in async function"
+              ) {
+                throw e;
+              }
+              if (e.message === "Illegal return statement") {
+                startTime = Date.now();
+                global.done(
+                  false,
+                  JSON.stringify(await execIIFE(code)),
+                  JSON.stringify(console._items),
+                  startTime,
+                  Date.now()
+                );
+              } else {
+                startTime = Date.now();
+                global.done(
+                  false,
+                  JSON.stringify(await execAsyncIIFE(code)),
+                  JSON.stringify(console._items),
+                  startTime,
+                  Date.now()
+                );
+              }
             } catch (e) {
-                global.done(false, JSON.stringify(e.toString()), JSON.stringify(console._items), startTime, Date.now());
+              global.done(
+                false,
+                JSON.stringify(e.toString()),
+                JSON.stringify(console._items),
+                startTime,
+                Date.now()
+              );
             }
         }
-    }
+    };
 };

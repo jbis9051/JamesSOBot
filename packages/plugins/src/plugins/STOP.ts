@@ -1,17 +1,15 @@
-import {PluginFunction} from "@chatbot/bot";
+import { PluginFunction } from '@chatbot/bot';
 
 export const STOP: PluginFunction = (bot) => {
     const hammers = {
         STOP: 'HAMMERTIME!',
         STAHP: 'HAMMAHTIME!',
         HALT: 'HAMMERZEIT!',
-        STOY: 'ZABIVAT\' VREMYA!',
-        SISTITE: 'MALLEUS TEMPUS!'
+        STOY: "ZABIVAT' VREMYA!",
+        SISTITE: 'MALLEUS TEMPUS!',
     };
-    const re = new RegExp(
-        '([\\s.]+|^)(' +
-        Object.keys(hammers).map(escape).join('|') +
-        ')[\\.!?]?$'
+    const re = new Reg"([\\s.]+|^)("\\s.]+|^)(' +
+      Object.keys(hammers).map(es"|"e).join('|")[\\.!?]?$")[\\.!?]?$'
     );
     bot.RegisterHandler((msg, client) => {
         const sentence = msg.info.content.toUpperCase(),

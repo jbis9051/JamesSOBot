@@ -1,16 +1,35 @@
-import * as ivm from "isolated-vm";
+import * as ivm from 'isolated-vm';
 // @ts-ignore
 import * as bla from './sandboxed-script';
 
-export default function (code: string, timeout = 500): Promise<{ error: string | false, result: string, logged: string[], time: number }> {
+export default function (
+    code: string,
+    timeout = 500
+): Promise<{
+    error: string | false;
+    result: string;
+    logged: string[];
+    time: number;
+}> {
     return new Promise((resolve, reject) => {
         // ship the data to whoever called this worker
-        function sendData(error: string | false, result: string, logged: string, startTime: number, endTime: number) {
-            resolve({error: error, result: result, logged: JSON.parse(logged), time: endTime - startTime});
+        function sendData(
+            error: string | false,
+            result: string,
+            logged: string,
+            startTime: number,
+            endTime: number
+        ) {
+            resolve({
+                error: error,
+                result: result,
+                logged: JSON.parse(logged),
+                time: endTime - startTime,
+            });
         }
 
         // Create a new isolate limited to 8MB
-        let isolate = new ivm.Isolate({memoryLimit: 8});
+        let isolate = new ivm.Isolate({ memoryLimit: 8 });
 
         // Create a new context within this isolate.
 
@@ -24,30 +43,48 @@ export default function (code: string, timeout = 500): Promise<{ error: string |
         jail.setSync('global', jail.derefInto());
 
         // We will create a done function to be called when either we get a result or we have a runtime error
-        jail.setSync('_done', new ivm.Reference(function (...args: any) {
-            // @ts-ignore
-            sendData(...args);
-        }));
+        jail.setSync(
+            '_done',
+            new ivm.Reference(function (...args: any) {
+                // @ts-ignore
+                sendData(...args);
+            })
+        );
 
-        jail.setSync('_atob', new ivm.Reference(function (string: string) {
-            return Buffer.from(string, 'base64').toString()
-        }));
+        jail.setSync(
+            '_atob',
+            new ivm.Reference(function (string: string) {
+                return Buffer.from(string, 'base64').toString();
+            })
+        );
 
         // This will bootstrap the context. Prependeng 'new ' to a function is just a convenient way to
         // convert that function into a self-executing closure that is still syntax highlighted by
         // editors. It drives strict mode and linters crazy though.
 
         const sandboxed_script = require('./sandboxed-script');
-        const compiled_sandbox_script = isolate.compileScriptSync('new ' + sandboxed_script);
+        const compiled_sandbox_script = isolate.compileScriptSync(
+            'new ' + sandboxed_script
+        );
 
         compiled_sandbox_script.runSync(context);
 
-        const code_to_run = `runCode('${Buffer.from(code).toString('base64')}')`;
+        const code_to_run = `runCode('${Buffer.from(code).toString(
+            'base64'
+        )}')`;
         const start = Date.now();
         try {
-            isolate.compileScriptSync(code_to_run).runSync(context, {timeout: timeout});
+            isolate
+                .compileScriptSync(code_to_run)
+                .runSync(context, { timeout: timeout });
         } catch (e) {
-            sendData(false, e.toString(), JSON.stringify([]), start, Date.now());
+            sendData(
+                false,
+                e.toString(),
+                JSON.stringify([]),
+                start,
+                Date.now()
+            );
         }
     });
 }

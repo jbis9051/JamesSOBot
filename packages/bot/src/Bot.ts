@@ -2,25 +2,28 @@ import * as events from 'events';
 import * as path from 'path';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
-import {Command} from "./interfaces/Command";
-import {PluginFunction} from "./interfaces/PluginFunction";
-import {MessageHandler} from "./types/CallbackTypes";
-import {Message} from "./models/Message";
-import {Client} from './Client';
-import {Config} from "./interfaces/Config";
-import {PermissionType} from "./interfaces/Permission";
-import { DataSaver } from "./DataSaver";
-import * as process from "process";
+import { Command } from './interfaces/Command';
+import { PluginFunction } from './interfaces/PluginFunction';
+import { MessageHandler } from './types/CallbackTypes';
+import { Message } from './models/Message';
+import { Client } from './Client';
+import { Config } from './interfaces/Config';
+import { PermissionType } from './interfaces/Permission';
+import { DataSaver } from './DataSaver';
+import * as process from 'process';
 
 export class Bot extends events.EventEmitter {
     readonly saveFolder: string;
     private shutdown_scripts: Array<MessageHandler> = [];
     commands: { [key: string]: Command } = {};
-    private messageHandlers: MessageHandler[] = []
-    private validatorScripts: Array<{ name: string, handler: MessageHandler<boolean> }> = []
+    private messageHandlers: MessageHandler[] = [];
+    private validatorScripts: Array<{
+        name: string;
+        handler: MessageHandler<boolean>;
+    }> = [];
     public info = {
         start: Date.now(),
-        name: "James",
+        name: 'James',
     };
     private config: Config;
     public readonly dataStore: DataSaver;
@@ -30,7 +33,7 @@ export class Bot extends events.EventEmitter {
     constructor(saveFolderName: string, config: Config) {
         super();
         if (!process.env.DATA_FOLDER) {
-            throw "Data folder required";
+            throw"Data folder required"';
         }
         this.saveFolder = path.join(process.env.DATA_FOLDER, saveFolderName);
         this.saveFile = path.join(this.saveFolder, 'data.json');
@@ -39,7 +42,7 @@ export class Bot extends events.EventEmitter {
     }
 
     addPlugin(...plugins: PluginFunction[]) {
-        plugins.forEach(plugin => plugin(this, this.config));
+        plugins.forEach((plugin) => plugin(this, this.config));
     }
 
     RegisterHandler(handler: MessageHandler) {
@@ -50,7 +53,7 @@ export class Bot extends events.EventEmitter {
      *  Adds a validator script to check
      */
     RegisterValidator(name: string, handler: MessageHandler<boolean>) {
-        this.validatorScripts.push({name, handler});
+        this.validatorScripts.push({ name, handler });
     }
 
     /**
@@ -64,10 +67,14 @@ export class Bot extends events.EventEmitter {
         if (process.env.NODE_ENV === "development") {
             console.log(msg.info.fromName + ": " + msg.info.rawContent);
         }
-        if (!this.validatorScripts.every(validatorScript => validatorScript.handler(msg, client))) {
+        if (
+            !this.validatorScripts.every((validatorScript) =>
+                validatorScript.handler(msg, client)
+            )
+        ) {
             return;
         }
-        this.messageHandlers.forEach(cb => cb(msg, client));
+        this.messageHandlers.forEach((cb) => cb(msg, client));
         if (client.isMyMessage(msg)) {
             return;
         }
@@ -79,7 +86,7 @@ export class Bot extends events.EventEmitter {
             this.emit("no-command", msg, client);
             return;
         }
-        if (!await this.permissionCheck(client, command, msg)) {
+        if (!(await this.permissionCheck(client, command, msg))) {
             this.emit("not-authorized", msg, client);
             return;
         }
@@ -91,7 +98,9 @@ export class Bot extends events.EventEmitter {
     }
 
     isCommandMessage(msg: Message) {
-        return msg.prefix && msg.commandCall && ["||", "!!"].includes(msg.prefix);
+        return (
+            msg.prefix && msg.commandCall && ["||", "!!"].includes(msg.prefix)
+        );
     }
 
     getCommand(msg: Message): Command | undefined {
@@ -99,8 +108,12 @@ export class Bot extends events.EventEmitter {
             return;
         }
         const commandShortcutLowerCase = msg.commandCall.toLowerCase();
-        return Object.values(this.commands).find((command) => command.shortcuts.some(shortcut => {
-                if (typeof shortcut === "object" && shortcut instanceof RegExp) {
+        return Object.values(this.commands).find((command) =>
+            command.shortcuts.some((shortcut) => {
+                if (
+                    typeof shortcut === "object" &&
+                    shortcut instanceof RegExp
+                ) {
                     return shortcut.test(msg.commandCall!);
                 }
                 return shortcut === commandShortcutLowerCase;
@@ -112,7 +125,6 @@ export class Bot extends events.EventEmitter {
         this.clientFunctions.push(func);
     }
 
-
     addCommand(cmd: Command) {
         this.commands[cmd.name] = cmd;
     }
@@ -123,7 +135,7 @@ export class Bot extends events.EventEmitter {
 
     async permissionCheck(client: Client, command: Command, msg: Message) {
         return (
-            command.permissions.some(permissionsKey => {
+            command.permissions.some((permissionsKey) => {
                 switch (permissionsKey) {
                     case PermissionType.ALL: {
                         return true;
@@ -135,9 +147,10 @@ export class Bot extends events.EventEmitter {
                         return this.inGroup(msg.info.fromId, permissionsKey);
                     }
                 }
-            })
-            || (command.permissions.includes(PermissionType.OWNER) && await client.isRoomOwnerId(msg.info.fromId, msg))
-        )
+            }) ||
+            (command.permissions.includes(PermissionType.OWNER) &&
+                (await client.isRoomOwnerId(msg.info.fromId, msg)))
+        );
     }
 
     inGroup(id: string, group: string) {
@@ -146,7 +159,7 @@ export class Bot extends events.EventEmitter {
 
     async shutdown(msg: Message, client: Client) {
         try {
-            await Promise.all(this.shutdown_scripts.map(e => e(msg, client)));
+            await Promise.all(this.shutdown_scripts.map((e) => e(msg, client)));
         } catch (e) {
             console.error(e);
             process.exit();
@@ -154,16 +167,26 @@ export class Bot extends events.EventEmitter {
         process.exit();
     }
 
-
     /**
      * Allows you to retrieve data from Google Search
      */
-    async google_search(query: string, site: string | undefined, selector: (($: cheerio.Root) => string) | undefined, selectorMatch: RegExp) {
+    async google_search(
+        query: string,
+        site: string | undefined,
+        selector: (($: cheerio.Root) => string) | undefined,
+        selectorMatch: RegExp
+    ) {
         /* if anyone wants to pay for API keys, feel free */
-        const url = "https://www.google.com/search?q=" + encodeURIComponent(query) + ((site) ? "%20site:" + site : "");
+        const url =
+            "https://www.google.com/search?q=" +
+            encodeURIComponent(query) +
+            (site ? "%20site:" + site : "");
         const body = await fetch(url, {
-            headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:10.0) Gecko/20100101 Firefox/12.0" }
-        }).then(resp => resp.text());
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:10.0) Gecko/20100101 Firefox/12.0"
+            }
+        }).then((resp) => resp.text());
 
         try {
             const $ = cheerio.load(body);
@@ -172,14 +195,21 @@ export class Bot extends events.EventEmitter {
             if (selector) {
                 selected = selector($);
             } else {
-                selected = $(".yuRUbf a").attr("href") && $(".yuRUbf a").attr("href")!.replace(/\/url?.*&url=/, "");
+                selected =
+                    $(".yuRUbf a").attr("href") &&
+                    $(".yuRUbf a")
+                        .attr("href")!
+                        .replace(/\/url?.*&url=/, "");
                 title = $(".yuRUbf").find(".LC20lb span").html();
             }
             if (!(selected && selected.match(selectorMatch))) {
-                console.error('Invalid Selector ' + selected);
+                console.error("Invalid Selector " + selected);
                 return false;
             }
-            return {url: selected as string, title: title || selected as string}
+            return {
+                url: selected as string,
+                title: title || (selected as string)
+            };
         } catch (e) {
             console.error(e);
             return false;
@@ -198,50 +228,57 @@ export class Bot extends events.EventEmitter {
     htmldecode(str: string) {
         const translate_re = /&(nbsp|amp|quot|lt|gt);/g;
         const translate = {
-            "nbsp": " ",
-            "amp": "&",
-            "quot": "\"",
-            "lt": "<",
-            "gt": ">"
+            nbsp: " ",
+            amp: "&",
+            quot: "\"",
+            lt: "<",
+            gt: ">"
         };
-        return str.replace(translate_re, function (match, entity) {
-            return translate[entity as keyof typeof translate];
-        }).replace(/&#(\d+);/gi, function (match, numStr) {
-            const num = parseInt(numStr, 10);
-            return String.fromCharCode(num);
-        });
+        return str
+            .replace(translate_re, function (match, entity) {
+                return translate[entity as keyof typeof translate];
+            })
+            .replace(/&#(\d+);/gi, function (match, numStr) {
+                const num = parseInt(numStr, 10);
+                return String.fromCharCode(num);
+            });
     }
 
     /* adapted from https://github.com/Zirak/SO-ChatBot/blob/d1fa258912a03931bd069406242fcd18721810dd/source/IO.js#L110 */
     htmlToMarkdown(str: string) {
         const htmlRe = /<(\S+)[^>]*>([^<]+)<\/\1>/g;
         const tags_to_markdown = {
-            i: '*',
-            b: '**',
-            strike: '---',
-            code: '`',
+            i: "*",
+            b: "**",
+            strike: "---",
+            code: "`",
             a(entire_string: string, tag: string, innerText: string) {
                 const href = /href="([^"]+?)"/.exec(entire_string);
                 if (!href) {
                     return entire_string;
                 }
-                return '[' + innerText + '](' + href[1] + ')';
+                return "[" + innerText + "](" + href[1] + ")";
             }
         };
 
         // A string value is the delimiter (what replaces the tag)
         let delim;
-        return str.replace(htmlRe, (entire_string: string, tag: string, innerText: string) => {
-            if (!tags_to_markdown.hasOwnProperty(tag)) {
-                return entire_string;
+        return str.replace(
+            htmlRe,
+            (entire_string: string, tag: string, innerText: string) => {
+                if (!tags_to_markdown.hasOwnProperty(tag)) {
+                    return entire_string;
+                }
+                delim = tags_to_markdown[tag as keyof typeof tags_to_markdown];
+                if (typeof delim === "function") {
+                    return delim.apply(tags_to_markdown, [
+                        entire_string,
+                        tag,
+                        innerText
+                    ]);
+                }
+                return delim + innerText + delim;
             }
-            delim = tags_to_markdown[tag as keyof typeof tags_to_markdown];
-            if (typeof delim === "function") {
-                return delim.apply(tags_to_markdown, [entire_string, tag, innerText]);
-            }
-            return delim + innerText + delim;
-        });
+        );
     }
-
 }
-
