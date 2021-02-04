@@ -33,14 +33,14 @@ export const welcome: PluginFunction = (bot: Bot, config) => {
         bot.dataStore.setData('people_seen', people_seen);
     });
     bot.RegisterHandler(async (msg, client: Client & any) => {
-        if (client.isMyMessage(msg) || parseInt(msg.info.fromId) < 0) {
+        if (client.isMyMessage(msg) || parseInt(msg.info.fromId, 10) < 0) {
             return;
         }
         if (people_seen.includes(msg.info.fromId)) {
             return;
-        } 
-            people_seen.push(msg.info.fromId);
-        
+        }
+        people_seen.push(msg.info.fromId);
+
         if (
             (await client.getNumMessagesFromId(
                 msg.info.fromId,

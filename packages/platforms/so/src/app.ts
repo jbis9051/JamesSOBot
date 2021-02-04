@@ -33,6 +33,7 @@ import {
     welcome,
     wiki,
 } from '@chatbot/plugins';
+import { define } from '@chatbot/plugins/build/plugins/define';
 import { SOClient } from './SOClient';
 
 const bot = new Bot('so', {
@@ -56,6 +57,7 @@ const bot = new Bot('so', {
 
 bot.addPlugin(
     backup,
+    define,
     errors,
     help,
     info,
