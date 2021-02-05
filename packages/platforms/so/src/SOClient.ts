@@ -307,23 +307,24 @@ export class SOClient extends Client {
         throw new Error('Method not implemented.');
     }
 
-    edit(content: string, context: Message): Promise<void> {
+    edit(content: string, context: Message | string): Promise<void> {
         return new Promise((resolve) => {
+            const messageNum =
+                typeof context === 'string'
+                    ? context
+                    : context.info.appData.message_id;
             console.log(`Sending: ${content}`);
-            this.fetch(
-                `${this.chatURL}/messages/${context.info.appData.message_id}`,
-                {
-                    method: 'POST',
-                    headers: {
-                        referer: `${this.chatURL}/rooms/${context.info.contextId}`,
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: formEncoder({
-                        text: content,
-                        fkey: this.fkey!,
-                    }),
-                }
-            ).then(async (resp) => {
+            this.fetch(`${this.chatURL}/messages/${messageNum}`, {
+                method: 'POST',
+                headers: {
+                    //    referer: `${this.chatURL}/rooms/${context.info.contextId}`,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formEncoder({
+                    text: content,
+                    fkey: this.fkey!,
+                }),
+            }).then(async (resp) => {
                 if (resp.status === 200) {
                     return;
                 }

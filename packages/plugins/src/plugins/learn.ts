@@ -63,7 +63,7 @@ export const learn: PluginFunction = (bot: Bot) => {
             };
             addLearnCommand(learn_list[name]);
             bot.dataStore.setData('learn_list', learn_list);
-            client.send(`${name  } has been added`, msg);
+            client.send(`${name} has been added`, msg);
         },
     });
 
@@ -78,15 +78,12 @@ export const learn: PluginFunction = (bot: Bot) => {
             ignore: true,
             permissions: [PermissionType.ALL],
             cb: (msg, client) => {
-                let {output} = learn_object;
+                let { output } = learn_object;
                 msg.quotedArgsList.forEach((arg, index) => {
                     output = output
+                        .replace(new RegExp(`\\{${index + 1}\\}`, 'g'), arg)
                         .replace(
-                            new RegExp(`\\{${  index + 1  }\\}`, 'g'),
-                            arg
-                        )
-                        .replace(
-                            new RegExp(`\\[${  index + 1  }\\]`, 'g'),
+                            new RegExp(`\\[${index + 1}\\]`, 'g'),
                             encodeURIComponent(arg)
                         );
                 });
@@ -112,7 +109,7 @@ export const learn: PluginFunction = (bot: Bot) => {
                         )
                     ) {
                         setTimeout(() => {
-                            client.edit(`> ${output}`, data); // get the annoying images away after a timeout
+                            client.edit(`> ${output}`, data.toString()); // get the annoying images away after a timeout
                         }, 60000);
                     }
                 });
@@ -150,7 +147,7 @@ export const learn: PluginFunction = (bot: Bot) => {
             delete learn_list[msg.args[0]];
             bot.deleteCommand(bot.commands[msg.args[0]]);
             bot.dataStore.setData('learn_list', learn_list);
-            client.send(`${msg.args[0]  } has been unlearned`, msg);
+            client.send(`${msg.args[0]} has been unlearned`, msg);
         },
     });
 };
