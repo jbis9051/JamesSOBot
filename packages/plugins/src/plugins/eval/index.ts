@@ -1,4 +1,5 @@
-import * as ivm from 'isolated-vm';
+import ivm from 'isolated-vm';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as bla from './sandboxed-script';
 
