@@ -194,7 +194,7 @@ export class Bot extends events.EventEmitter {
         const body = await fetch(url, {
             headers: {
                 'User-Agent':
-                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:10.0) Gecko/20100101 Firefox/12.0',
+                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:85.0) Gecko/20100101 Firefox/85.0',
             },
         }).then((resp) => resp.text());
 
