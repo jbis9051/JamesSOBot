@@ -235,7 +235,9 @@ export class SOClient extends Client {
             {
                 id: e.message_id,
                 rawContent: e.content,
-                content: this.bot.htmldecode(e.content.replace(/<.+>/g, '')),
+                content: this.bot.htmlToMarkdown(
+                    this.bot.htmldecode(e.content.replace(/<.+>/g, ''))
+                ),
                 contextId: e.room_id.toString(),
                 fromId: e.user_id.toString(),
                 fromName: e.user_name,
