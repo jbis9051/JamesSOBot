@@ -10,7 +10,7 @@ export const betterecho: PluginFunction = (bot: Bot) => {
         ignore: true,
         permissions: [PermissionType.ALL],
         cb: (msg, client) => {
-            client.send(bot.htmldecode(msg.args.join(' ')), msg);
+            client.send(msg.args.join(' '), msg);
         },
     });
 };
