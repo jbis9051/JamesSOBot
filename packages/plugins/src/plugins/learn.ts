@@ -29,9 +29,9 @@ export const learn: PluginFunction = (bot: Bot) => {
         permissions: [PermissionType.ALL],
         cb: async (msg, client) => {
             if (
-                bot.commands[
+                bot.getCommandFromText(
                     msg.args[0]
-                ] /* if its already registered a command */ &&
+                ) /* if its already registered a command */ &&
                 !(
                     learn_list.hasOwnProperty(msg.args[0]) &&
                     learn_list[msg.args[0]].creatorID === msg.info.fromId
