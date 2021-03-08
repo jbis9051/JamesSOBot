@@ -1,8 +1,6 @@
 import * as fs from 'fs';
 import { Bot, PermissionType } from '@chatbot/bot';
 import {
-    unformattedCode,
-    welcome,
     adoc,
     afk,
     applesupport,
@@ -12,6 +10,7 @@ import {
     calc,
     choose,
     debug,
+    define,
     errors,
     evalPlugin,
     funfact,
@@ -31,9 +30,11 @@ import {
     STOP,
     timeout,
     timer,
+    unformattedCode,
     w3schools,
+    welcome,
     wiki,
-    clapper,
+    man,
 } from '@chatbot/plugins';
 
 const bot = new Bot('docs', {
@@ -44,6 +45,7 @@ const bot = new Bot('docs', {
 
 bot.addPlugin(
     backup,
+    define,
     errors,
     help,
     info,
@@ -58,7 +60,6 @@ bot.addPlugin(
     ban,
     betterecho,
     calc,
-    clapper,
     choose,
     debug,
     funfact,
@@ -75,7 +76,8 @@ bot.addPlugin(
     timer,
     unformattedCode,
     w3schools,
-    wiki
+    wiki,
+    man
 );
 
 function getPermName(perm: PermissionType | string) {
@@ -89,10 +91,8 @@ function getPermName(perm: PermissionType | string) {
     }
 }
 
-let md_doc = `
-# Command Documentation
+let md_doc = `# Command Documentation
 *A better version of the help menu*
-[Learned Commands can be found here](#learned-commands)
 To interact with the bot simply enter your command with the following prefix:\`||\`.
 \`\`\`
 || commandName arg1 arg2 arg3
@@ -129,19 +129,21 @@ plugins.forEach((command) => {
     md_doc += `
 ## ${command.name}
 ${command.description}
+
 **Permissions**
-${command.permissions.map((el) => `- ${  getPermName(el)}`).join('\n')}
+${command.permissions.map((el) => `- ${getPermName(el)}`).join('\n')}
            
 **Example**
-${command.examples.map((el) => `- \`${  el  }\``).join('\n')}
+${command.examples.map((el) => `- \`${el}\``).join('\n')}
+
 **Shortcuts**
-${command.shortcuts.map((el) => `- \`${  el  }\``).join('\n')}
+${command.shortcuts.map((el) => `- \`${el}\``).join('\n')}
 `;
 });
-
+/*
 md_doc += `
 # Learned Commands
-These are commands created by users of the bot, not by me. Many were imported from the previous bot. I am not responsible for these commands, however, if you find one that is offensive and/or against Stack Exchange's policy please open an issue and it may be removed. 
+These are commands created by users of the bot, not by me. Many were imported from the previous bot. I am not responsible for these commands, however, if you find one that is offensive and/or against Stack Exchange's policy please open an issue and it may be removed.
 `;
 
 learned.forEach((command: any) => {
@@ -152,9 +154,9 @@ ${command.description}
 **Creator ID:** ${command.creatorID}
 **Date Created:** ${command.date_created}
 `;
-});
+}); */
 
-fs.writeFileSync(`${__dirname  }/../../docs/COMMANDS.md`, md_doc);
+fs.writeFileSync(`${__dirname}/../../docs/COMMANDS.md`, md_doc);
 
 function localSort(a, b) {
     return a.name.localeCompare(b.name);

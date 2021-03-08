@@ -1,440 +1,389 @@
 # Command Documentation
-
-_A better version of the help menu_
-[Learned Commands can be found here](#learned-commands) To interact with the bot
-simply enter your command with the following prefix:`||`.
-
+*A better version of the help menu*
+To interact with the bot simply enter your command with the following prefix:`||`.
 ```
 || commandName arg1 arg2 arg3
 ```
-
-The [eval](#eval) command has a shortcut of `||>`. See the examples in the eval
-section for how to use this. The eval is sandboxed. If you find a vulnerability
-please contact me or a Room Owner immediately. They will be able to shut down
-the bot until it is fixed.
-
----
+The [eval](#eval) command has a shortcut of `||>`. See the examples in the eval section for how to use this.
+The eval is sandboxed. If you find a vulnerability please contact me or a Room Owner immediately. They will be able to shut down the bot until it is fixed.
+----
 
 # Default Plugins
 
 # Plugins
 
 ## afk
+Add an afk message
 
-Add an afk message **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| afk bla`
-- `|| afk foo` **Shortcuts**
+- `|| afk foo`
+
+**Shortcuts**
 - `afk`
 
 ## Android Docs
+Searches for query on Android Developer Docs
 
-Searches for query on Android Developer Docs **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| adoc bluetooth`
 
-- `|| adoc bluetooth` **Shortcuts**
+**Shortcuts**
 - `adocs`
 - `adoc`
 - `androiddocs`
 - `droiddocs`
 
 ## Apple Search
+Searches for query on Apple Support
 
-Searches for query on Apple Support **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| aps forgot Apple ID password`
 
-- `|| aps forgot Apple ID password` **Shortcuts**
+**Shortcuts**
 - `aps`
 - `apple`
 
 ## backup
+Backup data to Gist and posts a link
 
-Backup data to Gist and posts a link **Permissions**
-
+**Permissions**
 - admin
-
+           
 **Example**
+- `|| backup`
 
-- `|| backup` **Shortcuts**
+**Shortcuts**
 - `backup`
 
 ## ban
+Bans a user
 
-Bans a user **Permissions**
-
+**Permissions**
 - owner
 - admin
-
+           
 **Example**
-
 - `|| ban @JBis`
 - `|| ban JBis`
-- `|| ban 7886229` **Shortcuts**
+- `|| ban 7886229`
+
+**Shortcuts**
 - `ban`
 
 ## calc
+Calculates an expression using Math.js
 
-Calculates an expression using Math.js **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| calc 5^2`
-- `|| calc 9*2` **Shortcuts**
+- `|| calc 9*2`
+
+**Shortcuts**
 - `calc`
 - `math`
 - `calculator`
 - `c`
 
 ## choose
-
 Chooses an option from a space delimited string of options. Strips 'or's .
+
 **Permissions**
-
 - all
-
+           
 **Example**
-
 - `|| choose heads tails`
-- `|| choose 1 2 3 or 4` **Shortcuts**
+- `|| choose 1 2 3 or 4`
+
+**Shortcuts**
 - `choose`
 - `pick`
 - `choice`
 
-## clap
-
-Clap help **Permissions**
-
-- all
-
-**Example**
-
-- `|| clap` **Shortcuts**
-- `clap`
-
-## clap.add
-
-Adds a member to a channel managed by clap **Permissions**
-
-- admin
-
-**Example**
-
-- `|| clap.add` **Shortcuts**
-- `clap.add`
-
-## clap.cancel
-
-Unmanages the current room **Permissions**
-
-- admin
-
-**Example**
-
-- `|| clap.cancel` **Shortcuts**
-- `clap.cancel`
-
-## clap.enforce
-
-Enforce policy **Permissions**
-
-- admin
-
-**Example**
-
-- `|| clap.enforce` **Shortcuts**
-- `clap.enforce`
-
-## clap.init
-
-Clap initiate **Permissions**
-
-- admin
-
-**Example**
-
-- `|| clap.init` **Shortcuts**
-- `clap.init`
-
-## clap.kick
-
-Kick a member from a channel managed by clap **Permissions**
-
-- admin
-
-**Example**
-
-- `|| clap.kick` **Shortcuts**
-- `clap.kick`
-
-## clap.snapshot
-
-Snapshots the current members in the room **Permissions**
-
-- admin
-
-**Example**
-
-- `|| clap.snapshot` **Shortcuts**
-- `clap.snapshot`
-
-## clap.status
-
-Checks the clap status **Permissions**
-
-- admin
-
-**Example**
-
-- `|| clap.status` **Shortcuts**
-- `clap.status`
-
 ## debug
+Disables/Enables the bot in the test room (193540)
 
-Disables/Enables the bot in the test room (193540) **Permissions**
-
+**Permissions**
 - admin
-
+           
 **Example**
+- `|| sudo debug enable`
 
-- `|| sudo debug enable` **Shortcuts**
+**Shortcuts**
 - `debug`
 
-## disable
+## define
+Defines a word
 
-Disables the bot. Won't respond to messages until `|| enable` is ran by admin.
 **Permissions**
+- all
+           
+**Example**
+- `|| define hello`
 
+**Shortcuts**
+- `define`
+- `definition`
+
+## disable
+Disables the bot. Won't respond to messages until `|| enable` is ran by admin.
+
+**Permissions**
 - admin
 - owner
-
+           
 **Example**
+- `|| sudo disable`
 
-- `|| sudo disable` **Shortcuts**
+**Shortcuts**
 - `disable`
 
 ## echo
+Bot echo's what you say
 
-Bot echo's what you say **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| echo hi`
 
-- `|| echo hi` **Shortcuts**
+**Shortcuts**
 - `echo`
 - `betterecho`
 - `say`
 
 ## enable
+Enables the bot.
 
-Enables the bot. **Permissions**
-
+**Permissions**
 - admin
 - owner
-
+           
 **Example**
+- `|| enable`
 
-- `|| enable` **Shortcuts**
+**Shortcuts**
 - `enable`
 
 ## eval
+Evaluates JS
 
-Evaluates JS **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| eval console.log('Hello World!');`
 - `||> console.log('Hello World!');`
-- `!!> console.log('Hello World!');` **Shortcuts**
+- `!!> console.log('Hello World!');`
+
+**Shortcuts**
 - `eval`
 
 ## formatting
+Message about formatting to an optional person
 
-Message about formatting to an optional person **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| formatting @JBis`
-- `|| formatting` **Shortcuts**
+- `|| formatting`
+
+**Shortcuts**
 - `formatting`
 
 ## funfact
+Sends a fun fact
 
-Sends a fun fact **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| funfact`
 
-- `|| funfact` **Shortcuts**
+**Shortcuts**
 - `funfact`
 - `ff`
 
 ## help
+Lists commands
 
-Lists commands **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| help`
 
-- `|| help` **Shortcuts**
+**Shortcuts**
 - `help`
 
 ## info
+Gives information about the bot
 
-Gives information about the bot **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| info`
 
-- `|| info` **Shortcuts**
+**Shortcuts**
 - `info`
 
 ## joke
+Sends a joke
 
-Sends a joke **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| joke`
 
-- `|| joke` **Shortcuts**
+**Shortcuts**
 - `joke`
 
 ## kill
 
+
 **Permissions**
-
 - all
-
+           
 **Example**
+- `|| kill self`
 
-- `|| kill self` **Shortcuts**
+**Shortcuts**
 - `kill`
 
 ## laws
+Lists the laws
 
-Lists the laws **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| laws`
 
-- `|| laws` **Shortcuts**
+**Shortcuts**
 - `rules`
 - `laws`
 
 ## learn
+Teaches a bot a command. Will output the `output` when `|| shortcut` is called. You can also add args by wrapping the arg number (starting with 1) in curly brackets. If you would like to escape spaces (like for a link) wrap the index in regular brackets. You can also use `{a}` to include all the arguments and `[a]` to encode them all.
 
-Teaches a bot a command. Will output the `output` when `|| shortcut` is called.
-You can also add args by wrapping the arg number (starting with 1) in curly
-brackets. If you would like to escape spaces (like for a link) wrap the index in
-regular brackets. You can also use `{a}` to include all the arguments and `[a]`
-to encode them all. **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| learn shortcut output`
 - `|| learn tbh to be honest`
 - `|| learn hbd Happy Birthday {1}!`
-- `|| learn vampire_redirect https://lmgtfy.com/?q=[1]` **Shortcuts**
+- `|| learn vampire_redirect https://lmgtfy.com/?q=[1]`
+
+**Shortcuts**
 - `learn`
 
-## mdn
+## man
+Displays the man page for a bot command
 
-Searches for query on MDN **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| man ban`
 
-- `|| mdn array sort` **Shortcuts**
+**Shortcuts**
+- `man`
+
+## mdn
+Searches for query on MDN
+
+**Permissions**
+- all
+           
+**Example**
+- `|| mdn array sort`
+
+**Shortcuts**
 - `mdn`
 - `rtfm`
 
 ## obama
-
 talktobama wrapper. (Converts text to a video of obama saying that text)
+
 **Permissions**
-
 - all
-
+           
 **Example**
+- `|| obama Hey, I'm Obama!`
 
-- `|| obama Hey, I'm Obama!` **Shortcuts**
+**Shortcuts**
 - `obama`
 - `obamaize`
 - `talkobama`
 
 ## random
+Generates Random number in range of [min,max] (both inclusive)
 
-Generates Random number in range of [min,max] (both inclusive) **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| random 2 30`
 - `|| random -2 30`
-- `|| random 30 18` **Shortcuts**
+- `|| random 30 18`
+
+**Shortcuts**
 - `random`
 
 ## stat
+Gets info about a user
 
-Gets info about a user **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| stat @JBis`
 - `|| stat JBis`
-- `|| stat 7886229` **Shortcuts**
+- `|| stat 7886229`
+
+**Shortcuts**
 - `stats`
 - `stat`
 
 ## status
+Used to check if the bot is alive.
 
-Used to check if the bot is alive. **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| status`
 
-- `|| status` **Shortcuts**
+**Shortcuts**
 - `status`
 - `poke`
 - `test`
 
 ## suicide
+Ends the bot's node process.
 
-Ends the bot's node process. **Permissions**
-
+**Permissions**
 - admin
-
+           
 **Example**
+- `|| sudo restart`
 
-- `|| sudo restart` **Shortcuts**
+**Shortcuts**
 - `die`
 - `destroy`
 - `selfdestruct`
@@ -445,86 +394,85 @@ Ends the bot's node process. **Permissions**
 - `shutdown`
 
 ## timeout
+Disables the bot for 30 sec.
 
-Disables the bot for 30 sec. **Permissions**
-
+**Permissions**
 - admin
 - owner
-
+           
 **Example**
+- `|| sudo timeout`
 
-- `|| sudo timeout` **Shortcuts**
+**Shortcuts**
 - `timeout`
 
 ## timer
+Creates a timer
 
-Creates a timer **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| remind 'hello JBis' in 10 minutes`
-- `|| remind 'hello JBis' 10 hours` **Shortcuts**
+- `|| remind 'hello JBis' 10 hours`
+
+**Shortcuts**
 - `timer`
 - `remind`
 - `remindme`
 
 ## unban
+Unbans a user
 
-Unbans a user **Permissions**
-
+**Permissions**
 - owner
 - admin
-
+           
 **Example**
-
 - `|| unban @JBis`
 - `|| unban JBis`
-- `|| unban 7886229` **Shortcuts**
+- `|| unban 7886229`
+
+**Shortcuts**
 - `unban`
 
 ## unlearn
+Unlearns a learned command command
 
-Unlearns a learned command command **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| unlearn tbh`
 
-- `|| unlearn tbh` **Shortcuts**
+**Shortcuts**
 - `unlearn`
 - `forget`
 
 ## welcome
+Welcomes a new user to the room with a message
 
-Welcomes a new user to the room with a message **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
-
 - `|| welcome @JBis`
 - `|| welcome JBis`
-- `|| welcome` **Shortcuts**
+- `|| welcome`
+
+**Shortcuts**
 - `welcome`
 
 ## wiki
+Looks query up on Wikipedia
 
-Looks query up on Wikipedia **Permissions**
-
+**Permissions**
 - all
-
+           
 **Example**
+- `|| wiki Alan Turing`
 
-- `|| wiki Alan Turing` **Shortcuts**
+**Shortcuts**
 - `wiki`
 - `lookup`
 - `search`
-
-# Learned Commands
-
-These are commands created by users of the bot, not by me. Many were imported
-from the previous bot. I am not responsible for these commands, however, if you
-find one that is offensive and/or against Stack Exchange's policy please open an
-issue and it may be removed.

@@ -15,6 +15,7 @@ export * from './plugins/calc';
 export * from './plugins/clapper';
 export * from './plugins/choose';
 export * from './plugins/debug';
+export * from './plugins/define';
 export * from './plugins/eval';
 export * from './plugins/funfact';
 export * from './plugins/joke';
