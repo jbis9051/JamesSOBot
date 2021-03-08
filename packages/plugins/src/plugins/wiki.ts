@@ -1,4 +1,4 @@
-import { PluginFunction } from '@chatbot/bot';
+import { PermissionType, PluginFunction } from '@chatbot/bot';
 import fetch from 'node-fetch';
 
 function random(arr: any[]) {
@@ -13,7 +13,7 @@ export const wiki: PluginFunction = (bot) => {
         shortcuts: ['wiki', 'lookup', 'search'],
         examples: ['|| wiki Alan Turing'],
         ignore: false,
-        permissions: ['all'],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (msg.info.contextId === '15') {
                 client.send('Mehdi told me not to tell you.', msg);
@@ -24,8 +24,9 @@ export const wiki: PluginFunction = (bot) => {
                 return;
             }
             fetch(
-                `https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=${ 
-                    encodeURIComponent(msg.args.join(' '))}`
+                `https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=${encodeURIComponent(
+                    msg.args.join(' ')
+                )}`
             )
                 .then((resp) => resp.json())
                 .then((resp) => {
@@ -38,7 +39,7 @@ export const wiki: PluginFunction = (bot) => {
                         return;
                     }
                     let res = resp[3][0];
-                        let found = true;
+                    let found = true;
 
                     if (!res) {
                         found = false;
