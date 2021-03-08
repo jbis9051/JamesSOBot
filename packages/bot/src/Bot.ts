@@ -132,6 +132,20 @@ export class Bot extends events.EventEmitter {
         );
     }
 
+    getCommandFromText(text: string) {
+        return Object.values(this.commands).find((command) =>
+            command.shortcuts.some((shortcut) => {
+                if (
+                    typeof shortcut === 'object' &&
+                    shortcut instanceof RegExp
+                ) {
+                    return shortcut.test(text);
+                }
+                return shortcut === text;
+            })
+        );
+    }
+
     RegisterClientFunction<T extends Client>(func: ClientFunction<T>) {
         this.clientFunctions.push(func);
     }

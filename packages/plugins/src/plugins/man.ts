@@ -1,6 +1,6 @@
-import { PluginFunction } from '@chatbot/bot';
+import { PermissionType, PluginFunction } from '@chatbot/bot';
 
-const man: PluginFunction = (bot) => {
+export const man: PluginFunction = (bot) => {
     bot.addCommand({
         name: 'man',
         args: ['command'],
@@ -8,15 +8,15 @@ const man: PluginFunction = (bot) => {
         shortcuts: ['man'],
         examples: ['|| man ban'],
         ignore: false,
-        permissions: ['all'],
+        permissions: [PermissionType.ALL],
         cb: (msg, client) => {
             if (msg.args.length < 1) {
                 client.send('**Missing args**', msg);
                 return;
             }
-            const command = bot.commands[msg.args[0]];
+            const command = bot.getCommandFromText(msg.args[0]);
             if (!command) {
-                client.send(`No manual entry for ${  msg.args[0]}`, msg);
+                client.send(`No manual entry for ${msg.args[0]}`, msg);
                 return;
             }
             let stringToSend = `[\`${
@@ -25,7 +25,7 @@ const man: PluginFunction = (bot) => {
                 command.name
             }): "${command.description || ''}" `;
             if (command.creator) {
-                stringToSend += `Creator: ${  command.creator}`;
+                stringToSend += `Creator: ${command.creator}`;
             } else {
                 stringToSend += `Examples: ${(command.examples || [])
                     .map((example) => `\`${example}\``)

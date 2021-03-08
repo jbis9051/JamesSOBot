@@ -32,6 +32,7 @@ import {
     w3schools,
     welcome,
     wiki,
+    man,
 } from '@chatbot/plugins';
 import { define } from '@chatbot/plugins/build/plugins/define';
 import { SOClient } from './SOClient';
@@ -88,7 +89,8 @@ bot.addPlugin(
     timer,
     unformattedCode,
     w3schools,
-    wiki
+    wiki,
+    man
 );
 
 const client = new SOClient(

@@ -20,6 +20,7 @@ export * from './plugins/funfact';
 export * from './plugins/joke';
 export * from './plugins/kill';
 export * from './plugins/learn';
+export * from './plugins/man';
 export * from './plugins/mdn';
 export * from './plugins/obama';
 export * from './plugins/random';

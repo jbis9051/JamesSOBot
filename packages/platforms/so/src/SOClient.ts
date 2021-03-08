@@ -80,10 +80,7 @@ export class SOClient extends Client {
 
     async init() {
         await this.connect();
-        setInterval(
-            () => this.roomNums.forEach(this.joinRoom.bind(this)),
-            21600000
-        );
+        setInterval(() => this.connect(), 1000 * 60 * 60 * 2);
     }
 
     async connect() {
@@ -123,9 +120,7 @@ export class SOClient extends Client {
     async setUpWS() {
         this.fkey = await this.getFKEY(this.mainRoomNum);
         this.wsurl = await this.getWSURL(this.mainRoomNum);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const ws = new WebSocket(`${this.wsurl}?l=99999999999`, null, {
+        const ws = new WebSocket(`${this.wsurl}?l=99999999999`, {
             headers: {
                 Origin: this.chatURL,
             },
@@ -218,9 +213,7 @@ export class SOClient extends Client {
 
     async joinRoom(roomNum: number) {
         const wsurl = await this.getWSURL(roomNum);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const ws = new WebSocket(`${wsurl}?l=99999999999`, null, {
+        const ws = new WebSocket(`${wsurl}?l=99999999999`, {
             headers: {
                 Origin: this.chatURL,
             },
@@ -261,12 +254,16 @@ export class SOClient extends Client {
     send(content: string, context: string | Message): Promise<void> {
         const roomNum =
             typeof context === 'string' ? context : context.info.contextId;
+        let finalContent = content;
+        if (content.length > 500 && !content.includes('\n')) {
+            finalContent = `\n${content}`; // bypass so limit on chars  // TODO this breaks formatting, figure out a better solution
+        }
         return new Promise((resolve) => {
-            console.log(`Sending: ${content}`);
+            console.log(`Sending: ${finalContent}`);
             this.fetch(`${this.chatURL}/chats/${roomNum}/messages/new`, {
                 method: 'POST',
                 body: formEncoder({
-                    text: content,
+                    text: finalContent,
                     fkey: this.fkey!,
                 }),
                 headers: {
