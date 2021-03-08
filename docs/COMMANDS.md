@@ -1,9 +1,13 @@
 # Command Documentation
+
 *A better version of the help menu*
+
 To interact with the bot simply enter your command with the following prefix:`||`.
+
 ```
 || commandName arg1 arg2 arg3
 ```
+
 The [eval](#eval) command has a shortcut of `||>`. See the examples in the eval section for how to use this.
 The eval is sandboxed. If you find a vulnerability please contact me or a Room Owner immediately. They will be able to shut down the bot until it is fixed.
 ----
