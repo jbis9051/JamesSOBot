@@ -80,13 +80,19 @@ export class SOClient extends Client {
 
     async init() {
         await this.connect();
-        setInterval(() => this.connect(), 1000 * 60 * 60 * 2);
+        setInterval(async () => {
+            const { ws } = this;
+            await this.connect();
+            if (ws) {
+                ws.close();
+            }
+        }, 1000 * 60 * 60 * 2);
     }
 
     async connect() {
         await this.mainSiteLogin();
         await this.setUpWS();
-        this.roomNums.slice(1).forEach(this.joinRoom.bind(this));
+        await Promise.all(this.roomNums.slice(1).map(this.joinRoom.bind(this)));
         await this.setChatVars();
     }
 
