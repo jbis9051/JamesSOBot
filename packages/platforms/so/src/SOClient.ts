@@ -84,7 +84,7 @@ export class SOClient extends Client {
             const { ws } = this;
             await this.connect();
             if (ws) {
-                ws.close();
+                ws.terminate();
             }
         }, 1000 * 60 * 60 * 2);
     }
@@ -150,7 +150,9 @@ export class SOClient extends Client {
             });
         });
         ws.on('close', () => {
-            this.setUpWS();
+            if (this.ws === ws) {
+                this.setUpWS();
+            }
         });
         ws.on('error', (err: string) => {
             console.error(err);
