@@ -49,6 +49,7 @@ const bot = new Bot('so', {
                 "Welcome to the JavaScript chat! Please review the [room rules](https://rlemon.github.com/so-chat-javascript-rules/). If you have a question, just post it, and if anyone's free and interested they'll help. If you want to report an abusive user or a problem in this room, visit our [meta](https://github.com/JavaScriptRoom/culture/).",
         },
         code_check: ['17', '193540'],
+        auto_command: ['17', '193540', '1'],
         github: {
             token: process.env.GITHUB_TOKEN,
         },

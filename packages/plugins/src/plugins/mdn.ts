@@ -1,4 +1,13 @@
-import { PermissionType, PluginFunction } from '@chatbot/bot';
+import { Bot, Client, PermissionType, PluginFunction } from '@chatbot/bot';
+
+export function mdnSearch(bot: Bot, term: string) {
+    return bot.google_search(
+        term,
+        'developer.mozilla.org',
+        undefined,
+        /^https:\/\/developer\.mozilla\.org\/.*$/
+    );
+}
 
 export const mdn: PluginFunction = (bot) => {
     bot.addCommand({
@@ -14,12 +23,7 @@ export const mdn: PluginFunction = (bot) => {
                 client.send('**Missing args**', msg);
                 return;
             }
-            bot.google_search(
-                msg.args.join(' '),
-                'developer.mozilla.org',
-                undefined,
-                /^https:\/\/developer\.mozilla\.org\/.*$/
-            ).then((data) => {
+            mdnSearch(bot, msg.args.join(' ')).then((data) => {
                 if (data) {
                     client.send(
                         bot.htmldecode(client.link(data.title, data.url)),

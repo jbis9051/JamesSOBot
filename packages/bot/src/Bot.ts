@@ -94,11 +94,11 @@ export class Bot extends events.EventEmitter {
         }
         const command = this.getCommand(msg);
         if (!command) {
-            this.emit('no-command', msg, client);
+            this.emit('no-command', msg, client, this.config);
             return;
         }
         if (!(await this.permissionCheck(client, command, msg))) {
-            this.emit('not-authorized', msg, client);
+            this.emit('not-authorized', msg, client, this.config);
             return;
         }
         try {

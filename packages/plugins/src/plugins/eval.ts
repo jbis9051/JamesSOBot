@@ -1,6 +1,28 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
 import eval from './eval/index';
 
+function truncate(str: string | any) {
+    if (typeof str === 'string' && str.length > 400) {
+        return str.slice(0, 400);
+    }
+    return str;
+}
+
+export async function RunEval(code: string) {
+    if (/^\s*{/.test(code) && /}\s*$/.test(code)) {
+        // eslint-disable-next-line no-param-reassign
+        code = `(${code})`;
+    }
+    // eslint-disable-next-line no-eval
+    const val = await eval(code);
+    val.result = truncate(val.result);
+    if (val.error) {
+        return `Error running script: \`${val.result}\``;
+    }
+    const logged = truncate(val.logged.join(', '));
+    return `\`${val.result}\` Logged: \`${logged}\` Took: \`${val.time}ms\``;
+}
+
 export const evalPlugin: PluginFunction = (bot) => {
     bot.addCommand({
         name: 'eval',
@@ -15,33 +37,11 @@ export const evalPlugin: PluginFunction = (bot) => {
         ignore: false,
         permissions: [PermissionType.ALL],
         cb: (msg, client) => {
-            _run(msg.args.join(' ')).then((response) =>
+            RunEval(msg.args.join(' ')).then((response) =>
                 client.hardReply(response, msg)
             );
         },
     });
-
-    function truncate(str: string | any) {
-        if (typeof str === 'string' && str.length > 400) {
-            return str.slice(0, 400);
-        }
-        return str;
-    }
-
-    async function _run(code: string) {
-        if (/^\s*{/.test(code) && /}\s*$/.test(code)) {
-            // eslint-disable-next-line no-param-reassign
-            code = `(${code})`;
-        }
-        // eslint-disable-next-line no-eval
-        const val = await eval(code);
-        val.result = truncate(val.result);
-        if (val.error) {
-            return `Error running script: \`${val.result}\``;
-        }
-        const logged = truncate(val.logged.join(', '));
-        return `\`${val.result}\` Logged: \`${logged}\` Took: \`${val.time}ms\``;
-    }
 
     bot.RegisterHandler((msg, client) => {
         const text = bot.htmldecode(
@@ -52,7 +52,7 @@ export const evalPlugin: PluginFunction = (bot) => {
             /^(\|\|>|>\|\||!!>) ./.test(text)
         ) {
             const trigger = text.match(/^(\|\|>|>\|\||!!>) ./)![1];
-            _run(text.replace(trigger, '')).then((response) =>
+            RunEval(text.replace(trigger, '')).then((response) =>
                 client.hardReply(response, msg)
             );
         }
