@@ -197,9 +197,9 @@ export class Bot extends events.EventEmitter {
      */
     async google_search(
         query: string,
-        site: string | undefined,
-        selector: (($: cheerio.Root) => string) | undefined,
-        selectorMatch: RegExp
+        site?: string,
+        selector?: ($: cheerio.Root) => string,
+        selectorMatch?: RegExp
     ) {
         /* if anyone wants to pay for API keys, feel free */
         const url = `https://www.google.com/search?q=${encodeURIComponent(
@@ -226,7 +226,7 @@ export class Bot extends events.EventEmitter {
                         .replace(/\/url?.*&url=/, '');
                 title = $('.yuRUbf').find('.LC20lb span').html();
             }
-            if (!(selected && selected.match(selectorMatch))) {
+            if (selectorMatch && !(selected && selected.match(selectorMatch))) {
                 console.error(`Invalid Selector ${selected}`);
                 return false;
             }

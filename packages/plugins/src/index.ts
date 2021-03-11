@@ -18,6 +18,7 @@ export * from './plugins/debug';
 export * from './plugins/define';
 export * from './plugins/eval';
 export * from './plugins/funfact';
+export * from './plugins/google';
 export * from './plugins/joke';
 export * from './plugins/kill';
 export * from './plugins/learn';
