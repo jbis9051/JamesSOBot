@@ -28,7 +28,10 @@ export default async function autocommand(
     ).length;
 
     if (matches / terms.length > 0.4) {
-        client.send(bot.htmldecode(client.link(data.title, data.url)), msg);
+        client.hardReply(
+            bot.htmldecode(client.link(data.title, data.url)),
+            msg
+        );
         return true;
     }
     return false;
