@@ -224,7 +224,9 @@ export class Bot extends events.EventEmitter {
                     $('.yuRUbf a')
                         .attr('href')!
                         .replace(/\/url?.*&url=/, '');
-                title = $('.yuRUbf').find('.LC20lb span').html();
+                title =
+                    $('.yuRUbf').find('.LC20lb span').html() ||
+                    $('.yuRUbf').find('.LC20lb').html();
             }
             if (selectorMatch && !(selected && selected.match(selectorMatch))) {
                 console.error(`Invalid Selector ${selected}`);
