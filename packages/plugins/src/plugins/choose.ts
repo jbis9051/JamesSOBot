@@ -1,5 +1,13 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
 
+export function chooseFunction(list: string[]) {
+    const options = list.filter((arg) => arg !== 'or');
+    if (options.length === 0) {
+        return false;
+    }
+    return options[Math.floor(Math.random() * options.length)];
+}
+
 export const choose: PluginFunction = (bot) => {
     bot.addCommand({
         name: 'choose',
