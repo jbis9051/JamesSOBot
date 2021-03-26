@@ -15,7 +15,7 @@ export default async function autocommand(
     const content = msg.info.content.replace(`${msg.prefix} `, '');
     if (/[+\-/*{};]|=>/.test(content)) {
         const result = await RunEval(content);
-        client.send(result, msg);
+        client.hardReply(result, msg);
         return true;
     }
     if (/ or /.test(content)) {

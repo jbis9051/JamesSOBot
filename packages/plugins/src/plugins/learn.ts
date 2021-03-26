@@ -120,7 +120,8 @@ export const learn: PluginFunction = (bot: Bot) => {
     bot.addCommand({
         name: 'unlearn',
         args: [''],
-        description: 'Unlearns a learned command command',
+        description:
+            'Unlearns a learned command command. Must be admin, RO, or command creator.',
         shortcuts: ['unlearn', 'forget'],
         examples: ['|| unlearn tbh'],
         ignore: false,
@@ -133,7 +134,7 @@ export const learn: PluginFunction = (bot: Bot) => {
             if (
                 !(
                     bot.inGroup(msg.info.fromId, 'admin') ||
-                    (await client.isRoomOwnerId(msg.info.fromName, msg)) ||
+                    (await client.isRoomOwnerId(msg.info.fromId, msg)) ||
                     learn_list[msg.args[0]].creatorID === msg.info.fromId
                 )
             ) {
