@@ -159,11 +159,15 @@ module.exports = function () {
     }
 
     async function execIIFE(code) {
-        return await eval(`(async ()=> { ${code} })()`);
+        return await eval(`(()=> { ${code} })()`);
     }
 
     async function execAsyncIIFE(code) {
         return await eval(`(async ()=> { return ${code} })()`);
+    }
+
+    async function execAsyncIIFENoReturn(code) {
+        return await eval(`(async ()=> { ${code} })()`);
     }
 
     global.runCode = async function (base64EncodedCode) {
@@ -196,14 +200,31 @@ module.exports = function () {
                         Date.now()
                     );
                 } else {
-                    startTime = Date.now();
-                    global.done(
-                        false,
-                        JSON.stringify(await execAsyncIIFE(code)),
-                        JSON.stringify(console._items),
-                        startTime,
-                        Date.now()
-                    );
+                    try {
+                        startTime = Date.now();
+                        global.done(
+                            false,
+                            JSON.stringify(await execAsyncIIFE(code)),
+                            JSON.stringify(console._items),
+                            startTime,
+                            Date.now()
+                        );
+                    } catch (e) {
+                        if (
+                            !e.message ||
+                            !e.message.startsWith('Unexpected token')
+                        ) {
+                            throw e;
+                        }
+                        startTime = Date.now();
+                        global.done(
+                            false,
+                            JSON.stringify(await execAsyncIIFENoReturn(code)),
+                            JSON.stringify(console._items),
+                            startTime,
+                            Date.now()
+                        );
+                    }
                 }
             } catch (e) {
                 global.done(
