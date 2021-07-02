@@ -1,6 +1,6 @@
 export enum PermissionType {
     ALL,
-    OWNER,
+    OWNER, // room owner
 }
 
 export type Permission = PermissionType | string;

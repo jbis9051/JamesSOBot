@@ -1,4 +1,5 @@
 import ivm from 'isolated-vm';
+import { REPLACERS, reviver, stringifyOutput } from './helper';
 
 export default function (
     code: string,
@@ -6,7 +7,7 @@ export default function (
 ): Promise<{
     error: string | false;
     result: string;
-    logged: string[];
+    logged: string;
     time: number;
 }> {
     return new Promise((resolve, reject) => {
@@ -20,8 +21,8 @@ export default function (
         ) {
             resolve({
                 error,
-                result,
-                logged: JSON.parse(logged),
+                result: stringifyOutput(JSON.parse(result, reviver)),
+                logged: stringifyOutput(JSON.parse(logged, reviver)),
                 time: endTime - startTime,
             });
         }
@@ -71,7 +72,7 @@ export default function (
 
         const code_to_run = `runCode('${Buffer.from(code).toString(
             'base64'
-        )}')`;
+        )}', '${Buffer.from(JSON.stringify(REPLACERS)).toString('base64')}')`;
         const start = Date.now();
         try {
             isolate

@@ -170,15 +170,29 @@ module.exports = function () {
         return await eval(`(async ()=> { ${code} })()`);
     }
 
-    global.runCode = async function (base64EncodedCode) {
+    global.runCode = async function (base64EncodedCode, base64EncodedEscapes) {
         const code = await global.atob(base64EncodedCode);
+        const REPLACERS = JSON.parse(await global.atob(base64EncodedEscapes));
+        function replacer(key, value) {
+            if (typeof value === 'number') {
+                if (Number.isNaN(value)) {
+                    return REPLACERS.NaN;
+                }
+                if (!Number.isFinite(value)) {
+                    return value > 0
+                        ? REPLACERS.Infinity
+                        : REPLACERS.NegInfinity;
+                }
+            }
+            return value;
+        }
         let startTime;
         try {
             startTime = Date.now();
             global.done(
                 false,
-                JSON.stringify(await exec(code)),
-                JSON.stringify(console._items),
+                JSON.stringify(await exec(code), replacer),
+                JSON.stringify(console._items, replacer),
                 startTime,
                 Date.now()
             );
@@ -194,8 +208,8 @@ module.exports = function () {
                     startTime = Date.now();
                     global.done(
                         false,
-                        JSON.stringify(await execIIFE(code)),
-                        JSON.stringify(console._items),
+                        JSON.stringify(await execIIFE(code), replacer),
+                        JSON.stringify(console._items, replacer),
                         startTime,
                         Date.now()
                     );
@@ -204,8 +218,8 @@ module.exports = function () {
                         startTime = Date.now();
                         global.done(
                             false,
-                            JSON.stringify(await execAsyncIIFE(code)),
-                            JSON.stringify(console._items),
+                            JSON.stringify(await execAsyncIIFE(code), replacer),
+                            JSON.stringify(console._items, replacer),
                             startTime,
                             Date.now()
                         );
@@ -219,8 +233,11 @@ module.exports = function () {
                         startTime = Date.now();
                         global.done(
                             false,
-                            JSON.stringify(await execAsyncIIFENoReturn(code)),
-                            JSON.stringify(console._items),
+                            JSON.stringify(
+                                await execAsyncIIFENoReturn(code),
+                                replacer
+                            ),
+                            JSON.stringify(console._items, replacer),
                             startTime,
                             Date.now()
                         );
@@ -229,8 +246,8 @@ module.exports = function () {
             } catch (e) {
                 global.done(
                     false,
-                    JSON.stringify(e.toString()),
-                    JSON.stringify(console._items),
+                    JSON.stringify(e.toString(), replacer),
+                    JSON.stringify(console._items, replacer),
                     startTime,
                     Date.now()
                 );

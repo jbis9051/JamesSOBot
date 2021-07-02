@@ -19,7 +19,7 @@ export async function RunEval(code: string) {
     if (val.error) {
         return `Error running script: \`${val.result}\``;
     }
-    const logged = truncate(val.logged.join(', '));
+    const logged = truncate(val.logged);
     return `\`${val.result}\` Logged: \`${logged}\` Took: \`${val.time}ms\``;
 }
 
