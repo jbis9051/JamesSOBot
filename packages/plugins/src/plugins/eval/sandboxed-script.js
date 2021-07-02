@@ -184,6 +184,9 @@ module.exports = function () {
                         : REPLACERS.NegInfinity;
                 }
             }
+            if (value === undefined) {
+                return REPLACERS.undefined;
+            }
             return value;
         }
         let startTime;

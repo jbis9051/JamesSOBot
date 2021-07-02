@@ -4,10 +4,13 @@ export const REPLACERS = {
     NaN: crypto.randomBytes(16).toString('hex'),
     Infinity: crypto.randomBytes(16).toString('hex'),
     NegInfinity: crypto.randomBytes(16).toString('hex'),
+    undefined: crypto.randomBytes(16).toString('hex'),
 };
 
 export function reviver(key: string, value: string) {
-    switch (value) {
+    switch (
+        value // return undefined has different functionality here so we can't return undefined
+    ) {
         case REPLACERS.NaN:
             return NaN;
         case REPLACERS.Infinity:
@@ -21,6 +24,12 @@ export function reviver(key: string, value: string) {
 
 export function stringifyOutput(input: any) {
     function getVal(a: any): string {
+        if (a === null) {
+            return 'null';
+        }
+        if (a === undefined || a === REPLACERS.undefined) {
+            return 'undefined';
+        }
         if (typeof a.toJSON === 'function') {
             return a.toJSON();
         }
