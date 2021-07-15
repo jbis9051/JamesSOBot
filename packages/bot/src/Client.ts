@@ -1,4 +1,4 @@
-import * as events from 'events';
+import events from 'events';
 import { Message } from './models/Message';
 
 export abstract class Client extends events.EventEmitter {

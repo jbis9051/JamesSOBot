@@ -1,8 +1,8 @@
-import * as events from 'events';
-import * as path from 'path';
-import * as cheerio from 'cheerio';
+import events from 'events';
+import path from 'path';
+import cheerio from 'cheerio';
 import fetch from 'node-fetch';
-import * as process from 'process';
+import process from 'process';
 import { Command } from './interfaces/Command';
 import { PluginFunction } from './interfaces/PluginFunction';
 import { MessageHandler } from './types/CallbackTypes';

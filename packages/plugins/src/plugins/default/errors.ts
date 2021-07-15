@@ -1,6 +1,6 @@
 import { Message, PluginFunction, Client, Config } from '@chatbot/bot';
 
-import * as levenshtein from 'fast-levenshtein';
+import levenshtein from 'fast-levenshtein';
 import autocommand from './errorHelpers/autocommand';
 
 export const errors: PluginFunction = (bot) => {

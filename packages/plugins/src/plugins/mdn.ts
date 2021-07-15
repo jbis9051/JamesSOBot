@@ -1,4 +1,4 @@
-import { Bot, Client, PermissionType, PluginFunction } from '@chatbot/bot';
+import { Bot, PermissionType, PluginFunction } from '@chatbot/bot';
 
 export function mdnSearch(bot: Bot, term: string) {
     return bot.google_search(
@@ -19,11 +19,11 @@ export const mdn: PluginFunction = (bot) => {
         ignore: false,
         permissions: [PermissionType.ALL],
         cb: (msg, client) => {
+            let searchArgs = msg.args.join(' ');
             if (msg.args.length < 1) {
-                client.send('**Missing args**', msg);
-                return;
+                searchArgs = 'mdn'; // || mdn --> || mdn mdn
             }
-            mdnSearch(bot, msg.args.join(' ')).then((data) => {
+            mdnSearch(bot, searchArgs).then((data) => {
                 if (data) {
                     client.send(
                         bot.htmldecode(client.link(data.title, data.url)),
@@ -35,20 +35,4 @@ export const mdn: PluginFunction = (bot) => {
             });
         },
     });
-    /*
-    bot.RegisterListener({
-        func: (msg) => {
-            const text = msg.getRawContent().replace(/<br>/g, "\n").replace(/<.+>/g, "").htmldecode();
-            if (bot.permissionCheck(bot.getCommandFromName("eval"), msg) && /^(\|\|>|>\|\||!!>) ./.test(text)) {
-                const trigger = text.match(/^(\|\|>|>\|\||!!>) ./)[1];
-                msg.code = text.replace(trigger, '');
-                if (/^\s*{/.test(msg.code) && /}\s*$/.test(msg.code)) {
-                    msg.code = '(' + msg.code + ')';
-                }
-                return true;
-            }
-            return false;
-        },
-        callback: (msg) => _run(msg.code, msg)
-    }); */
 };

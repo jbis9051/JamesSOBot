@@ -2,8 +2,8 @@
     "name": "@chatbot/scripts",
     "version": "0.0.0",
     "scripts": {
-        "dev": "ts-node docgen.ts",
-        "build": "tsc docgen.ts"
+        "dev": "ts-node src/docgen.ts",
+        "build": "tsc"
     },
     "main": "build/index.js",
     "dependencies": {

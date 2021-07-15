@@ -1,4 +1,4 @@
-import * as fse from 'fs-extra';
+import fse from 'fs-extra';
 
 export class DataSaver {
     private readonly data: { [key: string]: any };

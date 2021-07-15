@@ -1,10 +1,10 @@
 import { Bot, Client, DataSaver, Message } from '@chatbot/bot';
-import * as path from 'path';
+import path from 'path';
 import WebSocket from 'ws';
-import * as cheerio from 'cheerio';
+import cheerio from 'cheerio';
 import nodefetch from 'node-fetch';
 import cookiefetch from 'fetch-cookie/node-fetch';
-import * as events from 'events';
+import events from 'events';
 import { CookieJar } from 'tough-cookie';
 import { ChatEvent } from './enum/ChatEvent';
 import formEncoder from './helpers/formEncoder';

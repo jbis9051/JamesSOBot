@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 import { Bot, PermissionType } from '@chatbot/bot';
 import {
     adoc,
@@ -162,6 +162,6 @@ ${command.description}
 
 fs.writeFileSync(`${__dirname}/../../docs/COMMANDS.md`, md_doc);
 
-function localSort(a, b) {
+function localSort(a: any, b: any) {
     return a.name.localeCompare(b.name);
 }

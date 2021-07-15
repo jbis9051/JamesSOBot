@@ -2,7 +2,7 @@ import { Bot, Client, Message } from '@chatbot/bot';
 import { WebAPICallResult, WebClient } from '@slack/web-api';
 import { createEventAdapter } from '@slack/events-api';
 import { SlackEventAdapter } from '@slack/events-api/dist/adapter';
-import * as events from 'events';
+import events from 'events';
 import { SlackMessage } from './interfaces/SlackMessage';
 
 const port = parseInt(process.env.PORT!, 10) || 3000;
