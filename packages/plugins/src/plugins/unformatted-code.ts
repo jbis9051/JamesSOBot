@@ -3,9 +3,9 @@ import { PermissionType, PluginFunction } from '@chatbot/bot';
 const needsResponse: { [key: string]: NodeJS.Timeout } = {};
 
 const format_message =
-    "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). You have 25 seconds to edit and format your message properly before it will be removed. Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
+    "Please don't post unformatted code - use the up arrow to edit your post, then hit Ctrl + K to format the code in that post. See the [faq](https://chat.stackoverflow.com/faq). You have 25 seconds to edit and format your message properly before it will be removed. Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
 const format_message_command =
-    "Please don't post unformatted code - hit Ctrl+K before sending, use up-arrow to edit messages, and see the [faq](https://chat.stackoverflow.com/faq). Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
+    "Please don't post unformatted code - use the up arrow to edit your post, then hit Ctrl + K to format the code in that post. See the [faq](https://chat.stackoverflow.com/faq). Please separate code blocks from your actual question. Put your question in 1 message and then your code in a 2nd and format it.";
 
 export const unformattedCode: PluginFunction = (bot, config) => {
     bot.addCommand({
