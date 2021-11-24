@@ -4040,10 +4040,10 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-isolated-vm@^3.3.5:
-  version "3.3.10"
-  resolved "https://registry.yarnpkg.com/isolated-vm/-/isolated-vm-3.3.10.tgz#18a8caef536ecc6bf685a00fbd526acdd06e75ef"
-  integrity sha512-COaInZ05+9lKCeJtsqUTGDdvGRHVWkhZAQr+vExVTSyVWUNoulXJop46zSIPPHSb78uscHVrpzCYhBYSP+wYDQ==
+isolated-vm@^4.3.6:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/isolated-vm/-/isolated-vm-4.3.6.tgz#443672194c96fc077f219d6c115d50b1706d9611"
+  integrity sha512-YvioBOU6wUNSTOWGgX/pDPLF9/WaSLsX8GqL7RlFCKzBXTXzyfG+T4JNIRNEiowtZk5H5ekJSUFqbx2QHSpJDQ==
 
 isstream@~0.1.2:
   version "0.1.2"
