@@ -22,6 +22,7 @@
         "fix": "yarn run prettier:fix && yarn run lint:fix && yarn run prettier:fix",
         "dev": "lerna run dev --parallel --scope @chatbot/plugins --scope @chatbot/bot",
         "dev:so": "lerna run dev --stream --scope @chatbot/so",
+        "dev:discord": "lerna run dev --stream --scope @chatbot/discord",
         "start:so": "lerna run start --stream --scope @chatbot/so",
         "build": "lerna run build --stream"
     },
