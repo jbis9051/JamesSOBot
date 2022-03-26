@@ -17,7 +17,7 @@ export async function RunEval(code: string) {
     const val = await eval(code);
     val.result = truncate(val.result);
     if (val.error) {
-        return `Error running script: \`${val.result}\``;
+        return `Error running script: \`${val.error}\``;
     }
     const logged = truncate(val.logged);
     return `\`${val.result}\` Logged: \`${logged}\` Took: \`${val.time}ms\``;

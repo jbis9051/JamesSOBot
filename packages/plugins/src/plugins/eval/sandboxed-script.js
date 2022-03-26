@@ -171,8 +171,8 @@ module.exports = function () {
     }
 
     global.runCode = async function (base64EncodedCode, base64EncodedEscapes) {
-        const code = await global.atob(base64EncodedCode);
-        const REPLACERS = JSON.parse(await global.atob(base64EncodedEscapes));
+        const code = global.atob(base64EncodedCode);
+        const REPLACERS = JSON.parse(global.atob(base64EncodedEscapes));
         function replacer(key, value) {
             if (typeof value === 'number') {
                 if (Number.isNaN(value)) {

@@ -51,11 +51,8 @@ export default function (
             })
         );
 
-        jail.setSync(
-            '_atob',
-            new ivm.Reference((string: string) =>
-                Buffer.from(string, 'base64').toString()
-            )
+        jail.setSync('_atob', (string: string) =>
+            Buffer.from(string, 'base64').toString()
         );
 
         // This will bootstrap the context. Prependeng 'new ' to a function is just a convenient way to
@@ -68,7 +65,7 @@ export default function (
             `new ${sandboxed_script}`
         );
 
-        compiled_sandbox_script.runSync(context);
+        compiled_sandbox_script.runSync(context, { timeout });
 
         const code_to_run = `runCode('${Buffer.from(code).toString(
             'base64'
@@ -81,7 +78,7 @@ export default function (
         } catch (e) {
             sendData(
                 false,
-                e.toString(),
+                JSON.stringify(e.toString()),
                 JSON.stringify([]),
                 start,
                 Date.now()
