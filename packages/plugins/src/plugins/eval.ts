@@ -48,6 +48,7 @@ export const evalPlugin: PluginFunction = (bot) => {
             msg.info.rawContent.replace(/<br>/g, '\n').replace(/<.+>/g, '')
         );
         if (
+            // @ts-ignore FIXME: can RegisterHandler accept async callbacks?
             bot.permissionCheck(client, bot.commands.eval, msg) &&
             /^(\|\|>|>\|\||!!>) ./.test(text)
         ) {

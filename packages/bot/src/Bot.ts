@@ -1,17 +1,17 @@
-import events from 'events';
-import path from 'path';
 import cheerio from 'cheerio';
+import events from 'events';
 import fetch from 'node-fetch';
+import path from 'path';
 import process from 'process';
-import { Command } from './interfaces/Command';
-import { PluginFunction } from './interfaces/PluginFunction';
-import { MessageHandler } from './types/CallbackTypes';
-import { Message } from './models/Message';
 import { Client } from './Client';
-import { Config } from './interfaces/Config';
-import { PermissionType } from './interfaces/Permission';
 import { DataSaver } from './DataSaver';
 import { ClientFunction } from './interfaces/ClientFunction';
+import { Command } from './interfaces/Command';
+import { Config } from './interfaces/Config';
+import { PermissionType } from './interfaces/Permission';
+import { PluginFunction } from './interfaces/PluginFunction';
+import { Message } from './models/Message';
+import { MessageHandler } from './types/CallbackTypes';
 
 export class Bot extends events.EventEmitter {
     readonly saveFolder: string;
@@ -237,7 +237,7 @@ export class Bot extends events.EventEmitter {
                 title: title || (selected as string),
             };
         } catch (e) {
-            console.error(e);
+            console.error(e as Error);
             return false;
         }
     }

@@ -4,36 +4,36 @@ import { Message } from './models/Message';
 export abstract class Client extends events.EventEmitter {
     abstract isMyMessage(msg: Message): boolean;
 
-    abstract async isRoomOwnerId(
+    abstract isRoomOwnerId(
         staticUID: string,
         context: Message
     ): Promise<boolean>;
 
-    abstract async send(
+    abstract send(
         content: string,
         context: Message | string
     ): Promise<any>;
 
-    abstract async hardReply(
+    abstract hardReply(
         content: string,
         context: Message | string
     ): Promise<any>;
 
-    abstract async softReply(
+    abstract softReply(
         content: string,
         context: Message | string
     ): Promise<any>;
 
-    abstract async delete(msg: Message): Promise<void>;
+    abstract delete(msg: Message): Promise<void>;
 
-    abstract async edit(
+    abstract edit(
         content: string,
         context: Message | string
     ): Promise<void>;
 
-    abstract async moveTo(message: Message, to: any): Promise<void>;
+    abstract moveTo(message: Message, to: any): Promise<void>;
 
-    abstract async usernameToId(
+    abstract usernameToId(
         username: string,
         context: Message
     ): Promise<string | undefined>;

@@ -6,6 +6,7 @@
         "lib": ["ES2020"],
         "strict": true,
         "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "declaration": true,
