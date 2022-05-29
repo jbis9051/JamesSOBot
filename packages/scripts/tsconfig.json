@@ -10,7 +10,12 @@
         "skipLibCheck": true,
         "declaration": true,
         "allowJs": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "paths": {
+            "@chatbot/bot": ["../bot/src"],
+            "@chatbot/plugins": ["../plugins/src"]
+        }
     },
     "include": ["src"],
     "exclude": ["node_modules"]

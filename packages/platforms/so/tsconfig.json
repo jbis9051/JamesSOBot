@@ -12,7 +12,13 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "isolatedModules": true,
-        "typeRoots": ["./node_modules/@types", "./src/types"]
+        "lib": ["es2020"],
+        "typeRoots": ["../../../node_modules/@types", "./src/types"],
+        "baseUrl": ".",
+        "paths": {
+            "@chatbot/bot": ["../../bot/src"],
+            "@chatbot/plugins": ["../../plugins/src"]
+        }
     },
     "include": ["src"],
     "exclude": ["node_modules"]

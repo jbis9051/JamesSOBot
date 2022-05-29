@@ -43,12 +43,12 @@ export const evalPlugin: PluginFunction = (bot) => {
         },
     });
 
-    bot.RegisterHandler((msg, client) => {
+    bot.RegisterHandler(async (msg, client) => {
         const text = bot.htmldecode(
             msg.info.rawContent.replace(/<br>/g, '\n').replace(/<.+>/g, '')
         );
         if (
-            bot.permissionCheck(client, bot.commands.eval, msg) &&
+            await bot.permissionCheck(client, bot.commands.eval, msg) &&
             /^(\|\|>|>\|\||!!>) ./.test(text)
         ) {
             const trigger = text.match(/^(\|\|>|>\|\||!!>) ./)![1];

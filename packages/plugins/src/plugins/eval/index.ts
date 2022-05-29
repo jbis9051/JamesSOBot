@@ -78,7 +78,7 @@ export default function (
         } catch (e) {
             sendData(
                 false,
-                JSON.stringify(e.toString()),
+                JSON.stringify(Object.prototype.toString.call(e)),
                 JSON.stringify([]),
                 start,
                 Date.now()
