@@ -76,15 +76,13 @@ export default function (
                 .compileScriptSync(code_to_run)
                 .runSync(context, { timeout });
         } catch (e) {
-            if (typeof e === "object" && e) {
-                sendData(
-                    false,
-                    JSON.stringify(e.toString()),
-                    JSON.stringify([]),
-                    start,
-                    Date.now()
-                );
-            }
+            sendData(
+                false,
+                JSON.stringify(Object.prototype.toString.call(e)),
+                JSON.stringify([]),
+                start,
+                Date.now()
+            );
         }
     });
 }
