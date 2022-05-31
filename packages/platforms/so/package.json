@@ -10,7 +10,7 @@
         "@chatbot/bot": "^0.0.0",
         "@chatbot/plugins": "^0.0.0",
         "cheerio": "^1.0.0-rc.3",
-        "fetch-cookie": "^0.10.1",
+        "fetch-cookie": "^2.0.5",
         "fs-extra": "^9.0.1",
         "node-fetch": "^2.6.1",
         "tough-cookie": "^4.0.0",

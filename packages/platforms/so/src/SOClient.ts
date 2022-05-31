@@ -2,7 +2,7 @@ import { Bot, Client, DataSaver, Message } from '@chatbot/bot';
 import { User } from "@userscripters/stackexchange-api-types";
 import cheerio from 'cheerio';
 import events from 'events';
-import cookiefetch from 'fetch-cookie/node-fetch';
+import cookiefetch from 'fetch-cookie';
 import nodefetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 import path from 'path';
 import { CookieJar } from 'tough-cookie';
@@ -10,6 +10,7 @@ import { URL } from "url";
 import WebSocket from 'ws';
 import { ChatEvent } from './enum/ChatEvent';
 import formEncoder from './helpers/formEncoder';
+import { FetchCookieImpl } from "./types/fetch-cookies";
 
 export class SOClient extends Client {
     private siteURL: string;
@@ -40,10 +41,7 @@ export class SOClient extends Client {
 
     private jar: CookieJar;
 
-    private fetch: (
-        input: RequestInfo,
-        init?: RequestInit
-    ) => Promise<Response>;
+    private fetch: FetchCookieImpl<RequestInfo, RequestInit, Response>;
 
     constructor(
         siteURL: string,
@@ -425,9 +423,13 @@ export class SOClient extends Client {
         return body.items[0];
     }
 
-    async chatIDToSiteID(id: number) {
+    /**
+     * @summary gets user site userId from chat userId
+     * @param id chat userId of the user
+     */
+    async chatIDToSiteID(id: number | string): Promise<string> {
         const body = await this.fetch(
-            `${this.chatURL}/users/thumbs/${id}`
+            `${this.chatURL}/users/thumbs/${id.toString()}`
         ).then((resp) => resp.json());
         return body.profileUrl.match(/\d+/)[0];
     }
