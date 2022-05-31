@@ -18,7 +18,7 @@ export class Bot extends events.EventEmitter {
 
     private shutdown_scripts: Array<MessageHandler> = [];
 
-    commands: { [key: string]: Command } = {};
+    commands: { [key: string]: Command<any, any>; } = {};
 
     private messageHandlers: MessageHandler[] = [];
 
@@ -150,11 +150,17 @@ export class Bot extends events.EventEmitter {
         this.clientFunctions.push(func);
     }
 
-    addCommand(cmd: Command) {
+    /**
+     * @summary registers a {@link Command}
+     */
+    addCommand<T extends void = void, U extends Client = Client>(cmd: Command<T, U>) {
         this.commands[cmd.name] = cmd;
     }
 
-    deleteCommand(cmd: Command) {
+    /**
+     * @summary unregisters a {@link Command}
+     */
+    deleteCommand<T extends void = void, U extends Client = Client>(cmd: Command<T, U>) {
         delete this.commands[cmd.name];
     }
 
