@@ -1,4 +1,5 @@
 import { Bot, Client, DataSaver, Message } from '@chatbot/bot';
+import { User } from "@userscripters/stackexchange-api-types";
 import cheerio from 'cheerio';
 import events from 'events';
 import cookiefetch from 'fetch-cookie/node-fetch';
@@ -408,7 +409,12 @@ export class SOClient extends Client {
 
     /* Client Specific Methods */
 
-    async stats(id: string, api_site_param = this.api_site_param!) {
+    /**
+     * @summary gets a {@link User} object from the SE API
+     * @param id user id
+     * @param api_site_param user site api slug
+     */
+    async stats(id: string, api_site_param = this.api_site_param!): Promise<User | false> {
         const resp = await this.fetch(
             `https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`
         );
