@@ -1,21 +1,4 @@
 {
-    "compilerOptions": {
-        "outDir": "build",
-        "target": "ES2020",
-        "module": "commonjs",
-        "lib": ["ES2020"],
-        "strict": true,
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "baseUrl": ".",
-        "paths": {
-            "@chatbot/bot": ["../../bot/src"],
-            "@chatbot/plugins": ["../../plugins/src"],
-            "@chatbot/so/*": ["../so/src/*"]
-        }
-    },
-    "include": ["src"],
-    "exclude": ["node_modules"]
+    "extends": "../tsconfig.json",
+    "include": ["src"]
 }

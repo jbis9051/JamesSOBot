@@ -1,25 +1,8 @@
 {
+    "extends": "../tsconfig.json",
     "compilerOptions": {
-        "module": "commonjs",
         "target": "es6",
-        "sourceMap": true,
-        "outDir": "build",
-        "downlevelIteration": true,
-        "declaration": true,
-        "skipLibCheck": false,
-        "noImplicitAny": true,
-        "strict": true,
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "lib": ["es2020"],
-        "typeRoots": ["../../../node_modules/@types"],
-        "baseUrl": ".",
-        "paths": {
-            "@chatbot/bot": ["../../bot/src"],
-            "@chatbot/plugins": ["../../plugins/src"],
-            "@chatbot/so/*": ["./src/*"]
-        }
+        "typeRoots": ["../../../node_modules/@types"]
     },
-    "include": ["src"],
-    "exclude": ["node_modules"]
+    "include": ["src"]
 }
