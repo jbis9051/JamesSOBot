@@ -407,11 +407,6 @@ export class SOClient extends Client {
 
     /* Client Specific Methods */
 
-    /**
-     * @summary gets a {@link User} object from the SE API
-     * @param id user id
-     * @param api_site_param user site api slug
-     */
     async stats(id: string, api_site_param = this.api_site_param!): Promise<User | false> {
         const resp = await this.fetch(
             `https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`
@@ -423,10 +418,6 @@ export class SOClient extends Client {
         return body.items[0];
     }
 
-    /**
-     * @summary gets user site userId from chat userId
-     * @param id chat userId of the user
-     */
     async chatIDToSiteID(id: number | string): Promise<string> {
         const body = await this.fetch(
             `${this.chatURL}/users/thumbs/${id.toString()}`

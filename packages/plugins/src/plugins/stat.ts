@@ -1,10 +1,6 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
 import { SOClient } from "@chatbot/so/SOClient";
 
-/**
- * @summary adds a 'stat' command for user stats
- * @param bot bot instance
- */
 export const stat: PluginFunction = (bot) => {
     bot.addCommand({
         name: 'stat',
