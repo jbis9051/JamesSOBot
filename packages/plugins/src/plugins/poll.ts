@@ -1,6 +1,6 @@
 import { Client, Message, PluginFunction } from '@chatbot/bot';
 
-const polls: { [key: string]: Poll } = {};
+const polls: { [roomId: string]: Poll } = {};
 
 const poll: PluginFunction = function (bot) {
     bot.addCommand({
