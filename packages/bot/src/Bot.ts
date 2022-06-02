@@ -18,13 +18,13 @@ export class Bot extends events.EventEmitter {
 
     private shutdown_scripts: Array<MessageHandler> = [];
 
-    commands: { [key: string]: Command<any, any>; } = {};
+    commands: { [key: string]: Command<any>; } = {};
 
     private messageHandlers: MessageHandler[] = [];
 
     private validatorScripts: Array<{
         name: string;
-        handler: MessageHandler<boolean>;
+        handler: MessageHandler;
     }> = [];
 
     public info = {
@@ -62,7 +62,7 @@ export class Bot extends events.EventEmitter {
     /**
      *  Adds a validator script to check
      */
-    RegisterValidator(name: string, handler: MessageHandler<boolean>) {
+    RegisterValidator(name: string, handler: MessageHandler) {
         this.validatorScripts.push({ name, handler });
     }
 
@@ -152,15 +152,17 @@ export class Bot extends events.EventEmitter {
 
     /**
      * @summary registers a {@link Command}
+     * @param cmd {@link Command} to register
      */
-    addCommand<T extends void = void, U extends Client = Client>(cmd: Command<T, U>) {
+    addCommand<T extends Client = Client>(cmd: Command<T>) {
         this.commands[cmd.name] = cmd;
     }
 
     /**
      * @summary unregisters a {@link Command}
+     * @param cmd {@link Command} to register
      */
-    deleteCommand<T extends void = void, U extends Client = Client>(cmd: Command<T, U>) {
+    deleteCommand<T extends Client = Client>(cmd: Command<T>) {
         delete this.commands[cmd.name];
     }
 

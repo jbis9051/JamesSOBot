@@ -1,4 +1,4 @@
-import { Message, PluginFunction, Client } from '@chatbot/bot';
+import { Client, Message, PluginFunction } from '@chatbot/bot';
 
 const polls: { [key: string]: Poll } = {};
 
@@ -101,10 +101,9 @@ const poll: PluginFunction = function (bot) {
         },
     });
 
-    bot.RegisterShutdownScript((msg, client) =>
-        Promise.all(
-            // @ts-ignore
-            Object.values(polls).map(async ([room, poll]) => {
+    bot.RegisterShutdownScript(async (msg, client) => {
+        await Promise.all(
+            Object.entries(polls).map(async ([room, poll]) => {
                 await client.send(
                     '**Bot Shutdown Imminent. Polls Auto-Closing**',
                     room
@@ -116,7 +115,7 @@ const poll: PluginFunction = function (bot) {
                 );
             })
         )
-    );
+    });
 };
 
 function closePoll(msg: Message, client: Client) {
