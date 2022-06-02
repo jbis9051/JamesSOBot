@@ -150,18 +150,10 @@ export class Bot extends events.EventEmitter {
         this.clientFunctions.push(func);
     }
 
-    /**
-     * @summary registers a {@link Command}
-     * @param cmd {@link Command} to register
-     */
     addCommand<T extends Client = Client>(cmd: Command<T>) {
         this.commands[cmd.name] = cmd;
     }
 
-    /**
-     * @summary unregisters a {@link Command}
-     * @param cmd {@link Command} to register
-     */
     deleteCommand<T extends Client = Client>(cmd: Command<T>) {
         delete this.commands[cmd.name];
     }
