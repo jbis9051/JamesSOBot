@@ -18,13 +18,13 @@ export class Bot extends events.EventEmitter {
 
     private shutdown_scripts: Array<MessageHandler> = [];
 
-    commands: { [key: string]: Command } = {};
+    commands: { [key: string]: Command<any>; } = {};
 
     private messageHandlers: MessageHandler[] = [];
 
     private validatorScripts: Array<{
         name: string;
-        handler: MessageHandler<boolean>;
+        handler: MessageHandler;
     }> = [];
 
     public info = {
@@ -62,7 +62,7 @@ export class Bot extends events.EventEmitter {
     /**
      *  Adds a validator script to check
      */
-    RegisterValidator(name: string, handler: MessageHandler<boolean>) {
+    RegisterValidator(name: string, handler: MessageHandler) {
         this.validatorScripts.push({ name, handler });
     }
 
@@ -150,11 +150,11 @@ export class Bot extends events.EventEmitter {
         this.clientFunctions.push(func);
     }
 
-    addCommand(cmd: Command) {
+    addCommand<T extends Client = Client>(cmd: Command<T>) {
         this.commands[cmd.name] = cmd;
     }
 
-    deleteCommand(cmd: Command) {
+    deleteCommand<T extends Client = Client>(cmd: Command<T>) {
         delete this.commands[cmd.name];
     }
 

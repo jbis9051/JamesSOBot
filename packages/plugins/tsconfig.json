@@ -14,7 +14,8 @@
         "baseUrl": ".",
         "paths": {
             "@chatbot/bot": ["../bot/src"],
-            "@chatbot/plugins": ["../plugins/src"]
+            "@chatbot/plugins": ["../plugins/src"],
+            "@chatbot/so/*": ["../platforms/so/src/*"]
         }
     },
     "include": ["src"],
