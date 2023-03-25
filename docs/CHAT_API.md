@@ -56,9 +56,9 @@ await this.mainPage.keyboard.type(config.password);
 await this.mainPage.click('#submit-button');
 ```
 
-Instead you can make a `POST` request to `/users/login`. If you are using this
-method you MUST submit the fkey (CSRF token). This is located in a hidden input
-field with the `name` as `fkey`.
+Alternatively, you can make a `POST` request to `/users/login`. If you are using
+this method you MUST submit the fkey (CSRF token). This is located in a hidden
+input field with the `name` as `fkey`.
 
 ```javascript
 const resp = /* request to /users/login */;
@@ -76,6 +76,9 @@ const body = await request({
   }
 });
 ```
+
+Note that the fkey acquired here only works on the main site, and not in chat.
+Getting an fkey for chat is demonstrated later.
 
 Once the submit button is clicked, you are redirected (It doesn't use AJAX to
 log you in).
@@ -164,6 +167,30 @@ If the login is successful, you are given the following cookies:
 ]
 ```
 
+**Note:** if your web request client URL encodes cookies by default, you must 
+disable that. Stack already URL encodes the cookie on its end, so if you
+encode the encoded cookie you've received, Stack will not do a double decode
+pass on its end, which means it will fail to recognise that you've logged in.
+
+If you're unsure, look at your requests and see how the `acct` cookie is sent.
+If you're seeing a value similar to the above, it's fine. If, however, the
+equals signs have been encoded, you have excessive encoding you need to
+disable. 
+
+Essentially, good format:
+
+```json
+"value": "t=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&s=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+```
+Bad format:
+```json
+"value": "t%3Dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx%26s%3Dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+```
+
+Note that in the part after the equals signs (`xxxxx...`), there may be URL
+encoded parts. This is fine, and part of the previously mentioned single
+URL encode pass done automatically by Stack on their end.
+
 ## Chat Authentication
 
 First, a note on authentication. Apparently, the chat uses two things to decide
@@ -179,9 +206,11 @@ The `fkey` is unique per user session (it changes on login and logout). The
 `fkey` is also used for users viewing the chat who are not logged in.
 
 The `fkey` is basically a CSRF token and it is required to view the chat and to
-send messages in the chat.
+send messages in the chat. Note that the `fkey` for chat is different from the
+`fkey` used during login, and can only be acquired by requesting a chat page.
 
-The `fkey` can be found in either of the following ways while on a chat page:
+After making a request to any chat page (just the root `https://chat.<domain>/`
+is enough), you get the fkey by either:
 
 1. Getting the value of an input with the id `#fkey`. The input is the last
    element in the `<body>` and contains the fkey.
@@ -237,7 +266,7 @@ The WebSocket URL is gotten by making a POST request, **with the login
 cookies**, to the `chatURL + '/ws-auth` with the following parameters:
 
 - `roomid=[room number]`
-- `fkey=[fkey obtained in previous steps]`
+- `fkey=[chat fkey obtained in previous steps]`
 
 **Note:** A `content-type` header with a value of
 `application/x-www-form-urlencoded` MUST be sent or the POST data will not work
