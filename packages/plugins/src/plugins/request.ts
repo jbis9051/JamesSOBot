@@ -5,7 +5,7 @@ export const calc: PluginFunction = (bot) => {
     bot.addCommand({
         name: 'request',
         args: [],
-        description: 'Sends an HTTP post request and gives a response',
+        description: 'Sends an HTTP request and gives a response',
         shortcuts: ['request', 'fetch', 'http'],
         examples: ['||request [url] [method] [body]', '||request https://httpbin.org/post POST "arg1: value, arg2: value"', '||request https://github.com/ GET'],
         ignore: false,
