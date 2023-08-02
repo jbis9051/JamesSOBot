@@ -1,9 +1,6 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
 import fetch from 'node-fetch';
 
-import { PermissionType, PluginFunction } from '@chatbot/bot';
-import fetch from 'node-fetch';
-
 export const calc: PluginFunction = (bot) => {
     bot.addCommand({
         name: 'request',
