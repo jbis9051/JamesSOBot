@@ -17,9 +17,9 @@ export const calc: PluginFunction = (bot) => {
                 "Content-Type": "application/json"
               }
             };
-            if (!(msg.args[0] && msg.args[1])) return client.hardReply('Error: The "url" and "method" arguments are required', msg);
+            if (!msg.args[0] || !msg.args[1]) return client.hardReply('Error: The "url" and "method" arguments are required', msg);
             if (!msg.args[2]) msg.args[2] = "";
-            if (msg.args[1] !== 'GET') {
+            if (msg.args[1].toLowerCase() === 'post') {
                 let body = eval('({' + msg.args[2] + '})');
                 params.body = JSON.stringify(body);
             }
