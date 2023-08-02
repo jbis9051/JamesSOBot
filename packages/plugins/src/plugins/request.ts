@@ -28,11 +28,7 @@ export const calc: PluginFunction = (bot) => {
             const response = await fetch(msg.args[0], params);
             let now = Date.now();
             let totalTimeMS = now - then;
-            if (!(response.status === 200)) {
-                client.hardReply('The destination ' + msg.args[0] + ' could not be reached (ERR ' + response.status + ')', msg);
-            } else {
-                client.hardReply(`[${totalTimeMS}ms] ${msg.args[1]} request responded: "${await response.text()}" response content: ${JSON.stringify(response)}`, msg);
-            }
+            client.hardReply(`[${totalTimeMS}ms] ${msg.args[1]} request responded: "${await response.text()}" response content: ${JSON.stringify(response)}`, msg);
         },
     });
 };
