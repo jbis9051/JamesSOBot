@@ -43,7 +43,7 @@ export const backup: PluginFunction = (bot, config) => {
             const { ok, status } = res;
 
             if (!ok) {
-                let errorPfx = 'Failed to backup data.';
+                const errorPfx = 'Failed to backup data.';
 
                 const errorMap: Record<number, string> = {
                     401: ' Please check your GitHub credentials',
