@@ -10,8 +10,8 @@ export const backup: PluginFunction = (bot, config) => {
         permissions: ['admin'],
         ignore: false,
         args: [],
-        cb(msg: Message, client: Client) {
-            fetch(`https://api.github.com/gists`, {
+        async cb(msg: Message, client: Client) {
+            const res = await fetch(`https://api.github.com/gists`, {
                 method: 'POST',
                 headers: {
                     'User-Agent': 'JamesSO Bot',
@@ -38,11 +38,28 @@ export const backup: PluginFunction = (bot, config) => {
                         },
                     },
                 }),
-            })
-                .then((resp) => resp.json())
-                .then((resp) => {
-                    client.send(`[Backup](${resp.html_url}) Created`, msg);
-                });
+            });
+
+            const { ok, status } = res;
+
+            if (!ok) {
+                let errorPfx = 'Failed to backup data.';
+
+                const errorMap: Record<number, string> = {
+                    401: ' Please check your GitHub credentials',
+                    403: ' You are not authorized to create Gists',
+                    422: ' Invalid backup data or too many requests',
+                };
+
+                const errorInfo = errorMap[status] || ' Unknown API error';
+
+                client.send(`${errorPfx}${errorInfo}`, msg);
+                return;
+            }
+
+            const apiResponse = await res.json();
+
+            client.send(`[Backup](${apiResponse.html_url}) Created`, msg);
         },
     });
 };
