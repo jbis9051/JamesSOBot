@@ -1,16 +1,16 @@
 import { Bot, Client, DataSaver, Message } from '@chatbot/bot';
-import { User } from "@userscripters/stackexchange-api-types";
+import { User } from '@userscripters/stackexchange-api-types';
 import cheerio from 'cheerio';
 import events from 'events';
 import cookiefetch from 'fetch-cookie';
 import nodefetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 import path from 'path';
 import { CookieJar } from 'tough-cookie';
-import { URL } from "url";
+import { URL } from 'url';
 import WebSocket from 'ws';
 import { ChatEvent } from './enum/ChatEvent';
 import formEncoder from './helpers/formEncoder';
-import { FetchCookieImpl } from "./types/fetch-cookies";
+import { FetchCookieImpl } from './types/fetch-cookies';
 
 export class SOClient extends Client {
     private siteURL: string;
@@ -254,8 +254,10 @@ export class SOClient extends Client {
     }
 
     async isRoomOwnerId(staticUID: string, context: Message): Promise<boolean> {
+        const uid = parseInt(staticUID);
+
         return (await this.getRoomOwners(context.info.contextId)).some(
-            (owner) => owner.id === staticUID
+            (owner) => owner.id === uid
         );
     }
 
@@ -407,7 +409,10 @@ export class SOClient extends Client {
 
     /* Client Specific Methods */
 
-    async stats(id: string, api_site_param = this.api_site_param!): Promise<User | false> {
+    async stats(
+        id: string,
+        api_site_param = this.api_site_param!
+    ): Promise<User | false> {
         const resp = await this.fetch(
             `https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`
         );
