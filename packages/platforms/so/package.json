@@ -23,6 +23,6 @@
         "@types/tough-cookie": "^4.0.0",
         "@types/ws": "^7.2.6",
         "ts-node-dev": "^1.0.0-pre.58",
-        "typescript": "^3.9.7"
+        "typescript": "5.5.4"
     }
 }
