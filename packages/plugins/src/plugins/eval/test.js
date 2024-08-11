@@ -1,7 +1,7 @@
-const eval = require('./index');
+const evaler = require('./index');
 
 async function _run(code, msg) {
-    const val = await eval(code);
+    const val = await evaler(code);
     if (val.error) {
         msg.replyDirect(`Error running script: \`${val.result}\``);
         return;
