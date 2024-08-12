@@ -3,7 +3,6 @@ import { User } from '@userscripters/stackexchange-api-types';
 import cheerio from 'cheerio';
 import events from 'events';
 import cookiefetch from 'fetch-cookie';
-import nodefetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 import path from 'path';
 import { CookieJar } from 'tough-cookie';
 import { URL } from 'url';
@@ -41,7 +40,7 @@ export class SOClient extends Client {
 
     private jar: CookieJar;
 
-    private fetch: FetchCookieImpl<RequestInfo, RequestInit, Response>;
+    private fetch: FetchCookieImpl<any, RequestInit, Response>;
 
     constructor(
         siteURL: string,
@@ -69,7 +68,7 @@ export class SOClient extends Client {
         } catch (e) {
             this.jar = new CookieJar();
         }
-        this.fetch = cookiefetch(nodefetch, this.jar);
+        this.fetch = cookiefetch(fetch, this.jar);
         this.events.on(ChatEvent.NEW_MESSAGE.toString(), (e) =>
             this.bot.processMessage(this.createMessage(e), this)
         );
