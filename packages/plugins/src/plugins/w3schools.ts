@@ -1,7 +1,4 @@
 import { PluginFunction } from '@chatbot/bot';
-
-import fetch from 'node-fetch';
-
 import cheerio from 'cheerio';
 
 export const w3schools: PluginFunction = (bot) => {

@@ -337,7 +337,7 @@ export class SOClient extends Client {
                 if (resp.status === 200) {
                     return;
                 }
-                const error = await resp.json();
+                const error: any = await resp.json();
                 const delay = error.error.match(
                     /(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/
                 );
@@ -371,7 +371,7 @@ export class SOClient extends Client {
                 if (resp.status === 200) {
                     return;
                 }
-                const body = await resp.json();
+                const body: any = await resp.json();
                 const delay = body.error.match(
                     /(?!You can perform this action again in )[0-9]+(?= second(s*)\.)/
                 );
@@ -390,7 +390,7 @@ export class SOClient extends Client {
         username: string,
         context: Message
     ): Promise<string | undefined> {
-        const body = await this.fetch(
+        const body: any = await this.fetch(
             `${this.chatURL}/rooms/pingable/${context.info.contextId}`
         ).then((resp) => resp.json());
         const array = body.filter(
@@ -416,7 +416,7 @@ export class SOClient extends Client {
         const resp = await this.fetch(
             `https://api.stackexchange.com/2.2/users/${id}?site=${api_site_param.trim()}`
         );
-        const body = await resp.json();
+        const body: any = await resp.json();
         if (resp.status !== 200 || !body.items) {
             return false;
         }
@@ -424,7 +424,7 @@ export class SOClient extends Client {
     }
 
     async chatIDToSiteID(id: number | string): Promise<string> {
-        const body = await this.fetch(
+        const body: any = await this.fetch(
             `${this.chatURL}/users/thumbs/${id.toString()}`
         ).then((resp) => resp.json());
         return body.profileUrl.match(/\d+/)[0];

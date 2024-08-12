@@ -1,5 +1,4 @@
 import { PluginFunction, Message, Client } from '@chatbot/bot';
-import fetch from 'node-fetch';
 
 export const backup: PluginFunction = (bot, config) => {
     bot.addCommand({
@@ -57,7 +56,7 @@ export const backup: PluginFunction = (bot, config) => {
                 return;
             }
 
-            const apiResponse = await res.json();
+            const apiResponse: any = await res.json();
 
             client.send(`[Backup](${apiResponse.html_url}) Created`, msg);
         },

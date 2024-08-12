@@ -1,5 +1,4 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
-import fetch from 'node-fetch';
 
 function random(arr: any[]) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -29,7 +28,7 @@ export const wiki: PluginFunction = (bot) => {
                 )}`
             )
                 .then((resp) => resp.json())
-                .then((resp) => {
+                .then((resp: any) => {
                     // the result will look like this:
                     // [search_term, [title0], [description0], [link0]]
                     // we only asked for one result, so the inner arrays will have only

@@ -1,5 +1,4 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
-import fetch from 'node-fetch';
 
 export const define: PluginFunction = (bot) => {
     bot.addCommand({
@@ -16,7 +15,7 @@ export const define: PluginFunction = (bot) => {
                     ' '
                 )}`
             ).then(async (resp) => {
-                const json = await resp.json();
+                const json: any = await resp.json();
                 if (!resp.ok) {
                     if (resp.status === 404) {
                         client.send('Word or phrase not found', msg);

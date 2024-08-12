@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import { PermissionType, PluginFunction } from '@chatbot/bot';
 
 const max_attempts = 20;

@@ -1,6 +1,5 @@
 import cheerio from 'cheerio';
 import events from 'events';
-import fetch from 'node-fetch';
 import path from 'path';
 import process from 'process';
 import { Client } from './Client';

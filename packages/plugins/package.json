@@ -11,8 +11,7 @@
         "cheerio": "^1.0.0-rc.3",
         "fast-levenshtein": "^3.0.0",
         "isolated-vm": "^5.0.1",
-        "node-gyp": "^10.2.0",
-        "node-fetch": "^2.6.1"
+        "node-gyp": "^10.2.0"
     },
     "devDependencies": {
         "@types/fast-levenshtein": "^0.0.1",

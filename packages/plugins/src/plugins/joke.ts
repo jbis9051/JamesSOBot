@@ -1,5 +1,4 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
-import fetch from 'node-fetch';
 
 export const joke: PluginFunction = (bot) => {
     bot.addCommand({
@@ -19,11 +18,12 @@ export const joke: PluginFunction = (bot) => {
                 'https://official-joke-api.appspot.com/jokes/programming/random'
             )
                 .then((resp) => resp.json())
-                .then((json: Array<{ setup: string; punchline: string }>) => {
+                .then((json: any) => {
                     if (!json) {
                         client.send('Error getting Joke', msg);
                         return;
                     }
+                    // Array<{ setup: string; punchline: string }>
                     const theJoke = json[0];
                     client.send(theJoke.setup, msg);
                     setTimeout(() => {

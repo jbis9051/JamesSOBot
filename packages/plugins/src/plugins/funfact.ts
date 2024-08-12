@@ -1,5 +1,4 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
-import fetch from 'node-fetch';
 
 export const funfact: PluginFunction = (bot) => {
     bot.addCommand({
@@ -13,7 +12,7 @@ export const funfact: PluginFunction = (bot) => {
         cb: (msg, client) => {
             fetch('https://uselessfacts.jsph.pl/random.json?language=en')
                 .then((resp) => resp.json())
-                .then((body) => {
+                .then((body: any) => {
                     client.send(body.text, msg);
                 });
         },
