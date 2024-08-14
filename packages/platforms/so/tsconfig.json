@@ -3,7 +3,8 @@
     "compilerOptions": {
         "target": "es6",
         "typeRoots": ["../../../node_modules/@types"],
-        "noImplicitAny": false
+        "noImplicitAny": false,
+        "outDir": "build"
     },
     "include": ["src"]
 }
