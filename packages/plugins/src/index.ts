@@ -27,7 +27,6 @@ export * from './plugins/mdn';
 export * from './plugins/obama';
 export * from './plugins/random';
 export * from './plugins/rules';
-export * from '@chatbot/so/src/plugins/stat';
 export * from './plugins/STOP';
 export * from './plugins/timeout';
 export * from './plugins/timer';
