@@ -1,5 +1,5 @@
 import { PermissionType, PluginFunction } from '@chatbot/bot';
-import { SOClient } from "@chatbot/so/SOClient";
+import { SOClient } from "../SOClient";
 
 export const stat: PluginFunction = (bot) => {
     bot.addCommand({

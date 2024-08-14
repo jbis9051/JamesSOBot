@@ -11,12 +11,7 @@
         "declaration": true,
         "allowJs": true,
         "forceConsistentCasingInFileNames": true,
-        "baseUrl": ".",
-        "paths": {
-            "@chatbot/bot": ["../bot/src"],
-            "@chatbot/plugins": ["../plugins/src"],
-            "@chatbot/so/*": ["../platforms/so/src/*"]
-        }
+        "baseUrl": "."
     },
     "include": ["src"],
     "exclude": ["node_modules"]

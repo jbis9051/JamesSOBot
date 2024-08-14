@@ -25,7 +25,6 @@ import {
     random,
     rules,
     selfDestruct,
-    stat,
     status,
     STOP,
     timeout,
@@ -36,6 +35,7 @@ import {
     wiki,
     man,
 } from '@chatbot/plugins';
+import {stat} from "./plugins/stat";
 import { SOClient } from './SOClient';
 
 const bot = new Bot('so', {

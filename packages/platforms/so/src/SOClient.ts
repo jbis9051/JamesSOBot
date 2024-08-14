@@ -2,14 +2,16 @@ import { Bot, Client, DataSaver, Message } from '@chatbot/bot';
 import { User } from '@userscripters/stackexchange-api-types';
 import cheerio from 'cheerio';
 import events from 'events';
-import cookiefetch from 'fetch-cookie';
+import cookiefetch, {CookieJar, FetchCookieImpl} from 'fetch-cookie';
 import path from 'path';
-import { CookieJar } from 'tough-cookie';
 import { URL } from 'url';
 import WebSocket from 'ws';
 import { ChatEvent } from './enum/ChatEvent';
 import formEncoder from './helpers/formEncoder';
-import { FetchCookieImpl } from './types/fetch-cookies';
+
+interface CookieJarReal extends CookieJar {
+    serializeSync(): string
+}
 
 export class SOClient extends Client {
     private siteURL: string;
@@ -38,7 +40,7 @@ export class SOClient extends Client {
 
     private events = new events.EventEmitter();
 
-    private jar: CookieJar;
+    private jar: CookieJarReal;
 
     private fetch: FetchCookieImpl<any, RequestInit, Response>;
 
@@ -62,11 +64,11 @@ export class SOClient extends Client {
             {}
         );
         try {
-            this.jar = CookieJar.deserializeSync(
+            this.jar = cookiefetch.toughCookie.CookieJar.deserializeSync(
                 this.dataStore.getData('cookieJar')
             );
         } catch (e) {
-            this.jar = new CookieJar();
+            this.jar = new cookiefetch.toughCookie.CookieJar();
         }
         this.fetch = cookiefetch(fetch, this.jar);
         this.events.on(ChatEvent.NEW_MESSAGE.toString(), (e) =>

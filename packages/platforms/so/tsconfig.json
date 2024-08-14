@@ -2,7 +2,8 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "target": "es6",
-        "typeRoots": ["../../../node_modules/@types"]
+        "typeRoots": ["../../../node_modules/@types"],
+        "noImplicitAny": false
     },
     "include": ["src"]
 }
