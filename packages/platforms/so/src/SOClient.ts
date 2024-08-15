@@ -1,6 +1,6 @@
 import { Bot, Client, DataSaver, Message } from '@chatbot/bot';
 import { User } from '@userscripters/stackexchange-api-types';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import events from 'events';
 import cookiefetch, {CookieJar, FetchCookieImpl} from 'fetch-cookie';
 import path from 'path';

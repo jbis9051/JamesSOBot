@@ -1,5 +1,5 @@
 import { PluginFunction } from '@chatbot/bot';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 
 export const w3schools: PluginFunction = (bot) => {
     let lastW3Sucks = 0;
